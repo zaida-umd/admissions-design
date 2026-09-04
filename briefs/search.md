@@ -40,12 +40,27 @@ The query lives in `?q=`, so an executed search is linkable.
   `scripts/build-calendar.py`, not hand-edited.
 - **Lock** — `umd-layout-space-horizontal-small` (992px), not `-larger`
   (1152px). A single column of text rows wants the narrower measure.
-- **Search field is underlined, not boxed.** `critical.css` §23's boxed
-  treatment (white ground, grey border, red 44x44 submit) suits a filter band
-  sitting beside selects; here the field is the only control on the page, so
-  `#search-form` restyles it as one rule under the whole row with the DS
-  magnifier as a plain glyph. Focus turns the rule red via `:focus-within`
-  with no reflow. Scoped to this page — see OVERRIDES.md.
+- **Search field is underlined, not boxed, and carries no label.**
+  `critical.css` §23's boxed treatment (white ground, grey border, red 44x44
+  submit) suits a filter band sitting beside selects; here the field is the
+  only control on the page, so `#search-form` restyles it as one rule under
+  the whole row with the DS magnifier as a plain glyph. Focus turns the rule
+  red via `:focus-within` with no reflow. Scoped to this page — see
+  OVERRIDES.md.
+- **`type="search"`, not `"text"`.** Correct for a site search, and it takes
+  the field out of §23's `.umd-filter-search-row input[type="text"]` selector
+  (0,2,1), which would otherwise outrank the `umd-sans-larger` utility (0,1,0)
+  and pin the field at 16px. That utility is a fluid ramp — 18px,
+  `calc(18px + 0.5vw)`, 22px — so re-asserting it at higher specificity would
+  mean copying a type scale into the page. WebKit's `type="search"`
+  decorations and native clear button are suppressed; the band has its own
+  Clear search.
+- **No visible band heading.** The hero directly above already says SEARCH,
+  so the `umd-text-line-trailing-light` "Search this site" label was saying it
+  twice. The name it carried moves to `aria-label` on the `role="search"`
+  form, so the landmark is still announced. Clear search moves below the
+  field, right-aligned, as a direct grid child — `hidden` then takes it out of
+  the layout entirely, so the idle band is field-only.
 - **Band** — the Filter Band pattern minus the select. Everything is upstream:
   `umd-layout-background-highlight-light` (the `#F1F1F1` panel + `2px` red left
   rule), `umd-text-line-trailing-light`, `umd-animation-line-slide-graydark-red`,

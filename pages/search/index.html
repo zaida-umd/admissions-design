@@ -849,17 +849,32 @@
       border-bottom: 1px solid var(--umd-color-gray-darker, #242424);
     }
 
-    #search-form .umd-filter-search-row input[type="text"] {
+    /* type="search" means §23's input rule no longer matches, so the
+       three things it supplied that are still wanted come back here.
+       Type comes from .umd-sans-larger on the element. */
+    #search-form .umd-filter-search-row input[type="search"] {
+      flex: 1;
+      min-width: 0;
+      color: var(--umd-color-gray-darker, #242424);
       background: transparent;
       border: 0;
       padding: 8px 0;
-      font-size: 18px;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    /* WebKit decorates type="search" with a rounded inset box and a native
+       clear affordance. The band has its own Clear search control, so both
+       go rather than competing with it. */
+    #search-form .umd-filter-search-row input[type="search"]::-webkit-search-decoration,
+    #search-form .umd-filter-search-row input[type="search"]::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+      display: none;
     }
 
     /* The row's focus-within rule below IS the focus indicator, so the
-       input's own outline goes — left in place, critical.css §23 draws a
-       2px red box around a field that no longer has edges. */
-    #search-form .umd-filter-search-row input[type="text"]:focus {
+       input's own outline goes. */
+    #search-form .umd-filter-search-row input[type="search"]:focus {
       outline: none;
     }
 
@@ -869,6 +884,10 @@
       border-bottom-color: var(--umd-color-red, #E21833);
       box-shadow: 0 1px 0 0 var(--umd-color-red, #E21833);
     }
+
+    /* Direct child of the grid form, so `hidden` takes it out of the
+       layout entirely and the idle band is field-only. */
+    .search-reset { justify-self: end; }
 
     #search-form .umd-filter-search-btn {
       background-color: transparent;
@@ -1502,21 +1521,26 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <div class="umd-layout-space-horizontal-small">
 
       <!-- SEARCH BAND -->
+      <!-- No visible heading: the field is self-evident and the band sits
+           directly under a hero that already says SEARCH. The name the h2
+           used to carry moves to aria-label, so the search landmark is
+           still announced. -->
       <form id="search-form" class="umd-layout-background-highlight-light umd-layout-grid-gap-stacked"
-            data-animation="off" action="" role="search">
-
-        <div class="umd-layout-grid-inline-stretch">
-          <h2 class="umd-text-line-trailing-light"><span>Search this site</span></h2>
-          <button type="reset" id="search-reset" class="umd-sans-smaller umd-animation-line-slide-graydark-red" hidden>
-            <span aria-hidden="true">Clear search</span>
-            <span class="sr-only">Clear the search term and start over</span>
-          </button>
-        </div>
+            data-animation="off" action="" role="search" aria-label="Search this site">
 
         <div>
           <label for="search-q" class="sr-only">Search term</label>
           <div class="umd-filter-search-row">
-            <input type="text" id="search-q" name="q" placeholder="Enter a search term"
+            <!-- type="search", not "text". Correct for a site search, and it
+                 takes the field out of critical.css §23's
+                 `.umd-filter-search-row input[type="text"]` selector (0,2,1),
+                 which would otherwise outrank the .umd-sans-larger utility
+                 (0,1,0) and pin the field at 16px. umd-sans-larger is a fluid
+                 ramp -- 18px, calc(18px + 0.5vw), 22px across breakpoints --
+                 so re-asserting its values at higher specificity would mean
+                 copying a type scale into a page. -->
+            <input type="search" id="search-q" name="q" class="umd-sans-larger"
+                   placeholder="Enter a search term"
                    autocomplete="off" spellcheck="false" />
             <button type="submit" class="umd-filter-search-btn" aria-label="Submit search">
               <!-- The design system's own magnifier, verbatim from
@@ -1528,6 +1552,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
             </button>
           </div>
         </div>
+
+        <button type="reset" id="search-reset"
+                class="search-reset umd-sans-smaller umd-animation-line-slide-graydark-red" hidden>
+          <span aria-hidden="true">Clear search</span>
+          <span class="sr-only">Clear the search term and start over</span>
+        </button>
       </form>
 
       <p id="search-count" class="umd-filter-results-count" aria-live="polite" hidden></p>
