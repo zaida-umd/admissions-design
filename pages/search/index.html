@@ -826,9 +826,73 @@
        page-specific — there is no upstream "pinned search result".
     ============================================================ */
 
-    /* The band is a single full-width row, not the two-up select+search
-       grid of the Filter Band pattern — there is nothing to facet on. */
-    #search-form .umd-filter-search-row input[type="text"] { font-size: 18px; }
+    /* ---- SEARCH FIELD -------------------------------------------
+       The band is a single full-width row, not the two-up select+search
+       grid of the Filter Band pattern — there is nothing to facet on.
+
+       critical.css §23 styles .umd-filter-search-row as a BOXED field:
+       white ground, 1px #c0c0c0 border with the right side removed, butted
+       against a 44x44 solid-red submit. That reads correctly in a filter
+       band, where the search sits beside select boxes and should match
+       them. Here it is the only control on the page and the sole thing
+       the page exists for, so it is restyled as a single underlined
+       field: transparent ground, one rule under the whole row, and the
+       magnifier as a plain glyph rather than a red button.
+
+       Scoped to #search-form on purpose — the calendar and the
+       representatives directory still want the boxed treatment, and they
+       share the class. Promote to a critical.css variant only if a
+       second page wants this. */
+    #search-form .umd-filter-search-row {
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--umd-color-gray-darker, #242424);
+    }
+
+    #search-form .umd-filter-search-row input[type="text"] {
+      background: transparent;
+      border: 0;
+      padding: 8px 0;
+      font-size: 18px;
+    }
+
+    /* The row's focus-within rule below IS the focus indicator, so the
+       input's own outline goes — left in place, critical.css §23 draws a
+       2px red box around a field that no longer has edges. */
+    #search-form .umd-filter-search-row input[type="text"]:focus {
+      outline: none;
+    }
+
+    /* Thickens the rule to 2px in Maryland red without reflow — a
+       border-width change here would shift the row by a pixel. */
+    #search-form .umd-filter-search-row:focus-within {
+      border-bottom-color: var(--umd-color-red, #E21833);
+      box-shadow: 0 1px 0 0 var(--umd-color-red, #E21833);
+    }
+
+    #search-form .umd-filter-search-btn {
+      background-color: transparent;
+      align-self: center;
+    }
+    #search-form .umd-filter-search-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--umd-color-gray-darker, #242424);
+      transition: fill .3s;
+    }
+    #search-form .umd-filter-search-btn:hover svg,
+    #search-form .umd-filter-search-btn:focus-visible svg {
+      fill: var(--umd-color-red, #E21833);
+    }
+    /* The 44x44 hit area stays; only its red ground goes. */
+    #search-form .umd-filter-search-btn:hover,
+    #search-form .umd-filter-search-btn:focus {
+      background-color: transparent;
+    }
+    #search-form .umd-filter-search-btn:focus-visible {
+      outline: 2px solid var(--umd-color-red, #E21833);
+      outline-offset: 2px;
+    }
 
     /* Sits between the band and the count; the count's own 24px
        margin-top handles the gap below the form. */
@@ -1455,8 +1519,11 @@ umd-element-scroll-top[data-layout-fixed="true"] {
             <input type="text" id="search-q" name="q" placeholder="Enter a search term"
                    autocomplete="off" spellcheck="false" />
             <button type="submit" class="umd-filter-search-btn" aria-label="Submit search">
-              <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-                <path d="M8.5 3a5.5 5.5 0 0 1 4.383 8.823l3.647 3.647a1 1 0 0 1-1.414 1.414l-3.647-3.647A5.5 5.5 0 1 1 8.5 3zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"/>
+              <!-- The design system's own magnifier, verbatim from
+                   web-icons-library/dist/search.js — the same glyph the site
+                   header uses. Hollow ring via fill-rule="evenodd". -->
+              <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M79.3401 42.2306C79.3401 54.1438 69.6826 63.8013 57.7694 63.8013C45.8562 63.8013 36.1987 54.1438 36.1987 42.2306C36.1987 30.3174 45.8562 20.6599 57.7694 20.6599C69.6826 20.6599 79.3401 30.3174 79.3401 42.2306ZM91 42.2306C91 60.5833 76.1222 75.4612 57.7694 75.4612C51.3447 75.4612 45.3458 73.6379 40.2619 70.4806L24.2216 86.5209H5L30.2245 60.8255C26.6351 55.5189 24.5388 49.1195 24.5388 42.2306C24.5388 23.8778 39.4167 9 57.7694 9C76.1222 9 91 23.8778 91 42.2306Z"></path>
               </svg>
             </button>
           </div>

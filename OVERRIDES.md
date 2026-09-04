@@ -829,7 +829,17 @@ The `.text-black` one is worth noting as an audit gap: a comparison of "classes 
 
 Verified after removal: `.sr-only` still computes `position:absolute; width:1px; height:1px; overflow:hidden` with nothing leaking (60 instances on the calendar, 1 on programs), and the admissions overlay cards still compute `min-height: 560px` at desktop.
 
-The other class-name collisions the audit found are **legitimate and should stay** — they are scoped overrides, not redefinitions: `.pf-body .umd-field-checkbox-wrapper`, `.pf-pill-cluster.umd-text-cluster-pill`, `#cal-filters .umd-text-line-trailing-light`, `.wta-section > .umd-layout-space-horizontal-larger`. Each adjusts a DS class in one context; none restates it.
+The other class-name collisions the audit found are **legitimate and should stay** — they are scoped overrides, not redefinitions: `.pf-body .umd-field-checkbox-wrapper`, `.pf-pill-cluster.umd-text-cluster-pill`, `#cal-filters .umd-text-line-trailing-light`, `.wta-section > .umd-layout-space-horizontal-larger`, `#search-form .umd-filter-search-row`. Each adjusts a DS class in one context; none restates it.
+
+## Search field: underlined, not boxed (`pages/search/`)
+
+`critical.css` §23 styles `.umd-filter-search-row` as a **boxed** field — white ground, `1px #c0c0c0` border with the right side removed, butted against a `44x44` solid-red submit. That is right in a filter band, where the search sits beside select boxes and should match them.
+
+On `pages/search/` it is the only control on the page and the whole reason the page exists, so `#search-form` restyles it as a single **underlined** field: transparent ground, one `1px #242424` rule under the entire row, and the design system's own magnifier (`web-icons-library/dist/search.js`, verbatim) as a plain `#242424` glyph rather than a red button. The `44x44` hit area is kept; only its red ground goes.
+
+Focus moves to the row: `:focus-within` turns the rule Maryland red and adds `box-shadow: 0 1px 0` to reach 2px **without reflow** (a border-width change would shift the row a pixel — measured, the row stays 45px either way). The input's own `outline` is cleared, because §23's 2px red box draws around a field that no longer has edges.
+
+**Scoped to `#search-form` deliberately.** Promote to a `critical.css` variant only when a second page wants it. Today nothing else is affected: the calendar band has no search row, and the representatives directory uses its own `.reps-search-row` and keeps the boxed treatment.
 
 ### `.umd-text-rich-advanced` vs. the utilities on a heading
 

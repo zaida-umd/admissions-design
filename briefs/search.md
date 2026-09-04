@@ -40,6 +40,12 @@ The query lives in `?q=`, so an executed search is linkable.
   `scripts/build-calendar.py`, not hand-edited.
 - **Lock** — `umd-layout-space-horizontal-small` (992px), not `-larger`
   (1152px). A single column of text rows wants the narrower measure.
+- **Search field is underlined, not boxed.** `critical.css` §23's boxed
+  treatment (white ground, grey border, red 44x44 submit) suits a filter band
+  sitting beside selects; here the field is the only control on the page, so
+  `#search-form` restyles it as one rule under the whole row with the DS
+  magnifier as a plain glyph. Focus turns the rule red via `:focus-within`
+  with no reflow. Scoped to this page — see OVERRIDES.md.
 - **Band** — the Filter Band pattern minus the select. Everything is upstream:
   `umd-layout-background-highlight-light` (the `#F1F1F1` panel + `2px` red left
   rule), `umd-text-line-trailing-light`, `umd-animation-line-slide-graydark-red`,
