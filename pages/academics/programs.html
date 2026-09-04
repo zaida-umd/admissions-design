@@ -764,6 +764,16 @@
       padding-bottom: 24px;
       border-bottom: 1px solid #d0d0d0;
     }
+    /* The list owns its rules. When the items are umd-element-card
+       [data-display="list"], the component ALSO puts border-top:1px #E6E6E6 +
+       padding-top:24px on every sibling after the first; that border lands
+       directly against this one's border-bottom and the pair renders as a single
+       doubled 2px rule in two greys. Zero the component's. Specificity has to
+       clear the component rule's 0,2,2 — hence the tag names. */
+    .umd-filter-list > umd-element-card.umd-filter-item
+      + umd-element-card.umd-filter-item {
+      border-top: 0;
+    }
     .umd-filter-list > .umd-filter-item + .umd-filter-item {
       padding-top: 24px;
     }
@@ -775,6 +785,32 @@
       padding-top: 0;
     }
     .umd-filter-item[hidden] { display: none !important; }
+
+
+    /* ============================================================
+       24. PILL LIST ANCHOR COLOR — upstream gap-fill
+
+       element.min.css styles .umd-text-cluster-pill (deprecated alias
+       .umd-pill-list) with a chip ground, box model, 12px Interstate and a
+       #FFD200 hover on <a> children — but the LIGHT variant never declares
+       `color`, so an anchor chip falls through to the browser's default
+       blue/purple and keeps its UA underline. The DARK variant DOES declare
+       one (color:#FFFFFF on the child, #000000 on hover), so this is an
+       asymmetry in the package, not an implied black.
+
+       Same shape as §11: upstream styles a wrapper that this composition
+       does not use, and a bare <a> is left unstyled. Loads after the CDN
+       bundles, so equal specificity is enough; the tag selector adds one
+       anyway. Scoped to the light class names, so the dark variant's white
+       is untouched.
+
+       RETIRE THIS when composePill()'s light branch gains
+       `color: color.black` — packages/styles/source/element/text/cluster.ts.
+       ============================================================ */
+    :is(.umd-text-cluster-pill, .umd-pill-list) > a {
+      color: #000000;
+      text-decoration: none;
+    }
   </style>
 
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@1.19.5/dist/cdn.js"></script>
@@ -919,14 +955,14 @@
        rather than a nested scrollbar (see buildGroups) */
     .pf-body fieldset.is-collapsed .pf-extra { display:none; }
 
-    /* the toggle reuses the DS .umd-pill-list chip, same as the active-filter
+    /* the toggle reuses the DS .umd-text-cluster-pill chip, same as the active-filter
        pills above; neutralize its wrapping-margin hack and set our own offset. */
-    .pf-more-cluster.umd-pill-list { display:inline-flex; margin-top:8px; }
+    .pf-more-cluster.umd-text-cluster-pill { display:inline-flex; margin-top:8px; }
 
-    .pf-more-cluster.umd-pill-list > .pf-more { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
+    .pf-more-cluster.umd-text-cluster-pill > .pf-more { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
 
-    .pf-more-cluster.umd-pill-list > .pf-more:hover,
-    .pf-more-cluster.umd-pill-list > .pf-more:focus-visible { background-color:var(--umd-color-gold); }
+    .pf-more-cluster.umd-text-cluster-pill > .pf-more:hover,
+    .pf-more-cluster.umd-text-cluster-pill > .pf-more:focus-visible { background-color:var(--umd-color-gold); }
 
     /* option rows use the DS .umd-field-checkbox-wrapper (font-weight:400 — the
        DS-native counter to the global label{font-weight:700}
@@ -955,14 +991,14 @@
 
     .pf-pills-label { font-weight:700; margin-right:4px; }
 
-    /* active-filter pills use the DS .umd-pill-list chip (#FAFAFA, 12px);
+    /* active-filter pills use the DS .umd-text-cluster-pill chip (#FAFAFA, 12px);
        neutralize its wrapping-margin hack and use flex gap instead. */
-    .pf-pill-cluster.umd-pill-list { margin-top:0; display:inline-flex; flex-wrap:wrap; gap:8px; }
+    .pf-pill-cluster.umd-text-cluster-pill { margin-top:0; display:inline-flex; flex-wrap:wrap; gap:8px; }
 
-    .pf-pills .umd-pill-list > * { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
+    .pf-pills .umd-text-cluster-pill > * { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
 
-    .pf-pills .umd-pill-list > button:hover,
-    .pf-pills .umd-pill-list > button:focus-visible { background-color:var(--umd-color-gold); }
+    .pf-pills .umd-text-cluster-pill > button:hover,
+    .pf-pills .umd-text-cluster-pill > button:focus-visible { background-color:var(--umd-color-gold); }
 
     .pf-clear {
       background:none; border:0; padding:0 0 0 6px; cursor:pointer; color:var(--umd-color-black);
@@ -1318,7 +1354,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <umd-element-navigation-header
     sticky
     class="umd-layout-space-horizontal-full"
-    search-url="https://admissions.umd.edu/search"
+    search-url="../../pages/search/"
     cta-url="../../pages/apply-now/"
     cta-text="Apply Now">
     <a slot="logo" href="../../pages/">
@@ -1435,7 +1471,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       <a href="https://admissions.umd.edu/visit"><span>Visit UMD</span></a>
       <a href="../../pages/apply-now/"><span>Apply Now</span></a>
       <a href="https://admissions.umd.edu/connect"><span>Connect</span></a>
-      <a href="https://admissions.umd.edu/search"><span>Search</span></a>
+      <a href="../../pages/search/"><span>Search</span></a>
     </div>
     <div slot="children-slides">
       <div data-parent-ref="academics" data-active>
@@ -1752,7 +1788,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
             ' <span class="pf-count umd-sans-smaller">(' + o.count + ')</span></span></label>';
         }).join('');
         var more = long
-          ? '<span class="umd-pill-list pf-more-cluster">' +
+          ? '<span class="umd-text-cluster-pill pf-more-cluster">' +
             '<button type="button" class="pf-more" aria-expanded="false" aria-controls="pf-set-' + key + '">' +
             'Show all ' + opts.length + '</button></span>'
           : '';
@@ -1833,7 +1869,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       if (!items.length) { pillsHost.hidden = true; pillsHost.innerHTML = ''; return; }
       pillsHost.hidden = false;
       pillsHost.innerHTML = '<span class="pf-pills-label">Filtered by:</span>' +
-        '<span class="umd-pill-list pf-pill-cluster">' +
+        '<span class="umd-text-cluster-pill pf-pill-cluster">' +
         items.map(function (it) {
           return '<button type="button" class="pf-pill" data-k="' + it.k + '" data-v="' +
             esc(it.v) + '"><span>' + esc(it.label) +

@@ -764,6 +764,16 @@
       padding-bottom: 24px;
       border-bottom: 1px solid #d0d0d0;
     }
+    /* The list owns its rules. When the items are umd-element-card
+       [data-display="list"], the component ALSO puts border-top:1px #E6E6E6 +
+       padding-top:24px on every sibling after the first; that border lands
+       directly against this one's border-bottom and the pair renders as a single
+       doubled 2px rule in two greys. Zero the component's. Specificity has to
+       clear the component rule's 0,2,2 — hence the tag names. */
+    .umd-filter-list > umd-element-card.umd-filter-item
+      + umd-element-card.umd-filter-item {
+      border-top: 0;
+    }
     .umd-filter-list > .umd-filter-item + .umd-filter-item {
       padding-top: 24px;
     }
@@ -775,6 +785,32 @@
       padding-top: 0;
     }
     .umd-filter-item[hidden] { display: none !important; }
+
+
+    /* ============================================================
+       24. PILL LIST ANCHOR COLOR — upstream gap-fill
+
+       element.min.css styles .umd-text-cluster-pill (deprecated alias
+       .umd-pill-list) with a chip ground, box model, 12px Interstate and a
+       #FFD200 hover on <a> children — but the LIGHT variant never declares
+       `color`, so an anchor chip falls through to the browser's default
+       blue/purple and keeps its UA underline. The DARK variant DOES declare
+       one (color:#FFFFFF on the child, #000000 on hover), so this is an
+       asymmetry in the package, not an implied black.
+
+       Same shape as §11: upstream styles a wrapper that this composition
+       does not use, and a bare <a> is left unstyled. Loads after the CDN
+       bundles, so equal specificity is enough; the tag selector adds one
+       anyway. Scoped to the light class names, so the dark variant's white
+       is untouched.
+
+       RETIRE THIS when composePill()'s light branch gains
+       `color: color.black` — packages/styles/source/element/text/cluster.ts.
+       ============================================================ */
+    :is(.umd-text-cluster-pill, .umd-pill-list) > a {
+      color: #000000;
+      text-decoration: none;
+    }
   </style>
 
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@1.19.5/dist/cdn.js"></script>
@@ -1053,9 +1089,16 @@
        gives the first child flex:1 0 auto, so the trailing rule fills */
     #cal-filters .umd-text-line-trailing-light { background-color:var(--umd-color-gray-lighter); }
 
+    /* Box model and colour only -- type comes from .umd-sans-smaller on the
+       button itself. This rule used to carry `font:inherit; font-size:14px`,
+       which left the button on the browser's default face (a <button> does
+       not inherit font-family unless told to, and `inherit` here resolved to
+       the form, which sets none) AND outranked any umd-sans-* class the
+       button might carry, at 1,1,1 against 0,1,0. Same treatment as the
+       representatives filter band. */
     #cal-filters button[type="reset"] {
       background:none; border:0; padding:0; cursor:pointer; color:var(--umd-color-gray-darker);
-      font:inherit; font-size:14px; white-space:nowrap;
+      white-space:nowrap;
     }
 
     /* the DS select wrapper supplies the white box and chevron; the select
@@ -1064,7 +1107,7 @@
 
     #cal-filters select:focus-visible { outline:2px solid var(--umd-color-red); outline-offset:-2px; }
 
-    /* active-filter pills use the DS .umd-pill-list chip (var(--umd-color-gray-lightest), 12px);
+    /* active-filter pills use the DS .umd-text-cluster-pill chip (var(--umd-color-gray-lightest), 12px);
        neutralize its wrapping-margin hack and use flex gap instead. */
     /* 32px below, matching the band's own gap above, so the pill row sits in
        its own band of space rather than crowding the month line under it */
@@ -1077,12 +1120,12 @@
 
     .pf-pills-label { font-weight:700; margin-right:4px; }
 
-    .pf-pill-cluster.umd-pill-list { margin-top:0; display:inline-flex; flex-wrap:wrap; gap:8px; }
+    .pf-pill-cluster.umd-text-cluster-pill { margin-top:0; display:inline-flex; flex-wrap:wrap; gap:8px; }
 
-    .pf-pills .umd-pill-list > * { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
+    .pf-pills .umd-text-cluster-pill > * { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
 
-    .pf-pills .umd-pill-list > button:hover,
-    .pf-pills .umd-pill-list > button:focus-visible { background-color:var(--umd-color-gold); }
+    .pf-pills .umd-text-cluster-pill > button:hover,
+    .pf-pills .umd-text-cluster-pill > button:focus-visible { background-color:var(--umd-color-gold); }
 
     .pf-clear {
       background:none; border:0; padding:0 0 0 6px; cursor:pointer; color:var(--umd-color-black);
@@ -1605,7 +1648,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <umd-element-navigation-header
     sticky
     class="umd-layout-space-horizontal-full"
-    search-url="https://admissions.umd.edu/search"
+    search-url="../../pages/search/"
     cta-url="../../pages/apply-now/"
     cta-text="Apply Now">
     <a slot="logo" href="../../pages/">
@@ -1722,7 +1765,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       <a href="https://admissions.umd.edu/visit"><span>Visit UMD</span></a>
       <a href="../../pages/apply-now/"><span>Apply Now</span></a>
       <a href="https://admissions.umd.edu/connect"><span>Connect</span></a>
-      <a href="https://admissions.umd.edu/search"><span>Search</span></a>
+      <a href="../../pages/search/"><span>Search</span></a>
     </div>
     <div slot="children-slides">
       <div data-parent-ref="academics">
@@ -1762,15 +1805,20 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </umd-element-navigation-header>
   <!-- SHARED:header:END -->
 
-  <!-- HERO — minimal, dark theme.
-       Headline only: the live calendar page carries a breadcrumb and an <h1>
-       and nothing else. An earlier revision added a standard background hero
-       with a supporting paragraph and a "Plan Your Visit" CTA; both were
-       invented here, not taken from the source, and are gone. -->
+  <!-- HERO — background, small, centered. Matches the section landing
+       pages and pages/search/. Headline only: the live calendar page
+       carries a breadcrumb and an <h1> and nothing else. An earlier
+       revision added a supporting paragraph and a "Plan Your Visit"
+       CTA; both were invented here, not taken from the source, and are
+       gone. The image is shared with the search page on purpose --
+       both are utility pages, and the motion-blurred crowd around a
+       still Testudo reads as time passing on one and as everything on
+       the site moving past on the other. -->
   <section class="umd-layout-vertical-landing">
-    <umd-element-hero-minimal data-theme="dark">
+    <umd-element-hero data-layout-height="small" data-layout-text="center">
+      <img slot="image" src="../../images/calendar/blurry-testudo-FirstDayofClass_08262024_DS_2384_DAM.webp" alt="Students streaming past the Testudo statue outside McKeldin Library" />
       <h1 slot="headline">Calendar</h1>
-    </umd-element-hero-minimal>
+    </umd-element-hero>
   </section>
 
   <!-- EVENTS EXPLORER — control bar, filter band, list or month grid -->
@@ -1782,7 +1830,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 
         <div class="umd-layout-grid-inline-stretch">
           <h2 class="umd-text-line-trailing-light"><span>Filter Events</span></h2>
-          <button type="reset" class="umd-animation-line-slide-graydark-red">
+          <button type="reset" class="umd-sans-smaller umd-animation-line-slide-graydark-red">
             <span aria-hidden="true">Clear filters</span>
             <span class="sr-only">Clear all filters</span>
           </button>
@@ -2341,7 +2389,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       if (!items.length) { pillsHost.hidden = true; pillsHost.innerHTML = ''; return; }
       pillsHost.hidden = false;
       pillsHost.innerHTML = '<span class="pf-pills-label">Filtered by:</span>' +
-        '<span class="umd-pill-list pf-pill-cluster">' +
+        '<span class="umd-text-cluster-pill pf-pill-cluster">' +
         items.map(function (it) {
           return '<button type="button" class="pf-pill" data-k="' + it.k + '"><span>' +
             esc(it.label) + ' <span aria-hidden="true">×</span></span></button>';

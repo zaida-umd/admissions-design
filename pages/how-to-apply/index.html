@@ -318,13 +318,16 @@
                     > a.umd-sans-smaller (or button for dropdowns)
        - Dropdown: sibling div.umd-shell-utility-links[aria-hidden] panel
 
-       TWO LAYERS — keep them separate:
+       THREE LAYERS — keep them separate:
        A. BASE (unscoped) — the reusable .umd-shell-utility-item pattern.
           Used in the nav-header utility slot AND reused in pathway /
           banner-promo / section-intro action slots (RULES.md §5). These
           rules MUST stay unscoped or the reuse renders unstyled.
        B. NAV-HEADER (scoped) — overrides the shadow ::slotted(*) gap:24px
           and adds dropdown anchoring + panel. Only meaningful in the slot.
+       C. FLAT LINKS (scoped, gated) — bare <a> children of the slot, which
+          layer A never matches because every one of its selectors goes
+          through .umd-shell-utility-item.
        ============================================================ */
 
     /* ---- A. BASE: reusable shell-item pattern (do NOT scope) ---- */
@@ -349,9 +352,51 @@
 
     /* ---- B. NAV-HEADER: scoped to the utility-navigation slot ---- */
     /* Override the shadow ::slotted(*) gap:24px (the wrapper margins above
-       handle item spacing in the shell pattern). */
-    umd-element-navigation-header div[slot="utility-navigation"] {
+       handle item spacing in the shell pattern).
+
+       GATED ON :has(.umd-shell-utility-item) — this reset is ONLY correct for the
+       shell pattern, where each item supplies its own 16+1+16px margin/border
+       separator. A slot holding plain <a> children has no such margins, so an
+       unconditional `gap: 0` collapsed them into a single run-on string of links.
+       The shadow's own gap:24px is the right default there, so leave it alone.
+       Projects using flat links then need no spacing override at all — only link
+       colour/decoration, which layer C below now supplies. */
+    umd-element-navigation-header div[slot="utility-navigation"]:has(.umd-shell-utility-item) {
       gap: 0;
+    }
+
+    /* ---- C. FLAT LINKS: bare <a> children of the utility slot ---- */
+    /* WHY THIS EXISTS. Layer A styles `.umd-shell-utility-item a` — every one of
+       its selectors runs through that wrapper class. A slot holding plain <a>
+       children matches NONE of it, and the component's own shadow ::slotted(*)
+       reaches only the slotted div, never its descendants. So a bare <a> renders
+       browser-default blue-and-underlined, on a white header, with no error.
+
+       That is not an edge case: TEMPLATE.html's own utility-navigation example is
+       bare <a>, so it is the pattern most pages are built from. Before this layer
+       existed the gap was noted in the comment above and left open, and every
+       project rediscovered it and hand-wrote the same override in its own CSS
+       (admissions-design/shared/chrome.css is one such copy). Fixing it here means
+       every page inlining critical.css gets it for free.
+
+       GATED with :not(:has(...)) — the exact mirror of layer B's gate — so these
+       rules never touch the shell pattern, where layer A already owns the anchors
+       and the wrapper supplies its own separators. The two patterns stay disjoint.
+
+       No `gap` is set: the shadow's own gap:24px is correct for flat links, and
+       layer B deliberately leaves it alone. */
+    umd-element-navigation-header div[slot="utility-navigation"]:not(:has(.umd-shell-utility-item)) a {
+      color: #242424;
+      font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.25;
+      text-decoration: none;
+      transition: color 0.3s ease-in-out;
+    }
+    umd-element-navigation-header div[slot="utility-navigation"]:not(:has(.umd-shell-utility-item)) a:hover,
+    umd-element-navigation-header div[slot="utility-navigation"]:not(:has(.umd-shell-utility-item)) a:focus {
+      color: #E21833;
     }
     umd-element-navigation-header div[slot="utility-navigation"] .umd-shell-utility-item {
       position: relative;
@@ -719,6 +764,16 @@
       padding-bottom: 24px;
       border-bottom: 1px solid #d0d0d0;
     }
+    /* The list owns its rules. When the items are umd-element-card
+       [data-display="list"], the component ALSO puts border-top:1px #E6E6E6 +
+       padding-top:24px on every sibling after the first; that border lands
+       directly against this one's border-bottom and the pair renders as a single
+       doubled 2px rule in two greys. Zero the component's. Specificity has to
+       clear the component rule's 0,2,2 — hence the tag names. */
+    .umd-filter-list > umd-element-card.umd-filter-item
+      + umd-element-card.umd-filter-item {
+      border-top: 0;
+    }
     .umd-filter-list > .umd-filter-item + .umd-filter-item {
       padding-top: 24px;
     }
@@ -730,6 +785,32 @@
       padding-top: 0;
     }
     .umd-filter-item[hidden] { display: none !important; }
+
+
+    /* ============================================================
+       24. PILL LIST ANCHOR COLOR — upstream gap-fill
+
+       element.min.css styles .umd-text-cluster-pill (deprecated alias
+       .umd-pill-list) with a chip ground, box model, 12px Interstate and a
+       #FFD200 hover on <a> children — but the LIGHT variant never declares
+       `color`, so an anchor chip falls through to the browser's default
+       blue/purple and keeps its UA underline. The DARK variant DOES declare
+       one (color:#FFFFFF on the child, #000000 on hover), so this is an
+       asymmetry in the package, not an implied black.
+
+       Same shape as §11: upstream styles a wrapper that this composition
+       does not use, and a bare <a> is left unstyled. Loads after the CDN
+       bundles, so equal specificity is enough; the tag selector adds one
+       anyway. Scoped to the light class names, so the dark variant's white
+       is untouched.
+
+       RETIRE THIS when composePill()'s light branch gains
+       `color: color.black` — packages/styles/source/element/text/cluster.ts.
+       ============================================================ */
+    :is(.umd-text-cluster-pill, .umd-pill-list) > a {
+      color: #000000;
+      text-decoration: none;
+    }
   </style>
 
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@1.19.5/dist/cdn.js"></script>
@@ -1106,7 +1187,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <umd-element-navigation-header
     sticky
     class="umd-layout-space-horizontal-full"
-    search-url="https://admissions.umd.edu/search"
+    search-url="../../pages/search/"
     cta-url="../../pages/apply-now/"
     cta-text="Apply Now">
     <a slot="logo" href="../../pages/">
@@ -1223,7 +1304,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       <a href="https://admissions.umd.edu/visit"><span>Visit UMD</span></a>
       <a href="../../pages/apply-now/"><span>Apply Now</span></a>
       <a href="https://admissions.umd.edu/connect"><span>Connect</span></a>
-      <a href="https://admissions.umd.edu/search"><span>Search</span></a>
+      <a href="../../pages/search/"><span>Search</span></a>
     </div>
     <div slot="children-slides">
       <div data-parent-ref="academics">
