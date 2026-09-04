@@ -80,7 +80,7 @@ The listing container is `#umdrn-search`. Two `<form>`s exist: the REFINE rail (
   <div class="umdrn-news-results-loader"><span class="umd-animation-loader-dots"></span></div>
 
   <!-- active-filter pills, unhidden when filters are set -->
-  <div id="umdrn-results-filters" class="umd-pill-list umdrn-news-filtered-by" hidden></div>
+  <div id="umdrn-results-filters" class="umd-text-cluster-pill umdrn-news-filtered-by" hidden></div>
 
   <p id="umdrn-experts-empty" class="umdrn-news-empty">Loading…</p>
 

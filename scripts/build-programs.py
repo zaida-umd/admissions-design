@@ -216,14 +216,14 @@ BODY = r'''  </style>
        rather than a nested scrollbar (see buildGroups) */
     .pf-body fieldset.is-collapsed .pf-extra { display:none; }
 
-    /* the toggle reuses the DS .umd-pill-list chip, same as the active-filter
+    /* the toggle reuses the DS .umd-text-cluster-pill chip, same as the active-filter
        pills above; neutralize its wrapping-margin hack and set our own offset. */
-    .pf-more-cluster.umd-pill-list { display:inline-flex; margin-top:8px; }
+    .pf-more-cluster.umd-text-cluster-pill { display:inline-flex; margin-top:8px; }
 
-    .pf-more-cluster.umd-pill-list > .pf-more { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
+    .pf-more-cluster.umd-text-cluster-pill > .pf-more { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
 
-    .pf-more-cluster.umd-pill-list > .pf-more:hover,
-    .pf-more-cluster.umd-pill-list > .pf-more:focus-visible { background-color:var(--umd-color-gold); }
+    .pf-more-cluster.umd-text-cluster-pill > .pf-more:hover,
+    .pf-more-cluster.umd-text-cluster-pill > .pf-more:focus-visible { background-color:var(--umd-color-gold); }
 
     /* option rows use the DS .umd-field-checkbox-wrapper (font-weight:400 — the
        DS-native counter to the global label{font-weight:700}
@@ -252,14 +252,14 @@ BODY = r'''  </style>
 
     .pf-pills-label { font-weight:700; margin-right:4px; }
 
-    /* active-filter pills use the DS .umd-pill-list chip (#FAFAFA, 12px);
+    /* active-filter pills use the DS .umd-text-cluster-pill chip (#FAFAFA, 12px);
        neutralize its wrapping-margin hack and use flex gap instead. */
-    .pf-pill-cluster.umd-pill-list { margin-top:0; display:inline-flex; flex-wrap:wrap; gap:8px; }
+    .pf-pill-cluster.umd-text-cluster-pill { margin-top:0; display:inline-flex; flex-wrap:wrap; gap:8px; }
 
-    .pf-pills .umd-pill-list > * { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
+    .pf-pills .umd-text-cluster-pill > * { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
 
-    .pf-pills .umd-pill-list > button:hover,
-    .pf-pills .umd-pill-list > button:focus-visible { background-color:var(--umd-color-gold); }
+    .pf-pills .umd-text-cluster-pill > button:hover,
+    .pf-pills .umd-text-cluster-pill > button:focus-visible { background-color:var(--umd-color-gold); }
 
     .pf-clear {
       background:none; border:0; padding:0 0 0 6px; cursor:pointer; color:var(--umd-color-black);
@@ -506,7 +506,7 @@ BODY = r'''  </style>
             ' <span class="pf-count umd-sans-smaller">(' + o.count + ')</span></span></label>';
         }).join('');
         var more = long
-          ? '<span class="umd-pill-list pf-more-cluster">' +
+          ? '<span class="umd-text-cluster-pill pf-more-cluster">' +
             '<button type="button" class="pf-more" aria-expanded="false" aria-controls="pf-set-' + key + '">' +
             'Show all ' + opts.length + '</button></span>'
           : '';
@@ -587,7 +587,7 @@ BODY = r'''  </style>
       if (!items.length) { pillsHost.hidden = true; pillsHost.innerHTML = ''; return; }
       pillsHost.hidden = false;
       pillsHost.innerHTML = '<span class="pf-pills-label">Filtered by:</span>' +
-        '<span class="umd-pill-list pf-pill-cluster">' +
+        '<span class="umd-text-cluster-pill pf-pill-cluster">' +
         items.map(function (it) {
           return '<button type="button" class="pf-pill" data-k="' + it.k + '" data-v="' +
             esc(it.v) + '"><span>' + esc(it.label) +

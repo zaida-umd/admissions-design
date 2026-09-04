@@ -327,7 +327,7 @@ PAGE_CSS = '''
       background-image: linear-gradient(var(--umd-color-red), var(--umd-color-red));
       background-size: 100% 1px;
     }
-    /* Program-type labels use the DS pill geometry (.umd-pill-list: 12px,
+    /* Program-type labels use the DS pill geometry (.umd-text-cluster-pill: 12px,
        padding 8px 12px, #FAFAFA, 8px rhythm) with an added outline. Children
        are <span>, not <a> — the DS hover-yellow rule is scoped to a:hover, so
        spans stay inert and read as labels rather than controls. No per-type
@@ -397,7 +397,7 @@ for c in colleges:
                 if m['url'] else name)
         items.append(f'            <li class="cs-major">\n'
                      f'              <span class="cs-major-name umd-sans-small">{link}</span>\n'
-                     f'              <span class="cs-types umd-pill-list">{types}</span>\n'
+                     f'              <span class="cs-types umd-text-cluster-pill">{types}</span>\n'
                      f'            </li>')
     items = '\n'.join(items)
 
