@@ -420,9 +420,16 @@ BODY = r'''  </style>
        gives the first child flex:1 0 auto, so the trailing rule fills */
     #cal-filters .umd-text-line-trailing-light { background-color:var(--umd-color-gray-lighter); }
 
+    /* Box model and colour only -- type comes from .umd-sans-smaller on the
+       button itself. This rule used to carry `font:inherit; font-size:14px`,
+       which left the button on the browser's default face (a <button> does
+       not inherit font-family unless told to, and `inherit` here resolved to
+       the form, which sets none) AND outranked any umd-sans-* class the
+       button might carry, at 1,1,1 against 0,1,0. Same treatment as the
+       representatives filter band. */
     #cal-filters button[type="reset"] {
       background:none; border:0; padding:0; cursor:pointer; color:var(--umd-color-gray-darker);
-      font:inherit; font-size:14px; white-space:nowrap;
+      white-space:nowrap;
     }
 
     /* the DS select wrapper supplies the white box and chevron; the select
@@ -649,15 +656,20 @@ BODY = r'''  </style>
 
 @@CHROME:header@@
 
-  <!-- HERO — minimal, dark theme.
-       Headline only: the live calendar page carries a breadcrumb and an <h1>
-       and nothing else. An earlier revision added a standard background hero
-       with a supporting paragraph and a "Plan Your Visit" CTA; both were
-       invented here, not taken from the source, and are gone. -->
+  <!-- HERO — background, small, centered. Matches the section landing
+       pages and pages/search/. Headline only: the live calendar page
+       carries a breadcrumb and an <h1> and nothing else. An earlier
+       revision added a supporting paragraph and a "Plan Your Visit"
+       CTA; both were invented here, not taken from the source, and are
+       gone. The image is shared with the search page on purpose --
+       both are utility pages, and the motion-blurred crowd around a
+       still Testudo reads as time passing on one and as everything on
+       the site moving past on the other. -->
   <section class="umd-layout-vertical-landing">
-    <umd-element-hero-minimal data-theme="dark">
+    <umd-element-hero data-layout-height="small" data-layout-text="center">
+      <img slot="image" src="../../images/calendar/blurry-testudo-FirstDayofClass_08262024_DS_2384_DAM.webp" alt="Students streaming past the Testudo statue outside McKeldin Library" />
       <h1 slot="headline">Calendar</h1>
-    </umd-element-hero-minimal>
+    </umd-element-hero>
   </section>
 
   <!-- EVENTS EXPLORER — control bar, filter band, list or month grid -->
@@ -669,7 +681,7 @@ BODY = r'''  </style>
 
         <div class="umd-layout-grid-inline-stretch">
           <h2 class="umd-text-line-trailing-light"><span>Filter Events</span></h2>
-          <button type="reset" class="umd-animation-line-slide-graydark-red">
+          <button type="reset" class="umd-sans-smaller umd-animation-line-slide-graydark-red">
             <span aria-hidden="true">Clear filters</span>
             <span class="sr-only">Clear all filters</span>
           </button>
