@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <title>Search &#8212; Undergraduate Admissions | University of Maryland</title>
+
+  <!-- ============================================================
+       UMD Critical CSS — Hybrid CDN + Local
+       MUST precede cdn.js. If cdn.js loads first, elements upgrade
+       before :defined rules exist and container-type never gets set.
+
+       Load order:
+         <link> CDN bundles → <style> local subset → <script> cdn.js
+
+       Browsers block on stylesheet fetches before parsing the script
+       tag, so all CSS — both upstream and local — applies before
+       custom elements upgrade.
+
+       SOURCE OF TRUTH: styles/critical.css
+       The inline <style> block is a verbatim copy of styles/critical.css.
+       When updating, edit styles/critical.css first, then copy here.
+       See REQUIRED-CSS.md for what each rule does and why.
+  ============================================================ -->
+  <link rel="stylesheet" href="https://unpkg.com/@universityofmaryland/web-styles-library@1.8.16/css/font-faces.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@universityofmaryland/web-styles-library@1.8.16/css/tokens.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@universityofmaryland/web-styles-library@1.8.16/css/base.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@universityofmaryland/web-styles-library@1.8.16/css/typography.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@universityofmaryland/web-styles-library@1.8.16/css/element.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@universityofmaryland/web-styles-library@1.8.16/css/web-components.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@universityofmaryland/web-styles-library@1.8.16/css/layout.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@universityofmaryland/web-styles-library@1.8.16/css/animation.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@universityofmaryland/web-styles-library@1.8.16/css/accessibility.min.css">
+  <style>
+    /* ============================================================
+       1. COMPONENT REGISTRATION GAP-FILLS
+       Re-add :defined rules for components missing from upstream
+       web-components.min.css. As those land upstream, drop these.
+       ============================================================ */
+
+    /* umd-element-utility-header — present on every page (band above the
+       nav header). Not in upstream bundle as of v1.8.11. */
+    umd-element-utility-header:not(:defined) { content-visibility: hidden; }
+    umd-element-utility-header { display: block; container-type: normal; }
+
+    /* umd-element-carousel* — RETIRED (upstream since web-styles-library@1.8.14): all six
+       variants (plus new umd-element-carousel-people) now ship in upstream
+       web-components.min.css with content-visibility: auto + min-height
+       placeholder sizing. Do NOT re-add — a local content-visibility: hidden
+       loads after the CDN link at equal specificity, overrides the upstream
+       placeholder, and reintroduces layout shift. */
+
+    /* umd-layout-image-expand — :not(:defined) hiding + placeholder sizing
+       landed upstream in v1.8.14. display:block and width:100% remain
+       project-specific (collapses without them; upstream sets neither). */
+    umd-layout-image-expand {
+      display: block;
+      container-type: inline-size;
+      width: 100%;
+    }
+
+    /* Project-specific spacing for breadcrumb (not a default in upstream). */
+    umd-element-breadcrumb:defined { margin-top: 16px; }
+
+
+    /* ============================================================
+       2. WATERMARK DECORATION
+       ============================================================ */
+    :is(.umd-text-decoration-watermark, .umd-watermark, .umd-watermark-dark) > * {
+      position: absolute;
+      top: 20px;
+      left: -2%;
+      color: #f1f1f1;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: min(calc(44px + 13vw), 240px);
+      line-height: 0;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+    :is(.umd-text-decoration-watermark, .umd-watermark):not(.umd-watermark-dark) > * {
+      opacity: 0.6;
+      z-index: -1;
+    }
+    .umd-watermark-dark > * {
+      opacity: 0.12;
+      z-index: inherit;
+    }
+    @keyframes slide-in-from-left {
+      from { transform: translate(-15vw); }
+      to   { transform: translate(0); }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      @supports (animation-timeline: scroll()) {
+        :is(.umd-text-decoration-watermark, .umd-watermark, .umd-watermark-dark) > * {
+          animation: slide-in-from-left forwards;
+          animation-timeline: view();
+          animation-range-start: 0;
+          animation-range-end: 100vh;
+          transform: translate(-15vw);
+        }
+      }
+    }
+
+
+    /* ============================================================
+       3. LAYOUT AUGMENTATIONS
+       Extra properties on upstream layout classes that layout.min.css
+       doesn't include. These cascade over the upstream rules.
+       ============================================================ */
+
+    /* Upstream sets max-width/padding correctly. These extra properties are
+       required for watermark positioning and the internal @container query
+       used by umd-element-section-intro-wide. */
+    .umd-layout-space-horizontal-larger {
+      position: relative;
+      container-type: inline-size;
+      isolation: isolate;
+    }
+
+    /* Upstream omits align-items and flex-shrink on the columns-left layout.
+       align-items: flex-start prevents variable-height sidebar from stretching;
+       flex-shrink: 0 keeps the fixed 242px sidebar width under constraint.
+       Breakpoint matches upstream desktop.min (1024px) after DSYS-3063 fix —
+       sidebar width/margin moved from tablet.min (768px) to desktop.min. */
+    @media (min-width: 1024px) {
+      .umd-layout-space-columns-left { align-items: flex-start; }
+      .umd-layout-space-columns-left > *:first-child { flex-shrink: 0; }
+    }
+
+
+    /* ============================================================
+       4. BACKGROUND-FULL-DARK BUG FIX
+       layout.min.css serializes the highDef breakpoint as
+       @media([object Object]) — ignored by browsers — because
+       background/full.ts:42 uses media.queries.highDef (the whole
+       object) instead of media.queries.highDef.min. This rule
+       cascades over the broken upstream with the correct breakpoint.
+       ============================================================ */
+    .umd-layout-background-full-dark {
+      background-color: #000000;
+      padding: 48px 0;
+    }
+    @media (min-width: 768px) {
+      .umd-layout-background-full-dark { padding: 80px 0; }
+    }
+    @media (min-width: 1200px) {
+      .umd-layout-background-full-dark { padding: 104px 0; }
+    }
+
+
+    /* ============================================================
+       5. MASONRY SECTION-INTRO COMPANION
+       The base .umd-layout-grid-masonry class is provided by layout.min.css (CDN).
+       This rule compensates for masonry's negative top margin when a section
+       intro immediately precedes it — layout.min.css does not include this fix.
+       ============================================================ */
+    @media (min-width: 768px) {
+      umd-element-section-intro + .umd-layout-grid-masonry,
+      umd-element-section-intro-wide + .umd-layout-grid-masonry { padding-top: 32px; }
+    }
+    @media (min-width: 1024px) {
+      umd-element-section-intro + .umd-layout-grid-masonry,
+      umd-element-section-intro-wide + .umd-layout-grid-masonry { padding-top: 40px; }
+    }
+
+
+    /* ============================================================
+       6. COLOR UTILITIES — not in upstream tokens or typography bundles
+       ============================================================ */
+    .text-black { color: #000; }
+    /* .umd-text-rich-advanced * (§7) paints every descendant #454545 at the same
+       (0,1,0) specificity as this utility but later in the file, so a bare
+       .text-black loses inside editorial body copy. Scope it so it wins. */
+    .umd-text-rich-advanced .text-black { color: #000; }
+    .text-white { color: #ffffff; }
+
+
+    /* ============================================================
+       7. RICH TEXT ADVANCED — editorial body copy
+       Light and dark variants. 18px/1.5em with link hover styles.
+
+       NOTE: element.min.css (linked in TEMPLATE.html) now ships
+       .umd-text-rich-advanced with the same base sizing and link
+       animation. This section is kept as an intentional DELTA:
+       upstream only colors list content #454545; we force it on
+       all descendants. Do not delete without visual verification.
+       ============================================================ */
+
+    /* Light variant */
+    .umd-text-rich-advanced {
+      font-size: 18px;
+      line-height: 1.5em;
+    }
+    .umd-text-rich-advanced * {
+      color: #454545;
+    }
+    .umd-text-rich-advanced > * {
+      font-size: 18px;
+      margin-top: 24px;
+    }
+    .umd-text-rich-advanced > *:first-child {
+      margin-top: 0;
+    }
+    .umd-text-rich-advanced a {
+      text-decoration: none;
+      color: #000000;
+      background-image: linear-gradient(#000000, #000000);
+      position: relative;
+      background-position: left calc(100% - 1px);
+      background-repeat: no-repeat;
+      background-size: 100% 1px;
+      transition: color 0.5s, background-size 0.5s, background-image 0.5s, background-position 0.5s;
+    }
+    .umd-text-rich-advanced a:hover,
+    .umd-text-rich-advanced a:focus {
+      background-image: linear-gradient(#E21833, #E21833);
+    }
+
+    /* Dark variant */
+    .umd-text-rich-advanced-dark {
+      font-size: 18px;
+      line-height: 1.5em;
+    }
+    .umd-text-rich-advanced-dark p,
+    .umd-text-rich-advanced-dark li { color: #ffffff; }
+    .umd-text-rich-advanced-dark a {
+      text-decoration: none;
+      color: #ffffff;
+      background-image: linear-gradient(#ffffff, #ffffff);
+      position: relative;
+      background-position: left calc(100% - 1px);
+      background-repeat: no-repeat;
+      background-size: 100% 1px;
+      transition: color 0.5s, background-size 0.5s, background-image 0.5s, background-position 0.5s;
+    }
+    .umd-text-rich-advanced-dark a:hover,
+    .umd-text-rich-advanced-dark a:focus {
+      background-image: linear-gradient(#FFD200, #FFD200);
+    }
+
+
+    /* ============================================================
+       8. INTERIOR PAGE LAYOUT UTILITIES
+       ============================================================ */
+
+    /* Content column max-width (Tailwind utility) */
+    .max-w-\[800px\] { max-width: 800px; }
+
+
+    /* ============================================================
+       9. IMAGE-EXPAND CONTENT UTILITIES
+       Classes for div[slot="content"] inside umd-layout-image-expand.
+       ============================================================ */
+    .max-w-\[480px\] { max-width: 480px; }
+    .w-full          { width: 100%; }
+    .block           { display: block; }
+    .mr-auto         { margin-right: auto; }
+    .ml-auto         { margin-left: auto; }
+    .pl-md           { padding-left: 24px; }
+
+    :is(.umd-text-line-adjustent, .umd-adjacent-line-text) { position: relative; }
+    :is(.umd-text-line-adjustent, .umd-adjacent-line-text)::before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background-color: #E21833;
+      left: -24px;
+    }
+
+    /* Body copy on dark/image backgrounds — white text, animated underline links */
+    .umd-text-rich-simple-large-dark {
+      font-size: 18px;
+      line-height: 1.5em;
+      color: #ffffff;
+    }
+    .umd-text-rich-simple-large-dark * { color: #ffffff; }
+    .umd-text-rich-simple-large-dark > * { font-size: 18px; margin-top: 24px; }
+    .umd-text-rich-simple-large-dark > *:first-child { margin-top: 0; }
+    .umd-text-rich-simple-large-dark a {
+      text-decoration: none;
+      color: #ffffff;
+      background-image: linear-gradient(#ffffff, #ffffff);
+      position: relative;
+      background-position: left calc(100% - 1px);
+      background-repeat: no-repeat;
+      background-size: 100% 1px;
+      transition: color 0.5s, background-size 0.5s, background-image 0.5s, background-position 0.5s;
+    }
+    .umd-text-rich-simple-large-dark a:hover,
+    .umd-text-rich-simple-large-dark a:focus {
+      background-image: linear-gradient(#FFD200, #FFD200);
+    }
+
+
+    /* ============================================================
+       10. STICKY COLUMNS UTILITIES
+       Spacing tokens for slot content inside umd-element-sticky-columns.
+       ============================================================ */
+    .mb-md { margin-bottom: 24px; }
+    .mb-sm { margin-bottom: 16px; }
+
+
+    /* ============================================================
+       11. UTILITY NAVIGATION / SHELL-ITEM LINK STYLES
+       The shadow DOM ::slotted(*) only reaches div[slot="utility-navigation"],
+       NOT descendants — all link and separator styles must live here.
+
+       Canonical production pattern (matches umd.edu markup):
+       - Slot container: plain <div slot="utility-navigation">
+       - Each item: div.umd-shell-utility-item > div.umd-shell-utility-actions
+                    > a.umd-sans-smaller (or button for dropdowns)
+       - Dropdown: sibling div.umd-shell-utility-links[aria-hidden] panel
+
+       THREE LAYERS — keep them separate:
+       A. BASE (unscoped) — the reusable .umd-shell-utility-item pattern.
+          Used in the nav-header utility slot AND reused in pathway /
+          banner-promo / section-intro action slots (RULES.md §5). These
+          rules MUST stay unscoped or the reuse renders unstyled.
+       B. NAV-HEADER (scoped) — overrides the shadow ::slotted(*) gap:24px
+          and adds dropdown anchoring + panel. Only meaningful in the slot.
+       C. FLAT LINKS (scoped, gated) — bare <a> children of the slot, which
+          layer A never matches because every one of its selectors goes
+          through .umd-shell-utility-item.
+       ============================================================ */
+
+    /* ---- A. BASE: reusable shell-item pattern (do NOT scope) ---- */
+    .umd-shell-utility-item .umd-shell-utility-actions {
+      align-items: center;
+      display: flex;
+      gap: 4px;
+    }
+    .umd-shell-utility-item:not(:last-child) .umd-shell-utility-actions {
+      border-right: 1px solid #E6E6E6;
+      margin-right: 16px;
+      padding-right: 16px;
+    }
+    .umd-shell-utility-item a {
+      color: #242424;
+      text-decoration: none;
+    }
+    .umd-shell-utility-item a:hover,
+    .umd-shell-utility-item a:focus {
+      color: #E21833;
+    }
+
+    /* ---- B. NAV-HEADER: scoped to the utility-navigation slot ---- */
+    /* Override the shadow ::slotted(*) gap:24px (the wrapper margins above
+       handle item spacing in the shell pattern).
+
+       GATED ON :has(.umd-shell-utility-item) — this reset is ONLY correct for the
+       shell pattern, where each item supplies its own 16+1+16px margin/border
+       separator. A slot holding plain <a> children has no such margins, so an
+       unconditional `gap: 0` collapsed them into a single run-on string of links.
+       The shadow's own gap:24px is the right default there, so leave it alone.
+       Projects using flat links then need no spacing override at all — only link
+       colour/decoration, which layer C below now supplies. */
+    umd-element-navigation-header div[slot="utility-navigation"]:has(.umd-shell-utility-item) {
+      gap: 0;
+    }
+
+    /* ---- C. FLAT LINKS: bare <a> children of the utility slot ---- */
+    /* WHY THIS EXISTS. Layer A styles `.umd-shell-utility-item a` — every one of
+       its selectors runs through that wrapper class. A slot holding plain <a>
+       children matches NONE of it, and the component's own shadow ::slotted(*)
+       reaches only the slotted div, never its descendants. So a bare <a> renders
+       browser-default blue-and-underlined, on a white header, with no error.
+
+       That is not an edge case: TEMPLATE.html's own utility-navigation example is
+       bare <a>, so it is the pattern most pages are built from. Before this layer
+       existed the gap was noted in the comment above and left open, and every
+       project rediscovered it and hand-wrote the same override in its own CSS
+       (admissions-design/shared/chrome.css is one such copy). Fixing it here means
+       every page inlining critical.css gets it for free.
+
+       GATED with :not(:has(...)) — the exact mirror of layer B's gate — so these
+       rules never touch the shell pattern, where layer A already owns the anchors
+       and the wrapper supplies its own separators. The two patterns stay disjoint.
+
+       No `gap` is set: the shadow's own gap:24px is correct for flat links, and
+       layer B deliberately leaves it alone. */
+    umd-element-navigation-header div[slot="utility-navigation"]:not(:has(.umd-shell-utility-item)) a {
+      color: #242424;
+      font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.25;
+      text-decoration: none;
+      transition: color 0.3s ease-in-out;
+    }
+    umd-element-navigation-header div[slot="utility-navigation"]:not(:has(.umd-shell-utility-item)) a:hover,
+    umd-element-navigation-header div[slot="utility-navigation"]:not(:has(.umd-shell-utility-item)) a:focus {
+      color: #E21833;
+    }
+    umd-element-navigation-header div[slot="utility-navigation"] .umd-shell-utility-item {
+      position: relative;
+      z-index: 99999;
+    }
+    umd-element-navigation-header div[slot="utility-navigation"] .umd-shell-utility-item button {
+      color: #242424;
+      text-decoration: none;
+    }
+    /* Dropdown panel (shown via JS toggling aria-hidden — see LAYOUT-PATTERNS.md) */
+    umd-element-navigation-header div[slot="utility-navigation"] .umd-shell-utility-item .umd-shell-utility-links {
+      display: none;
+    }
+    umd-element-navigation-header div[slot="utility-navigation"] .umd-shell-utility-item .umd-shell-utility-links > * {
+      color: #242424;
+      display: block;
+      padding: 12px;
+      text-align: right;
+      text-decoration: none;
+    }
+    umd-element-navigation-header div[slot="utility-navigation"] .umd-shell-utility-item .umd-shell-utility-links a:hover,
+    umd-element-navigation-header div[slot="utility-navigation"] .umd-shell-utility-item .umd-shell-utility-links a:focus {
+      color: #a90007;
+    }
+    umd-element-navigation-header div[slot="utility-navigation"] .umd-shell-utility-item .umd-shell-utility-links[aria-hidden="false"] {
+      align-items: flex-end;
+      background-color: #fafafa;
+      box-shadow: -1px 9px 32px -10px rgba(0, 0, 0, .19);
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      right: 0;
+      top: 16px;
+      width: 200px;
+      max-width: 80vw;
+    }
+
+
+    /* ============================================================
+       12. BANNER-PROMO STACKED ACTIONS — light-DOM column flex.
+       Pairs with the shadow-DOM injection in OVERRIDES.md so the 8px
+       gap is visible regardless of where children render.
+       ============================================================ */
+    .banner-promo-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+
+    /* ============================================================
+       13. SECTION DIVIDER — standalone <hr> utility.
+       ============================================================ */
+    .umd-text-divider {
+      border: none;
+      border-top: 1px solid #000000;
+      margin: 0 0 24px 0;
+    }
+    .umd-text-divider.dark {
+      border-top-color: #ffffff;
+    }
+
+
+    /* ============================================================
+       14. TRAILING-LINE LABEL — section eyebrow with horizontal line
+       Source: @universityofmaryland/web-styles-library: element.text.line.trailing
+
+       NOTE: element.min.css (linked in TEMPLATE.html) now ships
+       .umd-text-line-trailing / -light / -dark. This section is kept
+       as an intentional DELTA: we add font-weight: 700 (upstream
+       omits it) and use #000 for the dark background (upstream uses
+       #242424). Do not delete without visual verification.
+       ============================================================ */
+    .umd-text-line-trailing,
+    .umd-text-line-trailing-dark {
+      font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      line-height: 1.42em;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+      background-color: #ffffff;
+    }
+    .umd-text-line-trailing::before,
+    .umd-text-line-trailing-dark::before {
+      content: "";
+      position: absolute;
+      top: 9px;
+      right: 0;
+      width: 100vw;
+      height: 1px;
+      background: #000000;
+      z-index: 1;
+    }
+    .umd-text-line-trailing > span,
+    .umd-text-line-trailing-dark > span {
+      position: relative;
+      background-color: inherit;
+      padding-right: 8px;
+      z-index: 2;
+    }
+    .umd-text-line-trailing + *,
+    .umd-text-line-trailing-dark + * {
+      margin-top: 40px;
+    }
+    .umd-text-line-trailing-dark {
+      background-color: #000000;
+      color: #ffffff;
+    }
+    .umd-text-line-trailing-dark::before {
+      background: #ffffff;
+    }
+
+
+    /* ============================================================
+       15. NOTE — GRID CLASSES FROM LAYOUT.MIN.CSS (CDN)
+       All standard grid classes are provided by layout.min.css loaded
+       from CDN in the <head>. Do NOT add them here — that duplicates CSS.
+
+       Available from CDN (layout.min.css):
+         umd-layout-grid-columns-two/three/four  — no-gap at tablet+
+         umd-layout-grid-gap-stacked/two/three/four  — 32px gap at all bp
+         umd-layout-grid-gap-two  — widens to 40px at 1024px
+         umd-layout-grid-child-fill-height  — height:100% on item + child
+         umd-layout-grid-child-size-double  — grid-column: span 2 at 650px+
+           (feature 2+1+1 card grids — see LAYOUT-PATTERNS.md)
+         umd-layout-grid-inline-tablet-rows  — flex CTA row at 650px+
+         umd-layout-grid-masonry  — 2-col staggered (base CSS)
+         umd-layout-grid-offset-three  — 3-col staircase offset
+         umd-layout-grid-border-two/three/four  — bordered cell grids
+
+       Typography classes (umd-sans-*, incl. umd-sans-largest-uppercase
+       used by the sticky text+stats pattern) likewise ship from the CDN
+       typography.min.css — check that bundle before flagging one missing.
+
+       Only add grid-related CSS here when it is genuinely absent from
+       layout.min.css (e.g. shellcraft-only classes like umd-animation-grid
+       and umd-shell-person-grid-helper padding).
+       ============================================================ */
+
+
+    /* ============================================================
+       16. RETIRED — OVERLAY CARD .size-large MIN-HEIGHT
+       Now shipped verbatim by web-components.min.css (linked in
+       TEMPLATE.html): umd-element-card-overlay.size-large
+       {min-height: 320px; 560px @768px}. Section number reserved —
+       do NOT renumber later sections when retiring a rule.
+       ============================================================ */
+
+
+    /* ============================================================
+       17. TUITION & AID 2-COLUMN GRID
+       Asymmetric content split: 1.5fr / 1fr at 1024px+.
+       ============================================================ */
+    .umd-layout-grid-tuition-two {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    @media (min-width: 1024px) {
+      .umd-layout-grid-tuition-two {
+        grid-template-columns: 1.5fr 1fr;
+        gap: 80px;
+      }
+    }
+
+
+    /* ============================================================
+       18. FULL-WIDTH OUTLINE BUTTON — light-DOM utility class
+       Visually mirrors umd-element-call-to-action data-display="outline"
+       but stretches to fill its grid cell. Use when the DS web component's
+       shadow-DOM max-width:380px would fight against your layout.
+       ============================================================ */
+    .umd-action-outline-block {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 24px;
+      font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.28em;
+      text-align: center;
+      text-decoration: none;
+      background-color: #ffffff;
+      border: 1px solid #242424;
+      color: #000000;
+      transition: background 0.5s ease-in-out, border 0.5s ease-in-out, color 0.5s ease-in-out;
+    }
+    .umd-action-outline-block:hover,
+    .umd-action-outline-block:focus {
+      background-color: #242424;
+      color: #ffffff;
+    }
+    .umd-action-outline-block.dark {
+      background-color: transparent;
+      border: 1px solid #ffffff;
+      color: #ffffff;
+    }
+    .umd-action-outline-block.dark:hover,
+    .umd-action-outline-block.dark:focus {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+
+    /* ============================================================
+       19. BORDER GRID — person-grid-helper container query + padding
+       Source: umd.edu shellcraft (umdApp-release-116.css)
+       Verified from: https://umd.edu/about/university-presidents
+
+       The base umd-layout-grid-border-two/three/four grid CSS is
+       provided by layout.min.css (CDN). Only the container query
+       setup and the umd-shell-person-grid-helper responsive padding
+       are absent from layout.min.css — those come from shellcraft.
+
+       Usage: add class="umd-shell-person-grid-helper" to every
+       umd-element-person host inside a border grid.
+       ============================================================ */
+
+    /* Establishes named container for padding queries */
+    [class*="umd-layout-grid-border-two"],
+    [class*="umd-layout-grid-border-three"],
+    [class*="umd-layout-grid-border-four"] {
+      container: umd-shell-person-grid-helper / inline-size;
+    }
+
+    /* Responsive cell padding (24px → 32px → 48px) */
+    [class*="umd-layout-grid-border-two"] .umd-shell-person-grid-helper,
+    [class*="umd-layout-grid-border-three"] .umd-shell-person-grid-helper,
+    [class*="umd-layout-grid-border-four"] .umd-shell-person-grid-helper {
+      padding: 24px;
+      transition: padding 0.5s ease-in-out;
+    }
+    @container umd-shell-person-grid-helper (min-width: 650px) {
+      [class*="umd-layout-grid-border-two"] .umd-shell-person-grid-helper,
+      [class*="umd-layout-grid-border-three"] .umd-shell-person-grid-helper,
+      [class*="umd-layout-grid-border-four"] .umd-shell-person-grid-helper {
+        padding: 32px;
+      }
+    }
+    @container umd-shell-person-grid-helper (min-width: 1024px) {
+      [class*="umd-layout-grid-border-two"] .umd-shell-person-grid-helper,
+      [class*="umd-layout-grid-border-three"] .umd-shell-person-grid-helper,
+      [class*="umd-layout-grid-border-four"] .umd-shell-person-grid-helper {
+        padding: 48px;
+      }
+    }
+
+
+    /* ============================================================
+       20. RETIRED — ANIMATION GRID INITIAL STATE
+       As of animation.min.css v1.8.14, upstream guards the
+       .umd-animation-grid > * initial state (opacity: 0 +
+       translateY(50px)) AND the .umd-animation-transition-fade-bottom
+       reveal animation behind @media (prefers-reduced-motion:
+       no-preference), so reduced-motion users never get hidden
+       content — the local duplicate and its reduce-block cancellation
+       are no longer needed. The class still works: keep using
+       .umd-animation-grid on grid wrappers with scripts/
+       grid-animations.js. Section number reserved — do NOT renumber.
+       ============================================================ */
+
+
+    /* ============================================================
+       21. SLIDER OVERFLOW CONTAINMENT
+       umd-element-slider-events (and other carousel/slider components)
+       expand beyond the viewport during transitions, causing horizontal
+       scroll at the document level. overflow: hidden on the section
+       alone is not sufficient.
+
+       clip (not hidden) is intentional: overflow-x: hidden promotes
+       the element to a scroll container, which breaks scroll-driven
+       animations (animation-timeline: scroll()) and shifts
+       IntersectionObserver offsets. overflow-x: clip suppresses
+       the scroll bar without creating a scroll container.
+       ============================================================ */
+    body { overflow-x: clip; }
+
+
+    /* ============================================================
+       22. DARK → LIGHT SECTION TRANSITION GAP
+       When a full-bleed dark section (.umd-layout-background-full-dark)
+       is immediately followed by a default/light section, inject 120px
+       of white breathing room between them.
+
+       Conditional: dark-after-dark gets no extra gap — the adjacent
+       sibling selector only fires when the following section lacks the
+       dark class. Add overflow: hidden to the dark section if its
+       content bleeds into this gap.
+       ============================================================ */
+    .umd-layout-background-full-dark + section:not(.umd-layout-background-full-dark) {
+      margin-top: 120px;
+    }
+
+
+    /* ============================================================
+       23. FILTER BAND COMPANIONS — page-built pieces of the
+       filterable-listing pattern (see LAYOUT-PATTERNS.md "Filter
+       Band"). The band itself uses upstream classes
+       (umd-layout-background-highlight-light, umd-text-line-trailing-
+       light, umd-field-select-wrapper, umd-animation-line-slide-*,
+       sr-only — element/animation/accessibility bundles). Only the
+       search row, results count, and divider list below are absent
+       upstream. Behavior comes from scripts/filter-band.js.
+       ============================================================ */
+    .umd-filter-search-row {
+      display: flex;
+      align-items: stretch;
+    }
+    .umd-filter-search-row input[type="text"] {
+      flex: 1;
+      padding: 12px 16px;
+      font-family: Interstate, Helvetica, Arial, Verdana, sans-serif;
+      font-size: 16px;
+      line-height: 1.375em;
+      border: 1px solid #c0c0c0;
+      border-right: none;
+      color: #242424;
+      background: #fff;
+      min-width: 0;
+    }
+    .umd-filter-search-row input[type="text"]:focus {
+      outline: 2px solid #E21833;
+      outline-offset: 0;
+    }
+    .umd-filter-search-btn {
+      background-color: #E21833;
+      border: none;
+      cursor: pointer;
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s;
+    }
+    .umd-filter-search-btn:hover,
+    .umd-filter-search-btn:focus {
+      background-color: #a90007;
+      outline: none;
+    }
+    .umd-filter-search-btn svg {
+      fill: #fff;
+      width: 20px;
+      height: 20px;
+    }
+    .umd-filter-results-count {
+      font-family: Interstate, Helvetica, Arial, Verdana, sans-serif;
+      font-size: 14px;
+      color: #454545;
+      margin: 24px 0 0;
+    }
+
+    /* Divider list — zero-gap stack with rules between visible items */
+    .umd-filter-list {
+      gap: 0 !important;
+      margin-top: 56px;
+    }
+    .umd-filter-list > .umd-filter-item {
+      padding-bottom: 24px;
+      border-bottom: 1px solid #d0d0d0;
+    }
+    /* The list owns its rules. When the items are umd-element-card
+       [data-display="list"], the component ALSO puts border-top:1px #E6E6E6 +
+       padding-top:24px on every sibling after the first; that border lands
+       directly against this one's border-bottom and the pair renders as a single
+       doubled 2px rule in two greys. Zero the component's. Specificity has to
+       clear the component rule's 0,2,2 — hence the tag names. */
+    .umd-filter-list > umd-element-card.umd-filter-item
+      + umd-element-card.umd-filter-item {
+      border-top: 0;
+    }
+    .umd-filter-list > .umd-filter-item + .umd-filter-item {
+      padding-top: 24px;
+    }
+    .umd-filter-list > .umd-filter-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .umd-filter-list > .umd-filter-item[hidden] + .umd-filter-item {
+      padding-top: 0;
+    }
+    .umd-filter-item[hidden] { display: none !important; }
+
+
+    /* ============================================================
+       24. PILL LIST ANCHOR COLOR — upstream gap-fill
+
+       element.min.css styles .umd-text-cluster-pill (deprecated alias
+       .umd-pill-list) with a chip ground, box model, 12px Interstate and a
+       #FFD200 hover on <a> children — but the LIGHT variant never declares
+       `color`, so an anchor chip falls through to the browser's default
+       blue/purple and keeps its UA underline. The DARK variant DOES declare
+       one (color:#FFFFFF on the child, #000000 on hover), so this is an
+       asymmetry in the package, not an implied black.
+
+       Same shape as §11: upstream styles a wrapper that this composition
+       does not use, and a bare <a> is left unstyled. Loads after the CDN
+       bundles, so equal specificity is enough; the tag selector adds one
+       anyway. Scoped to the light class names, so the dark variant's white
+       is untouched.
+
+       RETIRE THIS when composePill()'s light branch gains
+       `color: color.black` — packages/styles/source/element/text/cluster.ts.
+       ============================================================ */
+    :is(.umd-text-cluster-pill, .umd-pill-list) > a {
+      color: #000000;
+      text-decoration: none;
+    }
+  </style>
+
+  <script src="https://unpkg.com/@universityofmaryland/web-components-library@1.19.5/dist/cdn.js"></script>
+
+  <style>
+    /* ============================================================
+       SEARCH PAGE
+       The band, the results count and the divider list are all
+       critical.css §23 (`umd-filter-*`) plus upstream layout classes
+       (umd-layout-background-highlight-light, umd-layout-grid-gap-stacked,
+       umd-text-line-trailing-light, umd-tailwing-right-headline). Only
+       the pinned-result treatment and the empty/idle states below are
+       page-specific — there is no upstream "pinned search result".
+    ============================================================ */
+
+    /* The band is a single full-width row, not the two-up select+search
+       grid of the Filter Band pattern — there is nothing to facet on. */
+    #search-form .umd-filter-search-row input[type="text"] { font-size: 18px; }
+
+    /* Sits between the band and the count; the count's own 24px
+       margin-top handles the gap below the form. */
+    #search-count[hidden] { display: none; }
+
+    /* ---- PINNED RESULTS ------------------------------------------
+       Curated hits promoted above the ranked list for high-intent
+       terms ("apply", "tuition", "deadline"). One bordered box holds
+       the whole set, so the promotion reads as an editorial block
+       rather than as three individually decorated rows — and the cards
+       inside stay ordinary list cards, identical to the ranked ones
+       below. The box is the only thing saying "these are different".
+       ------------------------------------------------------------- */
+    .search-pinned {
+      margin-top: 40px;
+      border: 1px solid #000;
+      padding: 24px;
+    }
+    @media (min-width: 768px) {
+      .search-pinned { padding: 32px; }
+    }
+    .search-pinned[hidden] { display: none; }
+
+    /* Matches the eyebrow the cards render in their own shadow root
+       — .umd-element-eyebrow is Interstate 12px/700, uppercase, 0.6px
+       tracking — but in Maryland red, because this label belongs to
+       the box rather than to any one result inside it. Measured off
+       the live component, not guessed: umd-sans-min supplies the
+       family and the rest is set to the same numbers. */
+    .search-pinned-label {
+      color: var(--umd-color-red, #E21833);
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .6px;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    /* gap:0 on purpose. Consecutive umd-element-card[data-display=list]
+       siblings already get border-top:1px #E6E6E6 + padding-top:24px
+       from the design system, so a flex gap here would stack on top of
+       that 24px and push the rows apart while the DS rule keeps drawing
+       the divider at the old rhythm. Let the component space itself. */
+    .search-pinned-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 24px;
+    }
+
+    /* That same DS sibling rule collides with .umd-filter-list, which is
+       already drawing its own divider. critical.css §23 zeroes the
+       component's border-top there, so this page needs nothing for it. */
+
+    /* ---- RESULT LIST --------------------------------------------- */
+    /* .umd-filter-list gives the 1px #d0d0d0 rules between items and a
+       56px offset from whatever precedes it. */
+    #search-results[hidden] { display: none; }
+
+    /* ---- IDLE + EMPTY STATES ------------------------------------- */
+    .search-message {
+      margin-top: 56px;
+      padding-bottom: 8px;
+      max-width: 720px;
+    }
+    .search-message[hidden] { display: none; }
+    /* The DS type classes set face and size only, so the gap under the
+       heading is set here for whichever one the state uses. */
+    .search-message > h2 { margin: 0 0 16px; }
+    /* umd-text-rich-advanced supplies `> * { margin-top: 24px }` for the
+       block rhythm; only the list marker is missing from it. */
+    .search-message ul {
+      padding-left: 20px;
+      list-style: disc;
+    }
+    .search-message li { margin-top: 4px; }
+
+    /* Suggested terms — DS .umd-text-cluster-pill chip. They are real
+       links so a suggestion behaves like one: middle-click, open in a
+       new tab, and a real navigation to ?q=<term> rather than a
+       scripted swap.
+
+       Everything the chip needs comes from stylesheets now: ground,
+       box, 12px Interstate and the #FFD200 hover from element.min.css,
+       and the anchor's black text + no underline from critical.css §24,
+       which gap-fills the light variant's missing `color`.
+
+       What is left is this page's own layout choice — the container's
+       margin-top:-8px wrapping hack is swapped for a flex gap, so the
+       children's matching margin-top:8px has to go too, or wrapped rows
+       get 8 + 8. */
+    .search-suggest { margin-top: 24px; }
+    .search-suggest .umd-text-cluster-pill {
+      margin-top: 0;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .search-suggest .umd-text-cluster-pill > a { margin-top: 0; }
+  </style>
+  <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
+  <style>
+/* ============================================================
+   SHARED CHROME — CSS companions
+   Inlined into every page by scripts/build-chrome.py.
+   Edit here, not in pages/*.html.
+
+   These rules are NOT in page-builder/TEMPLATE.html. They pair with the
+   markup in shared/header.html and shared/footer.html, and a page that
+   carries the chrome markup without them renders SILENTLY wrong — no
+   console error, no broken layout, just unstyled.
+
+   This block must be emitted AFTER the inlined critical.css so it wins at
+   equal specificity.
+   ============================================================ */
+
+/* ---- Utility navigation: flat-link pattern ----
+   This project's chrome puts plain <a> children in the utility slot
+   (Visit UMD / Connect) rather than the DS .umd-shell-utility-item
+   pattern. critical.css §11's BASE layer styles
+   `.umd-shell-utility-item a`, which never matches a bare <a>, so
+   without these rules the projected links render browser-default blue
+   and underlined.
+
+   The display/justify/gap rule is belt-and-braces: since the upstream
+   fix (design-system-page-builder be3ea6c) gated §11's `gap: 0` on
+   :has(.umd-shell-utility-item), the component's own shadow
+   ::slotted(*) already supplies flex + 24px here. Stating it explicitly
+   keeps the intended layout readable and survives a shadow change. */
+umd-element-navigation-header div[slot="utility-navigation"] {
+  display: flex;
+  justify-content: flex-end;
+  gap: 24px;
+}
+umd-element-navigation-header div[slot="utility-navigation"] a {
+  font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--umd-color-gray-darker);
+  text-decoration: none;
+  line-height: 1.25;
+  transition: color 0.3s ease-in-out;
+}
+umd-element-navigation-header div[slot="utility-navigation"] a:hover,
+umd-element-navigation-header div[slot="utility-navigation"] a:focus {
+  color: var(--umd-color-red);
+  text-decoration: underline;
+}
+
+/* ---- Scroll-to-top pin ----
+   Opt-in per page (only the long directory pages use the element), but
+   the pin lives here so it is styled consistently wherever it appears.
+   Harmless on pages with no umd-element-scroll-top.
+   DS default for [data-layout-fixed] is right:40px; bottom:10vh. */
+umd-element-scroll-top[data-layout-fixed="true"] {
+  right: 24px;
+  bottom: 24px;
+}
+
+/* ---- Nav dropdown promos ----
+   umd-element-nav-item projects slot="dropdown-callout" through a real
+   <slot> into .nav-item-dropdown-cta-column, so the promo stays in the
+   LIGHT DOM: the nav-item's shadow CSS never reaches it, and these page
+   rules do. Same root cause as the utility-nav block above — a bare <a>
+   in a header slot gets no colour from critical.css and renders default
+   blue, so the anchor colour has to be stated here.
+
+   The shadow supplies the column box (.nav-item-dropdown-multiple-column
+   > * { min-width: 232px }); everything inside it is ours. */
+.umd-nav-promo a {
+  display: block;
+  width: 232px;
+  max-width: 100%;
+  color: var(--umd-color-black, #000);
+  text-decoration: none;
+  background-image: none;
+}
+.umd-nav-promo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+.umd-nav-promo .umd-nav-promo-title {
+  display: block;
+  margin-top: 12px;
+  font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--umd-color-black, #000);
+  transition: color 0.3s ease-in-out;
+}
+.umd-nav-promo .umd-nav-promo-text {
+  display: block;
+  margin-top: 4px;
+  font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--umd-color-gray-darker, #454545);
+}
+.umd-nav-promo a:hover .umd-nav-promo-title,
+.umd-nav-promo a:focus .umd-nav-promo-title {
+  color: var(--umd-color-red, #e21833);
+}
+  </style>
+  <!-- SHARED:chrome-css:END -->
+  <!-- SHARED:gate:START — generated from shared/gate.html; do not edit here -->
+  <!-- ============================================================
+       PROTOTYPE ACCESS GATE
+       Inlined into the <head> of every page by
+       page-builder/tools/build-chrome.py. Edit here, not in pages/*.html.
+
+       Keeps a GitHub Pages prototype blank for anyone without the shared
+       credentials, and — with the noindex meta chrome.py stamps into every
+       page — out of search results.
+
+       It is NOT access control. The whole check ships to the browser, so the
+       markup is retrievable with `curl` and the hash can be attacked offline.
+       Keep the project repo PRIVATE and put nothing behind it that would
+       matter if it leaked. See page-builder/scripts/gate.js for the full
+       reasoning.
+
+       DELETE THIS FILE on a project that should be public — the inliner skips
+       a region whose source file is absent, and the next build-chrome.py run
+       strips the block back out of every page.
+
+       ADD AN ACCOUNT — never type a password into this file by hand:
+
+           python3 page-builder/tools/gate.py --write shared/gate.html
+
+       That prompts for the username and password without echoing them, and
+       rewrites the block between the GATE:USERS markers below. The plaintext
+       password is never written to this repo.
+  ============================================================ -->
+  <style>
+    /* The lock is CSS, not JavaScript, and it is unconditional: the page is
+       hidden from the first paint and STAYS hidden if gate.js 404s, throws,
+       or scripting is off. gate.js adds .umd-gate-unlocked only after a
+       password verifies. Do not move this into a JS-added class — that
+       inverts it into fail-open. */
+    html:not(.umd-gate-unlocked) { overflow: hidden; }
+    html:not(.umd-gate-unlocked) body { visibility: hidden; }
+    html:not(.umd-gate-unlocked) body > .umd-gate { visibility: visible; }
+
+    .umd-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-y: auto;
+      background: #000;
+      font-family: Interstate, Helvetica, Arial, Verdana, sans-serif;
+    }
+
+    .umd-gate__panel {
+      width: 100%;
+      max-width: 420px;
+      margin: auto;
+      padding: 40px 32px;
+      background: #1a1a1a;
+      border-top: 4px solid #e21833;
+      color: #fff;
+      text-align: left;
+    }
+
+    .umd-gate__eyebrow {
+      margin: 0 0 12px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #ffd200;
+    }
+
+    .umd-gate__title {
+      margin: 0 0 8px;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .umd-gate__message {
+      margin: 0 0 24px;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #d1d1d1;
+    }
+
+    .umd-gate__label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #e6e6e6;
+    }
+
+    .umd-gate__input {
+      display: block;
+      width: 100%;
+      margin-bottom: 16px;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 16px;   /* below 16px, iOS Safari zooms the page on focus */
+      color: #000;
+      background: #fff;
+      border: 1px solid #757575;
+      border-radius: 0;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .umd-gate__input:focus-visible {
+      outline: 2px solid #ffd200;
+      outline-offset: 2px;
+    }
+
+    .umd-gate__submit {
+      width: 100%;
+      padding: 14px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: #fff;
+      background: #e21833;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .umd-gate__submit:hover { background: #c1152b; }
+    .umd-gate__submit:disabled { background: #757575; cursor: default; }
+    .umd-gate__submit:focus-visible { outline: 2px solid #ffd200; outline-offset: 2px; }
+
+    /* Always in the layout, so filling it in on a failed attempt does not
+       shove the button out from under the cursor. */
+    .umd-gate__error {
+      min-height: 20px;
+      margin: 0 0 8px;
+      font-size: 14px;
+      line-height: 20px;
+      color: #ff9a9a;
+    }
+
+    .umd-gate__note {
+      margin: 16px 0 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #a8a8a8;
+    }
+
+    /* gate.js never arrived — say so, rather than leaving a blank page that
+       looks like a broken deploy. Still locked: the rule above is untouched. */
+    html.umd-gate-error body::before {
+      content: "This prototype could not load its sign-in. Check that page-builder/scripts/gate.js is published alongside the site.";
+      visibility: visible;
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      background: #000;
+      color: #fff;
+      font-family: Interstate, Helvetica, Arial, Verdana, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      text-align: center;
+    }
+  </style>
+  <noscript>
+    <style>
+      html:not(.umd-gate-unlocked) body::before {
+        content: "This prototype requires JavaScript to sign in.";
+        visibility: visible;
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        background: #000;
+        color: #fff;
+        font-family: Interstate, Helvetica, Arial, Verdana, sans-serif;
+        font-size: 16px;
+        text-align: center;
+      }
+    </style>
+  </noscript>
+  <script>
+    window.UMD_GATE = {
+      title: 'This prototype is private',
+      message: 'Sign in with the credentials shared with you to view this preview.',
+      note: 'Trouble signing in? Contact the project team.',
+
+      /* 0 = this browser tab only. Otherwise the sign-in carries across tabs
+         and pages for this many hours, so a reviewer opening links in new
+         tabs is not asked again. */
+      rememberHours: 12,
+
+      /* PBKDF2 rounds. Must match what tools/gate.py used to make the hashes
+         below — change it and every account stops verifying. */
+      iterations: 310000,
+
+      /* GATE:USERS:START — written by page-builder/tools/gate.py; do not hand-edit */
+      users: [
+        { "user": "WebServices", "salt": "5a93279dee761d80ba3248862508ae49", "hash": "bd591fe7b960965ba6e69917c307bc20b2adbc6f48c7fae4296fe19be605be2d" }
+      ]
+      /* GATE:USERS:END */
+    };
+  </script>
+  <script src="../../page-builder/scripts/gate.js"
+          onerror="document.documentElement.classList.add('umd-gate-error')" defer></script>
+  <!-- SHARED:gate:END -->
+</head>
+<body>
+
+  <!-- 1. GLOBAL UNIVERSITY HEADER -->
+  <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
+  <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
+  <umd-element-utility-header></umd-element-utility-header>
+
+  <umd-element-navigation-header
+    sticky
+    class="umd-layout-space-horizontal-full"
+    search-url="../../pages/search/"
+    cta-url="../../pages/apply-now/"
+    cta-text="Apply Now">
+    <a slot="logo" href="../../pages/">
+      <img src="../../images/logos/admissions-logo.svg" alt="University of Maryland Admissions"
+           onerror="this.onerror=null;this.src='../../images/logos/primary-logo-dark.svg';" />
+    </a>
+    <div slot="utility-navigation">
+      <a href="https://admissions.umd.edu/visit">Visit UMD</a>
+      <a href="https://admissions.umd.edu/connect">Connect</a>
+    </div>
+    <nav slot="main-navigation">
+      <umd-element-nav-item>
+        <a slot="primary-link" href="../../pages/academics/">Academics</a>
+        <div slot="dropdown-links">
+          <a href="../../pages/academics/">Overview</a>
+          <a href="../../pages/academics/programs.html">All Programs</a>
+          <a href="../../pages/academics/colleges-schools.html">Colleges &amp; Schools</a>
+          <a href="https://admissions.umd.edu/programs/interest">Programs by Interest</a>
+          <a href="https://admissions.umd.edu/academics/limited-enrollment-programs">Limited Enrollment Programs</a>
+          <a href="https://ugst.umd.edu/llsop/index.html">Living-Learning &amp; Special Programs</a>
+        </div>
+        <!-- Dropdown promo — projected through a real <slot>, so it stays in the
+             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-nav-promo">
+          <a href="../../pages/academics/programs.html">
+            <img src="../../images/academics/students-walking.jpg" alt="" />
+            <span class="umd-nav-promo-title">All Programs</span>
+            <span class="umd-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
+          </a>
+        </div>
+      </umd-element-nav-item>
+      <umd-element-nav-item>
+        <a slot="primary-link" href="../../pages/student-life/">Student Life</a>
+        <div slot="dropdown-links">
+          <a href="../../pages/student-life/">Overview</a>
+          <a href="https://admissions.umd.edu/student/housing-and-dining">Housing &amp; Dining</a>
+          <a href="https://admissions.umd.edu/student/student-support">Student Support &amp; Safety</a>
+          <a href="https://admissions.umd.edu/student/get-involved">Get Involved on Campus</a>
+          <a href="https://admissions.umd.edu/student/find-community">Find Your Community</a>
+        </div>
+      </umd-element-nav-item>
+      <umd-element-nav-item>
+        <a slot="primary-link" href="../../pages/how-to-apply/">How To Apply</a>
+        <div slot="dropdown-links">
+          <a href="../../pages/how-to-apply/">Overview</a>
+          <a href="../../pages/how-to-apply/freshman-applicants.html">Freshman Applicants</a>
+          <a href="../../pages/how-to-apply/transfer-applicants.html">Transfer Applicants</a>
+          <a href="../../pages/how-to-apply/international-applicants.html">International Applicants</a>
+          <a href="https://admissions.umd.edu/apply/shady-grove-applicants">Shady Grove Applicants</a>
+          <a href="https://admissions.umd.edu/apply/application-deadlines">Application Deadlines</a>
+          <a href="https://admissions.umd.edu/apply/admission-review-process-factors">Admission Review Process &amp; Factors</a>
+          <a href="https://admissions.umd.edu/apply/application-faqs">Application FAQs</a>
+        </div>
+        <!-- Dropdown promo — projected through a real <slot>, so it stays in the
+             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-nav-promo">
+          <a href="https://admissions.umd.edu/apply/application-deadlines">
+            <img src="../../images/admissions/how-to-apply-hero.jpg" alt="" />
+            <span class="umd-nav-promo-title">Application Deadlines</span>
+            <span class="umd-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
+          </a>
+        </div>
+      </umd-element-nav-item>
+      <umd-element-nav-item>
+        <a slot="primary-link" href="../../pages/tuition/">Tuition &amp; Aid</a>
+        <div slot="dropdown-links">
+          <a href="../../pages/tuition/">Overview</a>
+          <a href="https://admissions.umd.edu/tuition/cost-of-attendance">Cost of Attendance</a>
+          <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships">Freshman Merit Scholarships</a>
+          <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships">Transfer Merit Scholarships</a>
+          <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
+        </div>
+        <!-- Dropdown promo — projected through a real <slot>, so it stays in the
+             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-nav-promo">
+          <a href="https://admissions.umd.edu/tuition/cost-of-attendance">
+            <img src="../../images/tuition/idea-factory-hero.jpg" alt="" />
+            <span class="umd-nav-promo-title">Cost of Attendance</span>
+            <span class="umd-nav-promo-text">See what a year at Maryland actually costs.</span>
+          </a>
+        </div>
+      </umd-element-nav-item>
+    </nav>
+    <!-- DRAWER:START — mobile / compact navigation.
+         The hamburger renders ONLY when slot="primary-slide-links" is present
+         (drawer.CreateElement returns null without it, which is why this header
+         had no hamburger at all). The DS appends the button to the logo column
+         with no media query, so it is persistent at every width, sitting beside
+         the desktop nav — same as umd.edu.
+
+         All three slots must be DIRECT children of umd-element-navigation-header
+         (the component collects them with `:scope > [slot]`) and are CLONED into
+         the shadow root, so page CSS cannot reach them: the DS drawer styles are
+         the only styling, and every link text needs its own <span> for the
+         selected-state underline.
+
+         data-child-ref values are the section DIRECTORY names under pages/.
+         scripts/_chrome.py relies on that to stamp data-active / data-selected
+         per page — rename a directory and its drawer ref has to follow. -->
+    <div slot="primary-slide-links">
+      <a href="../../pages/academics/" data-child-ref="academics"><span>Academics</span></a>
+      <a href="../../pages/student-life/" data-child-ref="student-life"><span>Student Life</span></a>
+      <a href="../../pages/how-to-apply/" data-child-ref="how-to-apply"><span>How To Apply</span></a>
+      <a href="../../pages/tuition/" data-child-ref="tuition"><span>Tuition &amp; Aid</span></a>
+    </div>
+    <!-- The utility row plus the two things the drawer is the ONLY route to on a
+         phone: Apply Now (the red CTA) and Search (the magnifier) both live in
+         .element-header-navigation-column, which the DS hides at =<1240px — at
+         375px they measure 0 wide. So this list is deliberately NOT a copy of
+         the utility row: Apply Now stays here even though it was dropped from
+         the utility row as a duplicate of the CTA, because on mobile there is
+         no CTA to duplicate. -->
+    <div slot="primary-slide-secondary-links">
+      <a href="https://admissions.umd.edu/visit"><span>Visit UMD</span></a>
+      <a href="../../pages/apply-now/"><span>Apply Now</span></a>
+      <a href="https://admissions.umd.edu/connect"><span>Connect</span></a>
+      <a href="../../pages/search/" data-selected><span>Search</span></a>
+    </div>
+    <div slot="children-slides">
+      <div data-parent-ref="academics">
+        <a href="../../pages/academics/"><span>Overview</span></a>
+        <a href="../../pages/academics/programs.html"><span>All Programs</span></a>
+        <a href="../../pages/academics/colleges-schools.html"><span>Colleges &amp; Schools</span></a>
+        <a href="https://admissions.umd.edu/programs/interest"><span>Programs by Interest</span></a>
+        <a href="https://admissions.umd.edu/academics/limited-enrollment-programs"><span>Limited Enrollment Programs</span></a>
+        <a href="https://ugst.umd.edu/llsop/index.html"><span>Living-Learning &amp; Special Programs</span></a>
+      </div>
+      <div data-parent-ref="student-life">
+        <a href="../../pages/student-life/"><span>Overview</span></a>
+        <a href="https://admissions.umd.edu/student/housing-and-dining"><span>Housing &amp; Dining</span></a>
+        <a href="https://admissions.umd.edu/student/student-support"><span>Student Support &amp; Safety</span></a>
+        <a href="https://admissions.umd.edu/student/get-involved"><span>Get Involved on Campus</span></a>
+        <a href="https://admissions.umd.edu/student/find-community"><span>Find Your Community</span></a>
+      </div>
+      <div data-parent-ref="how-to-apply">
+        <a href="../../pages/how-to-apply/"><span>Overview</span></a>
+        <a href="../../pages/how-to-apply/freshman-applicants.html"><span>Freshman Applicants</span></a>
+        <a href="../../pages/how-to-apply/transfer-applicants.html"><span>Transfer Applicants</span></a>
+        <a href="../../pages/how-to-apply/international-applicants.html"><span>International Applicants</span></a>
+        <a href="https://admissions.umd.edu/apply/shady-grove-applicants"><span>Shady Grove Applicants</span></a>
+        <a href="https://admissions.umd.edu/apply/application-deadlines"><span>Application Deadlines</span></a>
+        <a href="https://admissions.umd.edu/apply/admission-review-process-factors"><span>Admission Review Process &amp; Factors</span></a>
+        <a href="https://admissions.umd.edu/apply/application-faqs"><span>Application FAQs</span></a>
+      </div>
+      <div data-parent-ref="tuition">
+        <a href="../../pages/tuition/"><span>Overview</span></a>
+        <a href="https://admissions.umd.edu/tuition/cost-of-attendance"><span>Cost of Attendance</span></a>
+        <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships"><span>Freshman Merit Scholarships</span></a>
+        <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
+        <a href="https://financialaid.umd.edu/"><span>Office of Student Financial Aid</span></a>
+      </div>
+    </div>
+    <!-- DRAWER:END -->
+  </umd-element-navigation-header>
+  <!-- SHARED:header:END -->
+
+  <!-- 2. HERO — background, small, centered. Same treatment as the
+       section landing pages (academics, student-life, how-to-apply,
+       tuition, apply-now) so search does not read as a different kind
+       of page. No text block: the band directly below says what to do,
+       and a paragraph between the headline and the input is one thing
+       to read before the only control that matters. -->
+  <section class="umd-layout-vertical-landing">
+    <umd-element-hero data-layout-height="small" data-layout-text="center">
+      <img slot="image" src="../../images/calendar/blurry-testudo-FirstDayofClass_08262024_DS_2384_DAM.webp" alt="Students streaming past the Testudo statue outside McKeldin Library" />
+      <h1 slot="headline">Search</h1>
+    </umd-element-hero>
+  </section>
+
+  <!-- 3. SEARCH + RESULTS — one section so the band, the count and the
+       list keep their own internal rhythm (24px / 56px) rather than the
+       120px landing gap. -->
+  <section class="umd-layout-vertical-landing">
+    <div class="umd-layout-space-horizontal-small">
+
+      <!-- SEARCH BAND -->
+      <form id="search-form" class="umd-layout-background-highlight-light umd-layout-grid-gap-stacked"
+            data-animation="off" action="" role="search">
+
+        <div class="umd-layout-grid-inline-stretch">
+          <h2 class="umd-text-line-trailing-light"><span>Search this site</span></h2>
+          <button type="reset" id="search-reset" class="umd-sans-smaller umd-animation-line-slide-graydark-red" hidden>
+            <span aria-hidden="true">Clear search</span>
+            <span class="sr-only">Clear the search term and start over</span>
+          </button>
+        </div>
+
+        <div>
+          <label for="search-q" class="sr-only">Search term</label>
+          <div class="umd-filter-search-row">
+            <input type="text" id="search-q" name="q" placeholder="Enter a search term"
+                   autocomplete="off" spellcheck="false" />
+            <button type="submit" class="umd-filter-search-btn" aria-label="Submit search">
+              <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M8.5 3a5.5 5.5 0 0 1 4.383 8.823l3.647 3.647a1 1 0 0 1-1.414 1.414l-3.647-3.647A5.5 5.5 0 1 1 8.5 3zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <p id="search-count" class="umd-filter-results-count" aria-live="polite" hidden></p>
+
+      <!-- PINNED — curated hits in one bordered box above the ranked
+           list. The box is the differentiator, so the cards inside are
+           ordinary list cards and each keeps its section eyebrow; the
+           single red "Featured" label belongs to the group. -->
+      <div id="search-pinned" class="search-pinned" hidden>
+        <h2 class="search-pinned-label umd-sans-min">Featured</h2>
+        <div class="search-pinned-list" id="search-pinned-list"></div>
+      </div>
+
+      <!-- RANKED RESULTS — divider list, critical.css §23 -->
+      <div class="umd-layout-grid-gap-stacked umd-filter-list" data-animation="off" id="search-results" hidden></div>
+
+      <!-- IDLE — before a term is entered -->
+      <div class="search-message" id="search-idle">
+        <h2 class="umd-sans-large">Popular searches</h2>
+        <div class="search-suggest">
+          <span class="umd-text-cluster-pill">
+            <a href="?q=application+deadlines"><span>Application deadlines</span></a>
+            <a href="?q=scholarships"><span>Scholarships</span></a>
+            <a href="?q=majors"><span>Majors</span></a>
+            <a href="?q=campus+tour"><span>Campus tour</span></a>
+            <a href="?q=transfer"><span>Transfer</span></a>
+            <a href="?q=cost+of+attendance"><span>Cost of attendance</span></a>
+          </span>
+        </div>
+      </div>
+
+      <!-- EMPTY — a term was entered and matched nothing -->
+      <div class="search-message" id="search-empty" hidden>
+        <h2 class="umd-sans-larger-bold">No results</h2>
+        <!-- umd-text-rich-advanced is the DS body-copy treatment: #454545
+             text and BLACK links underlined with a gradient rule that goes
+             Maryland red on hover. Without it these anchors fall through to
+             the browser's own blue/purple, which is the one place on the
+             page that happens. -->
+        <div class="umd-text-rich-advanced">
+          <p>We couldn&#8217;t find anything for <strong id="search-empty-term"></strong>.</p>
+          <ul>
+            <li>Check the spelling, or try a shorter term.</li>
+            <li>Search for a program name rather than a career (&#8220;computer science&#8221; rather than &#8220;software job&#8221;).</li>
+            <li>Browse <a href="../academics/programs.html">all programs</a>, the <a href="../calendar/">events calendar</a>, or <a href="../how-to-apply/">how to apply</a>.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. FOOTER — visual -->
+  <!-- SHARED:footer:START — generated from shared/footer.html; do not edit here -->
+  <umd-element-footer data-display="visual">
+    <a slot="logo" href="../../pages/">
+      <img src="../../images/logos/footer-logo.svg" alt="University of Maryland" />
+    </a>
+    <img slot="image" src="../../page-builder/images/large/campus/footer-campus.jpg" alt="University of Maryland campus" />
+
+    <p slot="contact-headline">Undergraduate Admissions</p>
+    <!-- Every address line needs its own <span>: umd-element-footer extracts and
+         appends this into the shadow root, where color:white is applied only to
+         p / a / span — a bare text node or <br> renders black on the dark bar. -->
+    <address slot="address">
+      <a href="https://www.google.com/maps/place/Mitchell+Bldg,+7999+Regents+Dr,+College+Park,+MD+20742"
+         target="_blank" rel="noopener noreferrer">Mitchell Building</a>
+      <span>7999 Regents Dr.</span>
+      <span>College Park, MD 20742</span>
+    </address>
+    <div slot="contact-links">
+      <a href="tel:18004225867" aria-label="Call: 1-800-422-5867">1-800-422-5867</a>
+      <a href="mailto:ApplyMaryland@umd.edu" aria-label="Email: ApplyMaryland@umd.edu">ApplyMaryland@umd.edu</a>
+    </div>
+
+    <!-- The DS swaps each link's contents for an SVG icon matched on the href
+         domain, so the label has to be on aria-label, not in the link text. -->
+    <ul slot="social-links">
+      <li><a href="https://www.youtube.com/user/UMD2101" target="_blank" rel="noopener noreferrer" aria-label="Link to the YouTube channel for UMD Undergraduate Admissions"></a></li>
+      <li><a href="https://www.facebook.com/ApplyMaryland" target="_blank" rel="noopener noreferrer" aria-label="Link to the Facebook page for UMD Undergraduate Admissions"></a></li>
+      <li><a href="https://twitter.com/ApplyMaryland" target="_blank" rel="noopener noreferrer" aria-label="Link to the Twitter page for UMD Undergraduate Admissions"></a></li>
+      <li><a href="https://www.instagram.com/applymaryland/" target="_blank" rel="noopener noreferrer" aria-label="Link to the Instagram page for UMD Undergraduate Admissions"></a></li>
+    </ul>
+
+    <!-- A link column's heading comes from data-headline on the slot element —
+         a heading tag inside the column is dropped (the DS collects only <a>). -->
+    <div slot="link-column-one">
+      <a href="../../pages/academics/programs.html">Majors &amp; Minors</a>
+      <a href="../../pages/student-life/">Student Life</a>
+      <a href="../../pages/how-to-apply/">Admissions Requirements</a>
+      <a href="https://admissions.umd.edu/apply/application-deadlines">Application Deadlines</a>
+      <a href="../../pages/tuition/">Tuition &amp; Aid</a>
+    </div>
+    <div slot="link-column-two" data-headline="Information For:">
+      <a href="../../pages/personas/prospective-students.html">Prospective Students</a>
+      <a href="https://admissions.umd.edu/persona/parent-families">Parents &amp; Families</a>
+      <a href="https://admissions.umd.edu/persona/counselors-advisors">Counselors &amp; Advisors</a>
+      <a href="https://admissions.umd.edu/persona/admitted-students">Admitted Students</a>
+    </div>
+    <!-- The live site renders Visit UMD / Apply Now / Connect as three stacked
+         buttons. slot="actions" takes a single anchor here, so Apply Now is the
+         button and the other two live in this column rather than being dropped. -->
+    <div slot="link-column-three" data-headline="Get Started:">
+      <a href="https://admissions.umd.edu/visit">Visit UMD</a>
+      <a href="https://admissions.umd.edu/connect">Connect</a>
+      <a href="../../pages/apply-now/">Apply Now</a>
+    </div>
+
+    <a slot="actions" href="../../pages/apply-now/">Apply Now</a>
+
+    <!-- Privacy Policy and Web Accessibility are appended by the component
+         itself — listing them here would render them twice. -->
+    <div slot="utility-links">
+      <a href="https://umd.edu">umd.edu</a>
+    </div>
+  </umd-element-footer>
+  <!-- SHARED:footer:END -->
+
+  <!-- ============================================================
+       SEARCH BEHAVIOUR
+       Client-side over an embedded index, so the prototype can be
+       driven without a back end. Production replaces the index and the
+       rank() call with the CMS search endpoint; the render functions
+       and the markup they emit are the part being designed here.
+  ============================================================ -->
+  <script type="application/json" id="search-index">[{"t":"How to Apply","u":"../how-to-apply/","s":"How to Apply","d":"Ready to apply to the University of Maryland? Review our requirements and figure out your next steps.","img":"../../images/admissions/how-to-apply-hero.jpg","pin":["apply","application","how to apply","admissions"]},{"t":"Application Deadlines","u":"../how-to-apply/#deadlines","s":"How to Apply","d":"Required application deadlines for freshman, transfer, international and Shady Grove students.","pin":["deadline","deadlines","apply","application deadlines","early action","dates"]},{"t":"Majors &amp; Minors","u":"../academics/programs.html","s":"Academics","d":"Explore UMD&#8217;s majors and minors and find the perfect academic program for you. Search by program type, college and school, area of interest and campus location.","img":"../../images/academics/students-walking.jpg","pin":["major","majors","minor","program","programs","academics","degree"]},{"t":"Tuition &amp; Aid","u":"../tuition/","s":"Tuition &amp; Aid","d":"UMD&#8217;s cost of attendance for in-state and out-of-state students, plus the financial aid options available to you.","img":"../../images/tuition/idea-factory-hero.jpg","pin":["tuition","cost","aid","financial aid","cost of attendance","money","price","scholarship","scholarships"]},{"t":"Student Life","u":"../student-life/","s":"Student Life","d":"We want all Terps to feel at home. Learn more about student organizations, athletics, the College Park community and more.","img":"../../images/student-life/athletics.jpg","pin":["student life","campus life","housing","dining","clubs","greek"]},{"t":"Calendar","u":"../calendar/","s":"Visit &amp; Events","d":"Join us for an information session or tour, meet us at your high school or at a college fair.","img":"../../images/calendar/campus-clock.jpg","pin":["visit","tour","event","events","calendar","open house","information session"]},{"t":"Apply Now","u":"../apply-now/","s":"How to Apply","d":"Quick links to the application, required materials and the resources you need to finish it.","pin":["apply","apply now","application","common app"]},{"t":"Freshman Merit Scholarships","u":"https://admissions.umd.edu/tuition/freshman-merit-scholarships","s":"Tuition &amp; Aid","d":"Merit scholarships are awarded to incoming freshmen on the strength of the admission application &#8212; there is no separate scholarship application.","img":"../../images/tuition/TheM.jpg","pin":["scholarship","scholarships","merit","banneker","aid","money"]},{"t":"Freshman Applicants","u":"../how-to-apply/freshman-applicants.html","s":"How to Apply","d":"Requirements, deadlines and the review process for students applying to UMD directly from high school."},{"t":"Transfer Applicants","u":"../how-to-apply/transfer-applicants.html","s":"How to Apply","d":"Transfer credit, minimum coursework and the deadlines that apply to students moving to UMD from another institution."},{"t":"International Applicants","u":"../how-to-apply/international-applicants.html","s":"How to Apply","d":"English language proficiency, financial certification and visa steps for international students."},{"t":"Colleges &amp; Schools","u":"../academics/colleges-schools.html","s":"Academics","d":"Twelve colleges and schools, from Agriculture &amp; Natural Resources to Public Policy. See what each one offers."},{"t":"Programs by Interest: Engineering &amp; Technology","u":"../academics/interest-engineering-technology.html","s":"Academics","d":"Aerospace, bioengineering, computer science, cybersecurity and the rest of the majors that start with how things work."},{"t":"Admission Representatives","u":"../admission-representatives/","s":"Connect","d":"Meet the University of Maryland admission representatives, learn about their favorite UMD moments and the regions they recruit in."},{"t":"Find Your Representative","u":"../admission-representatives/search.html","s":"Connect","d":"Search the admission representative directory by territory to find the person who reads applications from your school."},{"t":"Banneker/Key Scholarship","u":"https://admissions.umd.edu/tuition/frederick-douglass-scholarship","s":"Tuition &amp; Aid","d":"The Banneker/Key Scholarship is the University of Maryland&#8217;s most prestigious merit scholarship for newly admitted freshmen invited to the Honors College."},{"t":"Cost of Attendance","u":"https://admissions.umd.edu/tuition/cost-of-attendance","s":"Tuition &amp; Aid","d":"Tuition, fees, housing, dining, books and personal expenses &#8212; the full year&#8217;s figure for in-state and out-of-state students."},{"t":"Essay Questions","u":"https://admissions.umd.edu/apply/essay-questions","s":"How to Apply","d":"The short-answer prompts on the UMD application, and what the admission committee is looking for in your responses."},{"t":"Submitting Documents","u":"https://admissions.umd.edu/apply/submitting-documents","s":"How to Apply","d":"How to send transcripts, test scores and supporting materials after you submit your application."},{"t":"Admission Review Process &amp; Factors","u":"https://admissions.umd.edu/apply/admission-review-process-factors","s":"How to Apply","d":"The 26 factors UMD considers in its holistic review, and how the committee weighs them."},{"t":"Application FAQs","u":"https://admissions.umd.edu/apply/application-faqs","s":"How to Apply","d":"Answers to the questions we field most often about applying, deadlines, decisions and next steps."},{"t":"Limited Enrollment Programs","u":"https://admissions.umd.edu/academics/limited-enrollment-programs","s":"Academics","d":"Some majors admit on a limited basis. Learn which programs are limited enrollment and how to gain direct admission."},{"t":"Maryland Transfer Advantage Program","u":"https://admissions.umd.edu/apply/maryland-transfer-advantage-program","s":"How to Apply","d":"A partnership with Maryland community colleges that gives participants a guided path and a tuition discount at UMD."},{"t":"Shady Grove Applicants","u":"https://admissions.umd.edu/apply/shady-grove-applicants","s":"How to Apply","d":"UMD programs offered at the Universities at Shady Grove in Rockville, and how admission there differs."},{"t":"English Language Proficiency","u":"https://admissions.umd.edu/apply/english-language-proficiency","s":"How to Apply","d":"TOEFL, IELTS and Duolingo score requirements, and the conditions under which the requirement is waived."},{"t":"Financial Certification","u":"https://admissions.umd.edu/apply/financial-certification","s":"How to Apply","d":"International students must certify they can cover one year of expenses before a Form I-20 is issued."},{"t":"Housing &amp; Dining","u":"https://admissions.umd.edu/student/housing-and-dining","s":"Student Life","d":"Residence halls, living-learning communities and the dining plans that come with them."},{"t":"Get Involved on Campus","u":"https://admissions.umd.edu/student/get-involved","s":"Student Life","d":"More than 800 student organizations, club sports, service groups and student government."},{"t":"Find Your Community","u":"https://admissions.umd.edu/student/find-community","s":"Student Life","d":"Cultural centers, identity-based organizations and the programs that help Terps find their people."},{"t":"Student Support &amp; Safety","u":"https://admissions.umd.edu/student/student-support","s":"Student Life","d":"Counseling, health services, accessibility support and campus safety resources."},{"t":"Fall Open House","u":"../calendar/","s":"Visit &amp; Events","d":"The next UMD Fall Open House will be held on Monday, September 14, 2026."},{"t":"Admitted Student Open House","u":"../calendar/","s":"Visit &amp; Events","d":"A campus day for admitted students and their families &#8212; academic sessions, tours and a chance to meet future classmates."},{"t":"Self-Guided Tour","u":"https://admissions.umd.edu/page/self-guided-tour","s":"Visit &amp; Events","d":"Take advantage of our self-guided audio tour and see the iconic sights of the University of Maryland."},{"t":"Group Tours","u":"https://admissions.umd.edu/page/group-tours","s":"Visit &amp; Events","d":"If you are bringing 10 or more people to campus you&#8217;ll need to schedule a group tour. Learn what is available and how to register."},{"t":"Visitor Center at The Hotel at UMD","u":"https://admissions.umd.edu/page/visitor-center","s":"Visit &amp; Events","d":"Location, hours, parking and special rates for guests of The Hotel at UMD."},{"t":"Know Before You Go","u":"https://admissions.umd.edu/page/know-before-you-go","s":"Visit &amp; Events","d":"Local lodging, dining and entertainment for guests planning a visit to the University of Maryland."},{"t":"Terps on Tour","u":"https://admissions.umd.edu/page/terpsontour","s":"Visit &amp; Events","d":"Terps on Tour receptions for Fall 2026 and Spring 2027 admitted freshmen, in 16 cities."},{"t":"Discover Maryland","u":"../calendar/","s":"Visit &amp; Events","d":"Discover Maryland will be held on Monday, February 16, 2026."},{"t":"College Access Conference","u":"https://admissions.umd.edu/page/college-access-conference","s":"Visit &amp; Events","d":"A day-long visit event designed to help high school students start thinking about, preparing for and planning for college."},{"t":"Counselor Conference","u":"https://admissions.umd.edu/page/counselor-conference","s":"Visit &amp; Events","d":"UMD&#8217;s biennial on-campus conference for counselors &#8212; the admissions process, transfer advising, financial aid and more."},{"t":"STARS &#8212; Small Town &amp; Rural Students","u":"https://admissions.umd.edu/page/stars","s":"Connect","d":"The STARS College Network supports students from small town and rural areas in exploring higher education, from pipeline programs to on-campus events."},{"t":"Maryland Ascent Program","u":"https://admissions.umd.edu/page/maryland-ascent","s":"Connect","d":"A partnership program for students in Prince George&#8217;s County and Baltimore."},{"t":"Connect","u":"https://admissions.umd.edu/connect","s":"Connect","d":"How to reach an admission representative, join the mailing list, follow us on social media and find our hours of operation."},{"t":"Prospective Students","u":"../personas/prospective-students.html","s":"Connect","d":"A starting point for students exploring UMD &#8212; what to look at first, and in what order."},{"t":"Living-Learning &amp; Special Programs","u":"https://ugst.umd.edu/llsop/index.html","s":"Academics","d":"Honors College, Scholars, and the other living-learning programs that pair a residence hall with a curriculum."},{"t":"Education Abroad","u":"https://admissions.umd.edu/academics/education-abroad","s":"Academics","d":"More than 400 study abroad programs in 70 countries, most of which apply directly to your degree."}]</script>
+
+  <script>
+    (function () {
+      var INDEX = JSON.parse(document.getElementById('search-index').textContent);
+
+      var form    = document.getElementById('search-form');
+      var input   = document.getElementById('search-q');
+      var reset   = document.getElementById('search-reset');
+      var count   = document.getElementById('search-count');
+      var pinWrap = document.getElementById('search-pinned');
+      var pinList = document.getElementById('search-pinned-list');
+      var results = document.getElementById('search-results');
+      var idle    = document.getElementById('search-idle');
+      var empty   = document.getElementById('search-empty');
+      var emptyTerm = document.getElementById('search-empty-term');
+
+      // Entities live in the index (it is rendered as HTML), so strip
+      // them before matching — otherwise "&amp;" would match "amp".
+      var scratch = document.createElement('div');
+      function plain(html) {
+        scratch.innerHTML = html;
+        return (scratch.textContent || '').toLowerCase();
+      }
+
+      // --- matching ------------------------------------------------
+      // Tokenized, AND across tokens: every word in the query has to
+      // land somewhere in the row. Enough fidelity that the prototype
+      // behaves like search on two-word queries ("campus tour") and
+      // plurals ("scholarships" → "scholarship"), which is what a
+      // reviewer will actually type. The real relevance model is the
+      // CMS's; this only has to stop the page from lying about how
+      // many results a term produces.
+      function tokens(q) {
+        return q.toLowerCase().split(/[^a-z0-9]+/).filter(function (w) {
+          return w.length > 1;
+        });
+      }
+
+      // Cheap singular fold so "majors"/"major" and "deadlines"/
+      // "deadline" are the same token. Not a stemmer — just the -s.
+      function fold(w) {
+        return w.length > 3 && w.charAt(w.length - 1) === 's' ? w.slice(0, -1) : w;
+      }
+
+      function has(hay, w) {
+        return hay.indexOf(fold(w)) !== -1;
+      }
+
+      // Title hit outranks a section hit outranks a description hit.
+      // Returns 0 when any token is unmatched, which is what drops the
+      // row from the results entirely.
+      function score(row, ws) {
+        var t = plain(row.t), d = plain(row.d), s = plain(row.s || '');
+        var n = 0;
+        for (var i = 0; i < ws.length; i++) {
+          var w = ws[i], hit = 0;
+          if (has(t, w)) hit += 40;
+          if (has(s, w)) hit += 10;
+          if (has(d, w)) hit += 5;
+          if (!hit) return 0;
+          n += hit;
+        }
+        if (plain(row.t) === ws.join(' ')) n += 100;
+        return n;
+      }
+
+      // A row is promoted when the query names one of its pin terms —
+      // every token of that term present, in any order. So "tuition"
+      // and "cost of tuition" both promote the tuition row, while
+      // "tuition deadline" promotes both it and the deadlines row.
+      function isPinned(row, ws) {
+        if (!row.pin || !ws.length) return false;
+        for (var i = 0; i < row.pin.length; i++) {
+          var pw = tokens(row.pin[i]), all = pw.length > 0;
+          for (var j = 0; j < pw.length; j++) {
+            var found = false;
+            for (var k = 0; k < ws.length; k++) {
+              if (fold(ws[k]) === fold(pw[j])) { found = true; break; }
+            }
+            if (!found) { all = false; break; }
+          }
+          if (all) return true;
+        }
+        return false;
+      }
+
+      // --- rendering -----------------------------------------------
+      // Both states are the same component — umd-element-card in its
+      // list display. The pinned one adds an eyebrow and sits inside a
+      // tinted, red-ruled wrapper; the ranked one is the bare card on
+      // the divider list. Same slots either way, so a result that gets
+      // promoted does not change shape, only surround.
+      function card(row, opts) {
+        var el = document.createElement('umd-element-card');
+        el.setAttribute('data-display', 'list');
+        // Pinned rows carry photography of whatever ratio the CMS
+        // happens to hold. Without this the card sizes the image
+        // intrinsically and each promoted row lands at a different
+        // height. Must be the literal string "true" — a bare attribute
+        // is inert (registry-cards.json).
+        if (opts.withImage) el.setAttribute('data-visual-image-aligned', 'true');
+
+        // One label, always above the headline: the section the page
+        // lives in. Pinned and ranked rows carry the same one — the
+        // "Featured" label belongs to the box, not to the cards inside
+        // it, so a promoted result is byte-for-byte the ranked card.
+        // The list card's other short slot (`date`) would put the label
+        // BELOW the body copy, which reads as a footnote rather than a
+        // category, so it is left unused.
+        var html = '';
+        if (row.s) html += '<p slot="eyebrow">' + row.s + '</p>';
+        html += '<h3 slot="headline"><a href="' + row.u + '">' + row.t + '</a></h3>';
+        html += '<p slot="text">' + row.d + '</p>';
+        if (opts.withImage && row.img) {
+          html += '<a slot="image" href="' + row.u + '" tabindex="-1" aria-hidden="true">' +
+                  '<img src="' + row.img + '" alt="" loading="lazy" /></a>';
+        }
+        el.innerHTML = html;
+        return el;
+      }
+
+      function show(el, on) {
+        if (on) el.removeAttribute('hidden'); else el.setAttribute('hidden', '');
+      }
+
+      function render(q) {
+        pinList.innerHTML = '';
+        results.innerHTML = '';
+
+        if (!q) {
+          show(count, false); show(pinWrap, false); show(results, false);
+          show(empty, false); show(idle, true); show(reset, false);
+          return;
+        }
+
+        show(idle, false);
+        show(reset, true);
+
+        var ws = tokens(q);
+        var pinned = [], ranked = [];
+        INDEX.forEach(function (row) {
+          if (isPinned(row, ws)) { pinned.push(row); return; }
+          var n = score(row, ws);
+          if (n > 0) ranked.push({ row: row, n: n });
+        });
+        ranked.sort(function (a, b) { return b.n - a.n; });
+
+        var total = pinned.length + ranked.length;
+
+        if (!total) {
+          show(count, false); show(pinWrap, false); show(results, false);
+          emptyTerm.textContent = '“' + q + '”';
+          show(empty, true);
+          return;
+        }
+
+        show(empty, false);
+        count.textContent = 'Showing ' + total + ' result' + (total === 1 ? '' : 's') +
+                            ' for “' + q + '”';
+        show(count, true);
+
+        pinned.forEach(function (row) {
+          pinList.appendChild(card(row, { withImage: true }));
+        });
+        show(pinWrap, pinned.length > 0);
+
+        ranked.forEach(function (hit) {
+          var el = card(hit.row, { withImage: false });
+          el.classList.add('umd-filter-item');
+          results.appendChild(el);
+        });
+        show(results, ranked.length > 0);
+      }
+
+      // --- wiring ---------------------------------------------------
+      // The query lives in the URL so an executed search is
+      // linkable and survives a reload — same contract as the live site.
+      function currentQuery() {
+        var m = /[?&]q=([^&]*)/.exec(window.location.search);
+        return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')).trim() : '';
+      }
+
+      function run(q, push) {
+        q = (q || '').trim();
+        input.value = q;
+        if (push) {
+          var url = window.location.pathname + (q ? '?q=' + encodeURIComponent(q) : '');
+          window.history.pushState({ q: q }, '', url);
+        }
+        render(q.toLowerCase());
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        run(input.value, true);
+      });
+
+      reset.addEventListener('click', function (e) {
+        e.preventDefault();
+        run('', true);
+        input.focus();
+      });
+
+      window.addEventListener('popstate', function () { run(currentQuery(), false); });
+
+      run(currentQuery(), false);
+    })();
+  </script>
+
+  <!-- SHARED:chrome-scripts:START — generated from shared/chrome-scripts.html; do not edit here -->
+  <!-- ============================================================
+       SHARED CHROME — shadow injections
+       Inlined into every page by scripts/build-chrome.py.
+       Edit here, not in pages/*.html.
+
+       ONLY chrome-driven injections belong in this file. The other
+       shadow injections used in this project (umd-element-pathway
+       aspect ratio, umd-element-banner-promo stacked actions,
+       call-to-action and card-overlay tweaks) are driven by PAGE
+       CONTENT, not by the header/footer, so they stay in the page that
+       needs them — see OVERRIDES.md.
+  ============================================================ -->
+  <script>
+    // NAV-HEADER LOGO WIDTH — navigation-header shadow CSS hard-codes
+    // .element-header-logo img { max-width: 240px } at tablet+ with no
+    // CSS variable hook. The admissions logo is wider than the default
+    // primary wordmark; override to 320px via shadow injection.
+    (function () {
+      const NAV_HEADER_LOGO_CSS =
+        '.element-header-logo img{max-width:320px!important}';
+      function inject(el) {
+        if (!el.shadowRoot || el.__navHeaderLogoInjected) return;
+        const style = document.createElement('style');
+        style.textContent = NAV_HEADER_LOGO_CSS;
+        el.shadowRoot.appendChild(style);
+        el.__navHeaderLogoInjected = true;
+      }
+      function applyAll() {
+        document.querySelectorAll('umd-element-navigation-header').forEach(inject);
+      }
+      customElements.whenDefined('umd-element-navigation-header').then(() => {
+        applyAll();
+        setTimeout(applyAll, 0);
+        setTimeout(applyAll, 250);
+      });
+    })();
+  </script>
+  <!-- SHARED:chrome-scripts:END -->
+</body>
+</html>
