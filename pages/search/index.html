@@ -885,6 +885,14 @@
       box-shadow: 0 1px 0 0 var(--umd-color-red, #E21833);
     }
 
+    /* The form's only two children are the field and Clear search, so the
+       form's own gap IS the space between them. umd-layout-grid-gap-stacked
+       gives 32px, widening to 40px at desktop — that is the rhythm for
+       separating discrete blocks, and it leaves Clear search floating well
+       away from the control it acts on. 16px reads as attached to the field
+       at every width. */
+    #search-form { gap: 16px; }
+
     /* Direct child of the grid form, so `hidden` takes it out of the
        layout entirely and the idle band is field-only. */
     .search-reset { justify-self: end; }

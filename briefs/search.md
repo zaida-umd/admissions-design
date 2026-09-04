@@ -60,7 +60,10 @@ The query lives in `?q=`, so an executed search is linkable.
   twice. The name it carried moves to `aria-label` on the `role="search"`
   form, so the landmark is still announced. Clear search moves below the
   field, right-aligned, as a direct grid child — `hidden` then takes it out of
-  the layout entirely, so the idle band is field-only.
+  the layout entirely, so the idle band is field-only. The form's gap is
+  overridden to 16px: `umd-layout-grid-gap-stacked`'s 32/40px is the rhythm
+  for separating discrete blocks, and it left Clear search floating away from
+  the control it acts on.
 - **Band** — the Filter Band pattern minus the select. Everything is upstream:
   `umd-layout-background-highlight-light` (the `#F1F1F1` panel + `2px` red left
   rule), `umd-text-line-trailing-light`, `umd-animation-line-slide-graydark-red`,
