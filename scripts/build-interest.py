@@ -171,7 +171,18 @@ def render(slug, data, programs, colleges_by_slug):
     # because this page has two umd-element-pathway instances; the banner-promo,
     # call-to-action and card-overlay injections are not (no such elements).
     return f'''{head_top}
-{PAGE_CSS}{HEAD_TAIL_OPEN}
+{HEAD_TAIL_OPEN}
+
+  <!-- Page CSS gets its OWN style block, after cdn.js -- it is deliberately
+       NOT appended to the inlined critical.css above. tools/inline-critical.py
+       rewrites the FIRST style block in a file and leaves later ones alone, so
+       page CSS sitting inside that block is (a) invisible to --check, which
+       then reports the page as permanently stale, and (b) DELETED the moment
+       the tool is run over pages/. Cascade order is unchanged: critical <
+       page CSS < chrome CSS, exactly as when this sat at the tail of the
+       critical block. (No literal style tag in this comment on purpose -- the
+       repo's tooling finds these blocks by regex.) -->
+  <style>{PAGE_CSS}  </style>
 {_chrome.block('chrome-css', out)}
 {_chrome.block('gate', out)}
 </head>

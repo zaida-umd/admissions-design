@@ -310,7 +310,18 @@ def render_landing(doc):
     intro_paras = '\n'.join('        <p>%s</p>' % t for t in intro['paragraphs'])
 
     return '''%(head)s
-%(css)s%(head_tail)s
+%(head_tail)s
+
+  <!-- Page CSS gets its OWN style block, after cdn.js -- it is deliberately
+       NOT appended to the inlined critical.css above. tools/inline-critical.py
+       rewrites the FIRST style block in a file and leaves later ones alone, so
+       page CSS sitting inside that block is (a) invisible to --check, which
+       then reports the page as permanently stale, and (b) DELETED the moment
+       the tool is run over pages/. Cascade order is unchanged: critical <
+       page CSS < chrome CSS, exactly as when this sat at the tail of the
+       critical block. (No literal style tag in this comment on purpose -- the
+       repo's tooling finds these blocks by regex.) -->
+  <style>%(css)s  </style>
 %(chrome_css)s
 %(gate)s
 </head>
@@ -531,7 +542,18 @@ def render_search(doc):
     intro_paras = '\n'.join('        <p>%s</p>' % t for t in intro['paragraphs'])
 
     return '''%(head)s
-%(css)s%(head_tail)s
+%(head_tail)s
+
+  <!-- Page CSS gets its OWN style block, after cdn.js -- it is deliberately
+       NOT appended to the inlined critical.css above. tools/inline-critical.py
+       rewrites the FIRST style block in a file and leaves later ones alone, so
+       page CSS sitting inside that block is (a) invisible to --check, which
+       then reports the page as permanently stale, and (b) DELETED the moment
+       the tool is run over pages/. Cascade order is unchanged: critical <
+       page CSS < chrome CSS, exactly as when this sat at the tail of the
+       critical block. (No literal style tag in this comment on purpose -- the
+       repo's tooling finds these blocks by regex.) -->
+  <style>%(css)s  </style>
 %(chrome_css)s
 %(gate)s
 </head>
@@ -858,7 +880,18 @@ def render_rep(doc, person):
 ''' % items
 
     return '''%(head)s
-%(css)s%(head_tail)s
+%(head_tail)s
+
+  <!-- Page CSS gets its OWN style block, after cdn.js -- it is deliberately
+       NOT appended to the inlined critical.css above. tools/inline-critical.py
+       rewrites the FIRST style block in a file and leaves later ones alone, so
+       page CSS sitting inside that block is (a) invisible to --check, which
+       then reports the page as permanently stale, and (b) DELETED the moment
+       the tool is run over pages/. Cascade order is unchanged: critical <
+       page CSS < chrome CSS, exactly as when this sat at the tail of the
+       critical block. (No literal style tag in this comment on purpose -- the
+       repo's tooling finds these blocks by regex.) -->
+  <style>%(css)s  </style>
 %(chrome_css)s
 %(gate)s
 </head>
