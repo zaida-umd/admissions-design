@@ -887,6 +887,43 @@
       display: flex;
       align-items: center;
       overflow: visible;
+      /* White breathing room before the overlay-card bank. The quote is
+         only 148px tall inside a 400px flex-centred box, so the 126px it
+         already gets below itself reads as part of the card bank rather
+         than as the quote's own space. Same 56/80/120 scale as
+         umd-layout-vertical-landing so the rhythm matches the rest of
+         the page. Safe for the chevron: .chevron-overlap's animation is
+         anchored to the TOP of that box (top: 0), so the box growing at
+         the bottom does not move it. */
+      margin-bottom: 56px;
+    }
+
+    @media (min-width: 768px) {
+      .quote-with-chevron { margin-bottom: 80px; }
+    }
+
+    @media (min-width: 1200px) {
+      .quote-with-chevron { margin-bottom: 120px; }
+    }
+
+    /* DARK-BAND SEAM — collapse the padding where two black bands meet.
+       "Information For" and the About UMD overlay pathway are one
+       continuous black region, so each section's 104px of seam padding is
+       invisible dead space, stacked on top of the 80px the overlay pathway
+       already pads itself via data-theme="dark" (288px total at ≥1200px).
+       Both utilities were already on the markup but defined NOWHERE — not
+       in critical.css, not in any CDN bundle, not in this block (see
+       OVERRIDES.md § "Overlay pathway as a dark editorial block", which
+       flags -no-top as a dead class). Defining them zeroes the seam and
+       leaves the pathway's own 80px as the gap. Compound selectors so they
+       beat .umd-layout-background-full-dark's shorthand on specificity
+       rather than on source order. */
+    .umd-layout-background-full-dark.umd-layout-background-full-dark-no-bottom {
+      padding-bottom: 0;
+    }
+
+    .umd-layout-background-full-dark.umd-layout-background-full-dark-no-top {
+      padding-top: 0;
     }
 
     .quote-with-chevron-content {
@@ -1623,18 +1660,21 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </section>
 
   <!-- ========================================
-       3. ABOUT UMD PATHWAY — image-right, overlay display, white theme
-       Section background stays BLACK; the white overlay panel sits
-       on top of the dark band. The next section (3-up edge-to-edge
-       overlay cards) reads as a dark panel, so we drop
-       umd-layout-vertical-landing here per RULES §19 to chain the
-       two dark visual bands with no white gap between them.
-       Pathway-dark-padding still gives the 80px breathing room
-       inside this section per RULES §24.
-       Rich text uses the light variant since it sits on the white panel.
+       3. ABOUT UMD PATHWAY — image-right, overlay display, dark theme
+       The overlay-dark pathway paints its own black panel
+       (OVERRIDES.md § "Overlay pathway as a dark editorial block"), so
+       panel and band are the same black and read as one region. The
+       umd-layout-background-full-dark wrapper is kept anyway: it is
+       what chains this to the Information For band above with no white
+       seam, and -no-top/-no-bottom + dropping umd-layout-vertical-landing
+       are the RULES §19 collapse for two adjacent dark bands.
+       Dark theme also adds its own 80px vertical padding to the overlay
+       lock at ≥800px, and swaps the rich text to
+       umd-text-rich-advanced-dark itself — no page CSS needed.
+       The action CTAs carry data-theme="dark" to read on the panel.
   ======================================== -->
   <section class="umd-layout-background-full-dark umd-layout-background-full-dark-no-top">
-    <umd-element-pathway data-display="overlay" data-theme="white">
+    <umd-element-pathway data-display="overlay" data-theme="dark">
       <h2 slot="headline">About UMD</h2>
       <div slot="text">
         <div class="umd-text-rich-advanced">
@@ -1642,7 +1682,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         </div>
       </div>
       <div slot="stats">
-        <umd-element-stat data-decoration-line="false">
+        <umd-element-stat data-decoration-line="false" data-theme="dark">
           <h2 slot="stat">1856</h2>
           <div slot="text">The year UMD was founded as Maryland Agricultural College.</div>
         </umd-element-stat>
@@ -1652,10 +1692,13 @@ umd-element-scroll-top[data-layout-fixed="true"] {
            src="../page-builder/images/small/campus/Testudo-Statue-650x820.webp"
            alt="Bronze Testudo statue looking out over McKeldin Mall at sunset" />
       <div slot="actions">
-        <umd-element-call-to-action data-display="secondary">
+        <umd-element-call-to-action data-display="primary" data-theme="dark">
+          <a href="https://www.umd.edu/rankings-and-fast-facts">Rankings &amp; Fast Facts</a>
+        </umd-element-call-to-action>
+        <umd-element-call-to-action data-display="secondary" data-theme="dark">
           <a href="#land-acknowledgement">Read our Land Acknowledgement</a>
         </umd-element-call-to-action>
-        <umd-element-call-to-action data-display="secondary">
+        <umd-element-call-to-action data-display="secondary" data-theme="dark">
           <a href="#diversity">Our Commitment to Diversity</a>
         </umd-element-call-to-action>
       </div>
@@ -1832,7 +1875,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </section>
 
   <!-- ========================================
-       10. HOW TO APPLY PATHWAY — with 24 stat (admission review factors)
+       10. HOW TO APPLY PATHWAY — with 23 stat (admission review factors)
   ======================================== -->
   <section class="umd-layout-vertical-landing">
     <umd-element-pathway data-layout-image-position="left">
@@ -1844,7 +1887,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       </div>
       <div slot="stats">
         <umd-element-stat data-decoration-line="false">
-          <h2 slot="stat">24</h2>
+          <h2 slot="stat">23</h2>
           <div slot="text">Admission Review Factors</div>
         </umd-element-stat>
       </div>
@@ -1852,7 +1895,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       <img slot="image" src="../page-builder/images/large/default/CampusSpring-students.jpg" alt="Students walking across campus in spring" />
       <div slot="actions">
         <umd-element-call-to-action data-display="primary">
-          <a href="#apply">Apply Now</a>
+          <a href="#apply">How to Apply to UMD</a>
         </umd-element-call-to-action>
         <umd-element-call-to-action data-display="secondary">
           <a href="#submitting-documents">Submitting Documents</a>
@@ -1879,7 +1922,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <p>The University of Maryland offers an array of financial aid programs—including scholarships, grants, loans and student employment—as part of our commitment to making an excellent education affordable. We encourage you to visit the Office of Student Financial Aid to explore types of aid and ways to finance a higher education.</p>
           <div class="umd-layout-grid-inline-tablet-rows">
             <umd-element-call-to-action data-display="primary">
-              <a href="#tuition-aid">Learn about tuition &amp; aid at UMD</a>
+              <a href="#tuition-aid">Learn About Tuition &amp; Aid at UMD</a>
             </umd-element-call-to-action>
           </div>
         </div>
@@ -1918,7 +1961,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <p>We have several application deadlines, depending on what type of applicant you are and the semester you wish to start at the University of Maryland. Review all deadlines to determine when you should apply and when you can expect to receive an admission decision.</p>
           <div class="umd-layout-grid-inline-tablet-rows">
             <umd-element-call-to-action data-display="primary">
-              <a href="#deadlines">View all application deadlines</a>
+              <a href="#deadlines">View All Application Deadlines</a>
             </umd-element-call-to-action>
           </div>
         </div>
