@@ -1572,12 +1572,16 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </section>
 
-  <!-- 11. RESOURCES — card carousel (full-bleed; component has its own lock + black bg) -->
+  <!-- 11. RESOURCES — card carousel (full-bleed; component has its own lock + black bg)
+       Cards are type="image" over the brand red-chevron texture. type="image"
+       is REQUIRED — without it the image slot is ignored outright and the card
+       falls back to the text-only dark variant (registry-cards.json). -->
   <section class="umd-layout-vertical-landing">
     <umd-element-carousel-cards>
       <h2 slot="headline">Resources for current and prospective Terps</h2>
       <div slot="cards">
-        <umd-element-card-overlay data-theme="dark">
+        <umd-element-card-overlay type="image" data-theme="dark">
+          <img slot="image" src="../../page-builder/images/small/default/red-chevron.jpg" alt="" />
           <p slot="headline"><a href="https://academiccatalog.umd.edu/"><span>Undergraduate Catalog</span></a></p>
           <div slot="text"><p>The complete listing of UMD's undergraduate programs, requirements, and policies — your reference for everything academic.</p></div>
           <div slot="actions">
@@ -1586,7 +1590,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
             </umd-element-call-to-action>
           </div>
         </umd-element-card-overlay>
-        <umd-element-card-overlay data-theme="dark">
+        <umd-element-card-overlay type="image" data-theme="dark">
+          <img slot="image" src="../../page-builder/images/small/default/red-chevron.jpg" alt="" />
           <p slot="headline"><a href="https://careers.umd.edu/students"><span>Career Center</span></a></p>
           <div slot="text"><p>Career counseling, internship placement, employer connections, and the tools to turn your degree into a meaningful first job.</p></div>
           <div slot="actions">
