@@ -2,7 +2,7 @@
 
 The chrome lives in shared/ as four files:
 
-    shared/header.html          header stack (nav-utility + utility-header +
+    shared/header.html          header stack (nav-utility +
                                 navigation-header with the project nav items)
     shared/footer.html          visual footer
     shared/chrome.css           CSS companions the chrome markup depends on

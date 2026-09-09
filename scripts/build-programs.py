@@ -74,7 +74,7 @@ programs_json = json.dumps(records, ensure_ascii=False, separators=(',', ':'))
 # ---------------------------------------------------------------- body
 BODY = r'''  </style>
 
-  <script src="https://unpkg.com/@universityofmaryland/web-components-library@1.19.5/dist/cdn.js"></script>
+  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
 
   <style>
     /* Brand chevron animation flanking the Study Here rich text and

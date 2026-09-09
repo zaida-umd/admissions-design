@@ -61,23 +61,30 @@ Reuses `umd-element-brand-logo-animation` (same element as the study-here chevro
 
 Pages using this: `pages/how-to-apply/index.html`.
 
-## Card-overlay horizontal padding (desktop+)
+## Card-overlay horizontal padding (desktop+) — RETIRED 2026-09-09
 
-`umd-element-card-overlay` (image variant) renders its content inside a shadow-DOM `.card-overlay-image-container` with hard-coded horizontal padding of `token.spacing.md` (24px) at every breakpoint — the upstream styles only adjust `padding-top` at the medium breakpoint, leaving sides at 24px from mobile through 4K. On wide viewports this crowds the headline/eyebrow/CTA against the card edges.
+**Landed upstream in `web-components-library@2.0.0`; the local injection is removed. Do NOT re-add.**
 
-Shadow-inject step-up horizontal padding aligned to the upstream token breakpoints (`highDef.min` = 1200px, `maximum.min` = 1500px):
+`umd-element-card-overlay` used to hard-code horizontal padding to `token.spacing.md`
+(24px) at every breakpoint, crowding the headline/eyebrow/CTA against the card edges on
+wide viewports. We shadow-injected a step-up (24 / 32 / 48px at 1200px / 1500px).
 
-```css
-.card-overlay-image-container { padding-left: 24px !important; padding-right: 24px !important; }
-@media (min-width: 1200px) { .card-overlay-image-container { padding-left: 32px !important; padding-right: 32px !important; } }
-@media (min-width: 1500px) { .card-overlay-image-container { padding-left: 48px !important; padding-right: 48px !important; } }
-```
+Upstream now ships the step-up itself, on **both** variants — `overlay/image.ts` and
+`overlay/color.ts` each carry `@container (min-width: 600px) { padding-left/right:
+token.spacing.xl }` (40px). Two consequences worth knowing:
 
-**Upstream candidate:** this should fold into `web-elements-library/src/composite/card/overlay/image.ts` as additional `createMediaQuery` entries on the `card-overlay-image-container` style block, mirroring the existing `medium.min` paddingTop step-up. The vertical padding does not need to change.
+- **It is container-based, not viewport-based**, which is strictly more correct: a narrow
+  card in a wide viewport now correctly stays at 24px. The old injection could not do that.
+- **The ceiling drops from 48px to 40px** on very wide screens. Accepted — matching the
+  design system beats holding a local 8px.
 
-**Scope caveat:** the step-up should only apply when overlay cards sit inside a horizontally-bounded layout (i.e. within `umd-layout-space-horizontal-*`). When the cards are in a "lock" / full-bleed bank that runs edge-to-edge to the browser viewport, the original 24px sides should be retained — the extra side padding is meant to give breathing room inside a constrained card width, not to inset content within an already-edge-to-edge band. Upstream should gate the wider padding on a layout context check (or expose a CSS variable / opt-in attribute so the page can suppress it for full-bleed banks).
+The old injection actively *masked* the upstream rule: it used `!important` with viewport
+media queries, so it won at every width. That is why it had to come out with the pin bump
+rather than being left as harmless dead code.
 
-Pages using this: `pages/admissions.html`, `pages/tuition/index.html`.
+The old scope caveat (full-bleed "lock" banks should keep 24px sides) is now handled for
+free — a full-bleed bank's cards are wide containers, but a card narrower than 600px in one
+keeps the tighter padding on its own.
 
 ## Card-overlay: the IMAGE variant clamps `slot="text"`, the COLOR variant does not
 
@@ -145,7 +152,9 @@ count, unregistered tags, section count and per-section heights:
   `transfer-applicants` +3px, `student-life` −32/−8px. Consistent with the 1.19 carousel
   refactor; nothing reflowed or broke.
 - `umd-element-utility-header` reports as unregistered with no shadow root on **all 11 pages at
-  both versions** — a pre-existing baseline condition, not an upgrade artifact.
+  both versions**. This was recorded as a pre-existing baseline condition; upstream later
+  established (page-builder `0f35707`, 2026-09-08) that the tag never existed in any version.
+  It has since been removed from `shared/header.html` and from every page here.
 
 ## Overlay pathway on a dark band — use `data-theme="white"`, not `"light"`
 

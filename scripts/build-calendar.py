@@ -144,7 +144,7 @@ today_json  = json.dumps(data['today'])
 # ---------------------------------------------------------------- body
 BODY = r'''  </style>
 
-  <script src="https://unpkg.com/@universityofmaryland/web-components-library@1.19.5/dist/cdn.js"></script>
+  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
 
   <!-- Calendar — page-specific styles -->
   <style>
