@@ -1577,36 +1577,31 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </section>
 
-  <!-- 11. RESOURCES — card carousel (full-bleed; component has its own lock + black bg)
-       Cards are type="image" over the brand red-chevron texture. type="image"
-       is REQUIRED — without it the image slot is ignored outright and the card
-       falls back to the text-only dark variant (registry-cards.json). -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-carousel-cards>
-      <h2 slot="headline">Resources for current and prospective Terps</h2>
-      <div slot="cards">
-        <umd-element-card-overlay type="image" data-theme="dark">
-          <img slot="image" src="../../page-builder/images/small/default/red-chevron.jpg" alt="" />
-          <p slot="headline"><a href="https://academiccatalog.umd.edu/"><span>Undergraduate Catalog</span></a></p>
-          <div slot="text"><p>The complete listing of UMD's undergraduate programs, requirements, and policies — your reference for everything academic.</p></div>
-          <div slot="actions">
-            <umd-element-call-to-action data-display="secondary" data-theme="dark" data-visual-size="standard">
-              <a href="https://academiccatalog.umd.edu/"><span>View the catalog</span></a>
-            </umd-element-call-to-action>
-          </div>
-        </umd-element-card-overlay>
-        <umd-element-card-overlay type="image" data-theme="dark">
-          <img slot="image" src="../../page-builder/images/small/default/red-chevron.jpg" alt="" />
-          <p slot="headline"><a href="https://careers.umd.edu/students"><span>Career Center</span></a></p>
-          <div slot="text"><p>Career counseling, internship placement, employer connections, and the tools to turn your degree into a meaningful first job.</p></div>
-          <div slot="actions">
-            <umd-element-call-to-action data-display="secondary" data-theme="dark" data-visual-size="standard">
-              <a href="https://careers.umd.edu/students"><span>Visit the Career Center</span></a>
-            </umd-element-call-to-action>
-          </div>
-        </umd-element-card-overlay>
+  <!-- 11. RESOURCES — dark section intro + dark icon-link cards. Same band as
+       how-to-apply/{freshman,transfer,international}-applicants.html so every
+       "Resources" block on the site reads identically: full-dark section,
+       dark section-intro, dark icon cards whose headline IS the link.
+
+       Two cards here, so the grid is umd-layout-grid-gap-two (gap-three would
+       leave a hole in the third column). -->
+  <section class="umd-layout-background-full-dark umd-layout-vertical-landing">
+    <div class="umd-layout-space-horizontal-larger">
+      <umd-element-section-intro data-theme="dark" class="umd-layout-vertical-landing-child">
+        <h2 slot="headline">Resources</h2>
+      </umd-element-section-intro>
+      <div class="umd-layout-grid-gap-two">
+        <umd-element-card-icon data-theme="dark">
+          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
+          <h3 slot="headline"><a href="https://academiccatalog.umd.edu/">Undergraduate Catalog</a></h3>
+          <p slot="text">The complete listing of UMD's undergraduate programs, requirements, and policies — your reference for everything academic.</p>
+        </umd-element-card-icon>
+        <umd-element-card-icon data-theme="dark">
+          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
+          <h3 slot="headline"><a href="https://careers.umd.edu/students">Career Center</a></h3>
+          <p slot="text">Career counseling, internship placement, employer connections, and the tools to turn your degree into a meaningful first job.</p>
+        </umd-element-card-icon>
       </div>
-    </umd-element-carousel-cards>
+    </div>
   </section>
 
   <!-- 12. STAY CONNECTED — banner-promo (gold default) inside larger lock -->

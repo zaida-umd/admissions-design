@@ -817,6 +817,25 @@
       color: #000000;
       text-decoration: none;
     }
+
+
+    /* ============================================================
+       25. SQUARE CROP FOR THE ZIG-ZAG FIGURES (§§7-9)
+
+       The three image/rich-text combos at the foot of the page ship at
+       388x461, 600x760 and 600x760 — three different portrait ratios, so
+       the photo column changed height row to row and the rows had no
+       shared silhouette reading down the page. A 1:1 crop gives all three
+       one shape.
+
+       Done in CSS, not by re-cropping the files, for the same reason as
+       international-applicants.html's .intl-figure-square: the sources are
+       shared and editing them in place would change other pages.
+       ============================================================ */
+    figure.sl-figure-square img {
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
   </style>
 
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
@@ -1482,7 +1501,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           </div>
         </div>
         <div class="umd-text-rich-advanced">
-          <figure class="umd-layout-alignment-block-stacked">
+          <figure class="umd-layout-alignment-block-stacked sl-figure-square">
             <img src="../../images/student-life/Education-Abroad-fields_2023-06-06-200744_ksck.jpg" alt="Terps studying abroad" />
           </figure>
         </div>
@@ -1495,7 +1514,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <div class="umd-layout-space-horizontal-small">
       <div class="umd-layout-grid-gap-two">
         <div class="umd-text-rich-advanced">
-          <figure class="umd-layout-alignment-block-stacked">
+          <figure class="umd-layout-alignment-block-stacked sl-figure-square">
             <img src="../../images/student-life/students-dorm@2x.jpg" alt="Scene from a dorm" />
           </figure>
         </div>
@@ -1532,7 +1551,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           </div>
         </div>
         <div class="umd-text-rich-advanced">
-          <figure class="umd-layout-alignment-block-stacked">
+          <figure class="umd-layout-alignment-block-stacked sl-figure-square">
             <img src="../../images/student-life/safety@2x.jpg" alt="Safety" />
           </figure>
         </div>

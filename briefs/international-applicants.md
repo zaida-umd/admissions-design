@@ -18,8 +18,8 @@ and the mobile drawer.
 | 6 | Benefits of Applying Early Action + Application Platforms | dark band, `umd-element-card-overlay` pair **with the brand chevron** (`.fa-cta-section` / `.fa-chevron` + the end-of-body positioning script) | freshman §6 |
 | 7 | Application Checklist | `umd-element-sticky-columns` — sticky intro, static column holds one `umd-element-accordion-item` per applicant type, each wrapping an `<ol>` of 7 steps | source accordion + transfer §4 sticky/accordion |
 | 8 | Making Sure Your Application is Complete | `umd-element-pathway data-display="sticky"`, light, image left, square image | — |
-| 9 | Services for International Students | **dark band** + `section-intro` + 4 zig-zag rich-text/image rows | LAYOUT-PATTERNS.md § "…two-column image + text (zig-zag)", inverted |
-| 10 | Resources | light section-intro + 3 light icon-link cards | apply-now §7 |
+| 9 | Services for International Students | LIGHT band + **dark `umd-element-banner-promo`** as the headline/divider + 4 zig-zag rich-text/image rows | LAYOUT-PATTERNS.md § "…two-column image + text (zig-zag)", inverted |
+| 10 | Resources | **dark band** + dark section-intro + 3 dark icon-link cards | freshman §9 / transfer §11 — the shared Resources treatment |
 | 11 | Stay connected | `umd-element-banner-promo` | freshman §10 |
 
 ## The ordered lists are numbered by the DESIGN SYSTEM — do not restyle them
