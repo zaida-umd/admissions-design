@@ -86,6 +86,121 @@ The old scope caveat (full-bleed "lock" banks should keep 24px sides) is now han
 free — a full-bleed bank's cards are wide containers, but a card narrower than 600px in one
 keeps the tighter padding on its own.
 
+## Hero-grid centre video overflows its grid row (2.0.0 regression)
+
+**Page:** `pages/index.html` (the only page with `umd-element-hero-grid`).
+
+`hero/custom/grid.ts` styles the centre video wrapper `width: 100%` + `aspect-ratio: 1 / 1`.
+Those two declarations existed at 1.19.5 as well, but were nested one level too deep —
+`additionalElementStyles: { additionalElementStyles: {...} }` — so the builder never emitted
+them. Release 2.0 renamed the key to `customStyles` (a single level), which made the
+previously dead rule go live.
+
+The centre column is as wide as its grid track (640px at 1280px viewport, 900px at 1600px)
+but the middle row of `grid-template-rows` is only 296px / 436px. A 1:1 video therefore
+renders at the **column width**, not the row height:
+
+| viewport | centre rows | video height | result |
+|---|---|---|---|
+| 1280px | `180 296 180` | **640px** | overflows row by 344px |
+| 1600px | `250 436 250` | **900px** | overflows row by 464px |
+
+At 1280px it swallowed the 32px row gap **and** the entire bottom image (712→892), then bled
+132px past the hero onto the Information For band below — covering 63% of that 208px section,
+which is why the band read as "missing its dark background". Nothing about the background was
+wrong; it was being painted over.
+
+Shadow-inject the video back to its row:
+
+```css
+.hero-grid-center .umd-element-video { aspect-ratio: auto !important; height: 100% !important; }
+```
+
+Restores the 1.19.5 geometry exactly (296px / 436px, both corner images visible, no bleed).
+**Upstream candidate:** the wrapper should take `height: 100%` from its grid row and let
+`aspect-ratio` apply only where the row is not already constrained. Remove this injection once
+upstream constrains it.
+
+## Dark pathway rich text: `<p>` must be a DIRECT child of `slot="text"` (2.0.0 regression)
+
+**Upstream regression with a markup workaround.** We fixed it by deleting our wrapper, but the
+fault is upstream — see "Why this is upstream's bug" below. Put `<p>` directly in `slot="text"`.
+
+At 1.19.5 the pathway shadow sheet carried `.umd-text-rich-advanced-dark p { line-height: 1.5em }`.
+2.0.0 **dropped that one rule** (everything else in the rich-text block is byte-identical), and
+it was the only thing setting the paragraph's line-height.
+
+The DS already wraps `slot="text"` in `.umd-text-rich-advanced-dark umd-rich-text-dark`, which
+computes `line-height: 27px`. With `<p>` as a direct child, it inherits that 27px and is fine.
+Nesting our own `<div class="umd-text-rich-advanced">` in between breaks the chain: that div
+computes 18px inside the shadow (our project class is light-DOM only and cannot reach it), and
+the `<p>` inherits 18px — `line-height: 1`, visibly cramped.
+
+Measured on the About UMD pathway before the fix: `<p>` 18px vs 27px, section 1054px vs 1135px.
+Every other pathway in the project was already correct because they all put `<p>` straight into
+`slot="text"` — which is why only this one looked wrong.
+
+Fix is to delete the wrapper, not to inject CSS. Removing only its *class* does not help: the
+bare `<div>` still computes 18px, so the element itself has to go.
+
+### Why this is upstream's bug, not just our markup
+
+The nested element is not merely *failing to inherit* — it is handed an explicit
+`line-height: 1` that **blocks** inheritance. Measured by probing a bare `<div>` appended
+into the wrapper's shadow:
+
+| test | result |
+|---|---|
+| bare `<div>` in the wrapper | 18px (wrapper is 27px) |
+| force parent to `line-height: 27px` inline | child **still 18px** |
+| set `line-height: inherit` on the child | 27px |
+
+If this were ordinary inheritance the second row would read 27px. It does not, because the
+component's shadow sheet carries a blanket element-selector reset:
+
+```css
+div { line-height: 1; }        /* in the pathway's shadow CSS */
+```
+
+So the full chain is:
+
+1. `.umd-text-rich-advanced-dark { font-size: 18px; line-height: 1.5em }` → wrapper computes 27px
+2. any nested `<div>` is caught by `div { line-height: 1 }` → 18px, which **blocks** inheritance
+3. a `<p>` inside that div inherits the div's 18px — `line-height: 1`, visibly cramped
+
+At 1.19.5 this was neutralised by `.umd-text-rich-advanced-dark p { line-height: 1.5em }`, which
+reached paragraphs at *any* depth and outranked the bare `div` reset. 2.0.0 dropped that one rule,
+so only a **direct-child** `<p>` still works — via the inheritance the wrapper provides.
+
+Nested structure in a rich-text slot is legitimate usage: the component itself ships rules for
+`ul`, `ol`, `li`, `blockquote` and `table` inside this wrapper (`li` and `blockquote` measure
+25.2px and are unaffected, because they carry their own explicit line-height). A `<p>` inside a
+wrapping `<div>` — ordinary CMS rich-text output — is the case that breaks. Any consumer nesting
+a paragraph one level deep hits this, not just this project.
+
+### Reproduced upstream (no project code involved)
+
+Confirmed on the design system's own component page,
+`https://beta.umd-staging.com/components/pathway/overlay/image`. All 11 pathways there render
+correctly **because every one of them puts `<p>` directly in `slot="text"`** — the shape that
+still works. The page never exercises the nested case.
+
+Appending three probes into a dark pathway's shadow wrapper on that page reproduces it:
+
+| probe | line-height |
+|---|---|
+| `<p>` appended directly to the wrapper | 27px ✓ |
+| `<p>` inside a bare `<div>` | **18px** ✗ |
+| `<p>` inside a `<div class="umd-text-rich-advanced">` | **18px** ✗ |
+
+The second and third rows are identical, which rules our project class out entirely — an
+unstyled `<div>` is sufficient to trigger it.
+
+**Upstream candidate:** either restore `.umd-text-rich-advanced-dark p { line-height: 1.5em }`,
+or drop the blanket `div { line-height: 1 }` reset so the wrapper's line-height inherits at any
+depth. The blanket reset is the deeper problem — it makes any structural `<div>` in a rich-text
+slot silently collapse the leading of everything beneath it.
+
 ## Card-overlay: the IMAGE variant clamps `slot="text"`, the COLOR variant does not
 
 Not an override in force — a documented silent failure, kept because it cost a build iteration and because the two variants are one tag apart.

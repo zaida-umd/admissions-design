@@ -1682,9 +1682,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <umd-element-pathway data-display="overlay" data-theme="dark">
       <h2 slot="headline">About UMD</h2>
       <div slot="text">
-        <div class="umd-text-rich-advanced">
-          <p>The University of Maryland (UMD) is the state of Maryland's flagship institution, a top-ranked public research university, and a global leader in research, entrepreneurship and innovation. Our campus community is strengthened by the richness of perspectives, lifestyles and personalities brought together here. We are home to students, faculty, staff, and nearly 405,000 alumni dedicated to moving Fearlessly Forward in pursuit of excellence and impact for the public good.</p>
-        </div>
+        <p>The University of Maryland (UMD) is the state of Maryland's flagship institution, a top-ranked public research university, and a global leader in research, entrepreneurship and innovation. Our campus community is strengthened by the richness of perspectives, lifestyles and personalities brought together here. We are home to students, faculty, staff, and nearly 405,000 alumni dedicated to moving Fearlessly Forward in pursuit of excellence and impact for the public good.</p>
       </div>
       <div slot="stats">
         <umd-element-stat data-decoration-line="false" data-theme="dark">
@@ -2098,6 +2096,36 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       customElements.whenDefined('umd-element-pathway').then(() => {
         applyAll();
         // Re-run after hydration completes
+        setTimeout(applyAll, 0);
+        setTimeout(applyAll, 250);
+      });
+    })();
+
+    // HERO-GRID CENTER VIDEO HEIGHT — web-components-library@2.0.0 regression.
+    // hero/custom/grid.ts sets the video wrapper to width:100% + aspect-ratio:1/1.
+    // Those styles existed at 1.19.5 too, but were nested one level too deep
+    // (additionalElementStyles.additionalElementStyles) and never applied; 2.0.0
+    // renamed the key to customStyles, so the dead rule went live. The center
+    // column is 640px wide but its middle grid row is only 296px, so a 1:1 video
+    // renders 640px tall — swallowing the 32px row gap AND the entire bottom
+    // image, and bleeding 132px over the Information For band below.
+    // Restore the 1.19.5 geometry: let the video fill its grid row instead.
+    // Remove when upstream constrains the video to its row.
+    (function () {
+      const HERO_GRID_VIDEO_CSS =
+        '.hero-grid-center .umd-element-video{aspect-ratio:auto!important;height:100%!important}';
+      function inject(el) {
+        if (!el.shadowRoot || el.__heroGridVideoInjected) return;
+        const style = document.createElement('style');
+        style.textContent = HERO_GRID_VIDEO_CSS;
+        el.shadowRoot.appendChild(style);
+        el.__heroGridVideoInjected = true;
+      }
+      function applyAll() {
+        document.querySelectorAll('umd-element-hero-grid').forEach(inject);
+      }
+      customElements.whenDefined('umd-element-hero-grid').then(() => {
+        applyAll();
         setTimeout(applyAll, 0);
         setTimeout(applyAll, 250);
       });
