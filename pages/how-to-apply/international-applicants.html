@@ -40,10 +40,16 @@
        web-components.min.css. As those land upstream, drop these.
        ============================================================ */
 
-    /* umd-element-utility-header — present on every page (band above the
-       nav header). Not in upstream bundle as of v1.8.11. */
-    umd-element-utility-header:not(:defined) { content-visibility: hidden; }
-    umd-element-utility-header { display: block; container-type: normal; }
+    /* umd-element-utility-header — RETIRED 2026-09-08: the tag does not exist.
+       It was never a component, in any version — the design system's only
+       utility-bar tag is umd-element-navigation-utility, which is what actually
+       renders the UMD flag / "A Top 20 Public Research University" band. These
+       rules were written on the assumption that a real component had been left
+       out of web-components.min.css, so they gap-filled a phantom: the element
+       never upgraded, :not(:defined) always matched, and it sat on every page
+       at height 0 with no children. Do NOT re-add. If you want the band, use
+       umd-element-navigation-utility (data-alert-off="true" hides its alert
+       strip, which is how TEMPLATE.html has always rendered it). */
 
     /* umd-element-carousel* — RETIRED (upstream since web-styles-library@1.8.14): all six
        variants (plus new umd-element-carousel-people) now ship in upstream
@@ -813,7 +819,7 @@
     }
   </style>
 
-  <script src="https://unpkg.com/@universityofmaryland/web-components-library@1.19.5/dist/cdn.js"></script>
+  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
 
   <style>
     /* Brand chevron animation flanking the Applying as an International Student rich text and
@@ -938,26 +944,12 @@
       .intl-zigzag-reverse > figure { order: -1; }
     }
 
-    /* ---- Zig-zag on the dark band (§9) ----
-       .umd-text-rich-advanced * paints every descendant #454545 (critical.css
-       §7's note), and the headline utility classes assume a light ground, so a
-       dark band needs both repainted. The <hr> rule above is #000; here it has
-       to be white, matching .umd-text-divider.dark. */
-    .intl-services-dark .intl-zigzag h3 { color: #ffffff; }
-    .intl-services-dark .umd-text-rich-advanced,
-    .intl-services-dark .umd-text-rich-advanced * { color: #ffffff; }
-    .intl-services-dark .umd-layout-grid-gap-two .umd-text-rich-advanced hr {
-      border-top-color: #ffffff;
-    }
-    /* Keep the gradient-underline link treatment, inverted. */
-    .intl-services-dark .umd-text-rich-advanced a {
-      color: #ffffff;
-      background-image: linear-gradient(#ffffff, #ffffff);
-    }
-    .intl-services-dark .umd-text-rich-advanced a:hover,
-    .intl-services-dark .umd-text-rich-advanced a:focus {
-      background-image: linear-gradient(#FFD200, #FFD200);
-    }
+    /* The dark banner-promo divider (§9 headline) to the first zig-zag row.
+       120px matches critical.css §22's dark→light section transition gap:
+       same visual situation — a black full-width bar above light body copy —
+       so it takes the same number rather than inventing one. Unconditional,
+       as §22's is. */
+    .intl-services-promo { margin-bottom: 120px; }
 
     /* Space between the four zig-zag rows. The grid's own 32px gap is the
        COLUMN gap inside one row; consecutive rows need their own rhythm. */
@@ -1339,7 +1331,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <!-- 1. GLOBAL UNIVERSITY HEADER -->
   <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
   <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
-  <umd-element-utility-header></umd-element-utility-header>
 
   <umd-element-navigation-header
     sticky
@@ -1792,12 +1783,39 @@ umd-element-scroll-top[data-layout-fixed="true"] {
        24px above/below spacing comes from the wrapper.
 
        h3, not the pattern's h2: the section already has an h2 from the
-       section-intro above, so the four services sit a level below it. -->
-  <section class="umd-layout-background-full-dark umd-layout-vertical-landing intl-services-dark">
-    <div class="umd-layout-space-horizontal-small">
-      <umd-element-section-intro data-theme="dark" class="umd-layout-vertical-landing-child">
+       section-intro above, so the four services sit a level below it.
+
+       LIGHT band. This section used to be dark; it was flipped so that §10
+       Resources is the page's dark Resources band without the two merging into
+       one unbroken black region. §6 (Early Action / Application Platforms) is
+       still dark, so the page keeps a brand-chevron band above this one. The
+       .intl-services-dark repaint rules that went with the dark treatment were
+       deleted, not just unhooked.
+
+       The headline sits in a DARK banner-promo rather than a section-intro:
+       this is the longest stretch of light page on the site and the black bar
+       reads as a divider between the application content above and the
+       services below. registry-alerts.json marks `text` REQUIRED on
+       banner-promo. registry-alerts.json marks `text` required; it is
+       deliberately omitted here — this bar is a divider carrying a section
+       title, not a promo, so it is headline-only.
+
+       The promo takes the LARGER lock (1152px content) while the zig-zag rows
+       below keep the small one (864px) — banner-promo is a full-bleed bar, not
+       a text block, and is not meant to align to the body column. That matches
+       the gold promo in §11 and the Resources band in §10, both -larger.
+
+       .intl-services-promo carries the 120px gap down to the first zig-zag row
+       — the same number critical.css §22 injects between a full-bleed dark
+       section and the light one after it. This is that same dark→light
+       transition, just inside one section rather than between two, so the
+       vertical-landing-child gap (48px) reads far too tight under a black
+       bar. -->
+  <section class="umd-layout-vertical-landing">
+    <div class="umd-layout-space-horizontal-larger">
+      <umd-element-banner-promo data-theme="dark" class="intl-services-promo">
         <h2 slot="headline">Services for International Students</h2>
-      </umd-element-section-intro>
+      </umd-element-banner-promo>
     </div>
 
     <div class="umd-layout-space-horizontal-small intl-zigzag-stack">
@@ -1809,7 +1827,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <p>The International Student &amp; Scholar Services (ISSS) office assists international students with transitioning to the U.S., advising on immigration requirements, and making the most of their academic experience here. While students don't start working with ISSS until they have been admitted to the university, we encourage you to visit their website to learn more.</p>
           <p>It's also important to familiarize yourself with UMD's <a href="https://admissions.umd.edu/apply/financial-certification">financial certification</a> requirements and the process to <a href="https://admissions.umd.edu/apply/obtainingvisa">obtain a visa</a>. Once admitted, ISSS will help you with these processes in further detail.</p>
           <div class="umd-layout-grid-inline-tablet-rows">
-            <umd-element-call-to-action data-display="secondary" data-theme="dark">
+            <umd-element-call-to-action data-display="secondary">
               <a href="https://globalmaryland.umd.edu/offices/international-student-scholar-services/prospective-and-new-international-students">Explore ISSS</a>
             </umd-element-call-to-action>
           </div>
@@ -1828,7 +1846,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <p>The Maryland English Institute (MEI) provides English language instruction and assessment at the postsecondary level for speakers of other languages. MEI offers rigorous courses of study while providing a positive and supportive learning community and promoting cross-cultural understanding.</p>
           <p>In some cases, UMD applicants must complete coursework through MEI before beginning their degree program. Students are notified within their admission decision letter if this is required of them.</p>
           <div class="umd-layout-grid-inline-tablet-rows">
-            <umd-element-call-to-action data-display="secondary" data-theme="dark">
+            <umd-element-call-to-action data-display="secondary">
               <a href="https://marylandenglishinstitute.com/">Learn More About MEI</a>
             </umd-element-call-to-action>
           </div>
@@ -1847,7 +1865,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <p>Transfer students from two-year and four-year schools are encouraged to take advantage of Pre-Transfer Advising before applying to UMD. Pre-Transfer Advising will help assess your readiness to transfer and estimate your time to degree completion. You can also review <a href="https://www.4yearplans.umd.edu/">4-Year Plans</a> for information about the major and graduation requirements for specific programs.</p>
           <p>Pre-Transfer advisors help you determine how previous coursework will apply to your UMD degree, identify remaining general education and major requirements, and locate specific resources for additional assistance.</p>
           <div class="umd-layout-grid-inline-tablet-rows">
-            <umd-element-call-to-action data-display="secondary" data-theme="dark">
+            <umd-element-call-to-action data-display="secondary">
               <a href="https://pretransferadvising.umd.edu/">Reach Out to Pre-Transfer Advising</a>
             </umd-element-call-to-action>
           </div>
@@ -1866,7 +1884,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <p>Transfer Credit Services facilitates the evaluation of credit for new students who have earned college credit or <a href="http://www.transfercredit.umd.edu/plc.html">prior learning credits</a> (such as AP, IB, A/AS level exams). They provide a course database to help students and advisors estimate what credits will transfer to UMD.</p>
           <p>A final determination will be made after being admitted to UMD and a review of your official college transcripts.</p>
           <div class="umd-layout-grid-inline-tablet-rows">
-            <umd-element-call-to-action data-display="secondary" data-theme="dark">
+            <umd-element-call-to-action data-display="secondary">
               <a href="https://www.transfercredit.umd.edu/index.html">Learn About Transfer Credit Services</a>
             </umd-element-call-to-action>
           </div>
@@ -1879,31 +1897,28 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </section>
 
-  <!-- 10. RESOURCES — LIGHT band, light icon-link cards. Matches the treatment
-       on apply-now/index.html §7. icon-link.svg is the light-theme spelling of
-       the asset; it is byte-identical to icon-link-dark.svg (both md5
-       7877acfc…) and draws the same red glyph.
-
-       This leaves §6 (Early Action / Application Platforms) as the page's ONLY
-       dark band, which is what carries the brand chevron. -->
-  <section class="umd-layout-vertical-landing">
+  <!-- 10. RESOURCES — dark section intro + dark icon-link cards. Same band as
+       freshman-applicants.html §9, transfer-applicants.html §11 and
+       academics/index.html §11 — every "Resources" block on the site is a
+       full-dark section with dark icon cards. -->
+  <section class="umd-layout-background-full-dark umd-layout-vertical-landing">
     <div class="umd-layout-space-horizontal-larger">
-      <umd-element-section-intro class="umd-layout-vertical-landing-child">
+      <umd-element-section-intro data-theme="dark" class="umd-layout-vertical-landing-child">
         <h2 slot="headline">Resources</h2>
       </umd-element-section-intro>
       <div class="umd-layout-grid-gap-three">
-        <umd-element-card-icon>
-          <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
+        <umd-element-card-icon data-theme="dark">
+          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
           <h3 slot="headline"><a href="https://admissions.umd.edu/apply/application-faqs">Application FAQs</a></h3>
           <p slot="text">If questions come up as you're filling out the UMD application, be sure to reference our frequently asked questions. We've gathered answers about the application platforms, required materials, what to do after you've applied, and more.</p>
         </umd-element-card-icon>
-        <umd-element-card-icon>
-          <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
+        <umd-element-card-icon data-theme="dark">
+          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
           <h3 slot="headline"><a href="https://admissions.umd.edu/apply/submitting-documents">Submitting Documents</a></h3>
           <p slot="text">Find details on the best way to submit all of your required application materials.</p>
         </umd-element-card-icon>
-        <umd-element-card-icon>
-          <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
+        <umd-element-card-icon data-theme="dark">
+          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
           <h3 slot="headline"><a href="https://admissions.umd.edu/apply/admission-review-process-factors">Admission Review Process &amp; Factors</a></h3>
           <p slot="text">Familiarize yourself with our holistic review process and the many factors we consider when reviewing applications.</p>
         </umd-element-card-icon>
@@ -2041,14 +2056,15 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       });
     });
 
-    // NOTE — no card-overlay injections on this page. The two documented ones
-    // (horizontal padding step-up, and the 300/220-char destructive text clamp)
-    // both target the IMAGE variant's shadow nodes: .card-overlay-image-container
-    // and .card-overlay-image-text-content. These cards are the COLOR variant
-    // (no slot="image"), whose shadow is .card-overlay-color — it has neither
+    // NOTE — no card-overlay injections on this page. The remaining documented
+    // one (the 300/220-char destructive text clamp) targets the IMAGE variant's
+    // .card-overlay-image-text-content. These cards are the COLOR variant
+    // (no slot="image"), whose shadow is .card-overlay-color — it has no such
     // node, and it does not clamp slot="text" at all (verified: the 451-char
     // Early Action paragraph renders in full, untouched). Carrying the
-    // injections here would have been dead code. See OVERRIDES.md.
+    // injection here would have been dead code. The horizontal padding step-up
+    // that used to be listed alongside it is retired — upstream 2.0.0 handles
+    // both variants via @container. See OVERRIDES.md.
 
     // BRAND CHEVRON — Early Action / Application Platforms band.
     // Ported from the When-to-Apply band on pages/how-to-apply.html; see

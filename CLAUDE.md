@@ -96,7 +96,7 @@ Every page within a single design project must use the **same site header, navig
 
 | File | What it holds |
 |---|---|
-| `shared/header.html` | Header stack: `umd-element-navigation-utility` + `umd-element-utility-header` + `umd-element-navigation-header` with the project nav items and logo |
+| `shared/header.html` | Header stack: `umd-element-navigation-utility` + `umd-element-navigation-header` with the project nav items and logo |
 | `shared/footer.html` | `umd-element-footer data-display="visual"` |
 | `shared/chrome.css` | CSS companions the chrome markup depends on (see below) |
 | `shared/chrome-scripts.html` | Chrome-driven shadow injections (nav-header logo width) |

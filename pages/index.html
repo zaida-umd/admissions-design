@@ -40,10 +40,16 @@
        web-components.min.css. As those land upstream, drop these.
        ============================================================ */
 
-    /* umd-element-utility-header — present on every page (band above the
-       nav header). Not in upstream bundle as of v1.8.11. */
-    umd-element-utility-header:not(:defined) { content-visibility: hidden; }
-    umd-element-utility-header { display: block; container-type: normal; }
+    /* umd-element-utility-header — RETIRED 2026-09-08: the tag does not exist.
+       It was never a component, in any version — the design system's only
+       utility-bar tag is umd-element-navigation-utility, which is what actually
+       renders the UMD flag / "A Top 20 Public Research University" band. These
+       rules were written on the assumption that a real component had been left
+       out of web-components.min.css, so they gap-filled a phantom: the element
+       never upgraded, :not(:defined) always matched, and it sat on every page
+       at height 0 with no children. Do NOT re-add. If you want the band, use
+       umd-element-navigation-utility (data-alert-off="true" hides its alert
+       strip, which is how TEMPLATE.html has always rendered it). */
 
     /* umd-element-carousel* — RETIRED (upstream since web-styles-library@1.8.14): all six
        variants (plus new umd-element-carousel-people) now ship in upstream
@@ -813,7 +819,7 @@
     }
   </style>
 
-  <script src="https://unpkg.com/@universityofmaryland/web-components-library@1.19.5/dist/cdn.js"></script>
+  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
 
   <style>
     /* ---- Preserved page-specific overrides (were in the pre-migration
@@ -1381,7 +1387,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   ============================================================ -->
   <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
   <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
-  <umd-element-utility-header></umd-element-utility-header>
 
   <umd-element-navigation-header
     sticky
@@ -1677,9 +1682,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <umd-element-pathway data-display="overlay" data-theme="dark">
       <h2 slot="headline">About UMD</h2>
       <div slot="text">
-        <div class="umd-text-rich-advanced">
-          <p>The University of Maryland (UMD) is the state of Maryland's flagship institution, a top-ranked public research university, and a global leader in research, entrepreneurship and innovation. Our campus community is strengthened by the richness of perspectives, lifestyles and personalities brought together here. We are home to students, faculty, staff, and nearly 405,000 alumni dedicated to moving Fearlessly Forward in pursuit of excellence and impact for the public good.</p>
-        </div>
+        <p>The University of Maryland (UMD) is the state of Maryland's flagship institution, a top-ranked public research university, and a global leader in research, entrepreneurship and innovation. Our campus community is strengthened by the richness of perspectives, lifestyles and personalities brought together here. We are home to students, faculty, staff, and nearly 405,000 alumni dedicated to moving Fearlessly Forward in pursuit of excellence and impact for the public good.</p>
       </div>
       <div slot="stats">
         <umd-element-stat data-decoration-line="false" data-theme="dark">
@@ -2098,6 +2101,36 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       });
     })();
 
+    // HERO-GRID CENTER VIDEO HEIGHT — web-components-library@2.0.0 regression.
+    // hero/custom/grid.ts sets the video wrapper to width:100% + aspect-ratio:1/1.
+    // Those styles existed at 1.19.5 too, but were nested one level too deep
+    // (additionalElementStyles.additionalElementStyles) and never applied; 2.0.0
+    // renamed the key to customStyles, so the dead rule went live. The center
+    // column is 640px wide but its middle grid row is only 296px, so a 1:1 video
+    // renders 640px tall — swallowing the 32px row gap AND the entire bottom
+    // image, and bleeding 132px over the Information For band below.
+    // Restore the 1.19.5 geometry: let the video fill its grid row instead.
+    // Remove when upstream constrains the video to its row.
+    (function () {
+      const HERO_GRID_VIDEO_CSS =
+        '.hero-grid-center .umd-element-video{aspect-ratio:auto!important;height:100%!important}';
+      function inject(el) {
+        if (!el.shadowRoot || el.__heroGridVideoInjected) return;
+        const style = document.createElement('style');
+        style.textContent = HERO_GRID_VIDEO_CSS;
+        el.shadowRoot.appendChild(style);
+        el.__heroGridVideoInjected = true;
+      }
+      function applyAll() {
+        document.querySelectorAll('umd-element-hero-grid').forEach(inject);
+      }
+      customElements.whenDefined('umd-element-hero-grid').then(() => {
+        applyAll();
+        setTimeout(applyAll, 0);
+        setTimeout(applyAll, 250);
+      });
+    })();
+
     // BANNER-PROMO ACTIONS GAP — banner-promo reprojects slot="actions"
     // into its shadow DOM under .banner-promo-actions. Inject column-flex
     // with 8px gap so the stacked CTAs aren't flush against each other.
@@ -2146,33 +2179,13 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       });
     })();
 
-    // CARD-OVERLAY HORIZONTAL PADDING — the shadow DOM container
-    // .card-overlay-image-container hard-codes horizontal padding to
-    // token.spacing.md (24px) at all sizes with no CSS variable hook.
-    // Step it up at desktop+ so headlines/CTAs aren't crowded against
-    // the card edges. Breakpoints mirror the upstream token system
-    // (highDef.min = 1200px, maximum.min = 1500px).
-    (function () {
-      const CARD_OVERLAY_PADDING_CSS =
-        '.card-overlay-image-container{padding-left:24px!important;padding-right:24px!important}' +
-        '@media (min-width:1200px){.card-overlay-image-container{padding-left:32px!important;padding-right:32px!important}}' +
-        '@media (min-width:1500px){.card-overlay-image-container{padding-left:48px!important;padding-right:48px!important}}';
-      function inject(el) {
-        if (!el.shadowRoot || el.__cardOverlayPaddingInjected) return;
-        const style = document.createElement('style');
-        style.textContent = CARD_OVERLAY_PADDING_CSS;
-        el.shadowRoot.appendChild(style);
-        el.__cardOverlayPaddingInjected = true;
-      }
-      function applyAll() {
-        document.querySelectorAll('umd-element-card-overlay').forEach(inject);
-      }
-      customElements.whenDefined('umd-element-card-overlay').then(() => {
-        applyAll();
-        setTimeout(applyAll, 0);
-        setTimeout(applyAll, 250);
-      });
-    })();
+    // CARD-OVERLAY HORIZONTAL PADDING — RETIRED 2026-09-09: upstream
+    // web-components-library@2.0.0 gives both overlay variants a
+    // @container (min-width: 600px) step-up to token.spacing.xl (40px),
+    // in overlay/image.ts and overlay/color.ts alike. Do NOT re-add: the
+    // old injection used !important with VIEWPORT media queries, so it
+    // masked the upstream container-based rule and could not keep a
+    // narrow card narrow inside a wide viewport. Ceiling drops 48px -> 40px.
 
 
     // GRID ENTRY ANIMATIONS — auto-applied to layout grids. Mirrors the

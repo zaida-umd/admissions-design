@@ -43,7 +43,7 @@ Every page within this design project renders the same chrome. Copy it verbatim 
 
 If `CLAUDE.md` declares a reference page (e.g. `pages/academics.html`), copy from that file:
 
-- The full header stack — typically `umd-element-navigation-utility` + `umd-element-utility-header` + `umd-element-navigation-header` (with this project's logo and nav items)
+- The full header stack — typically `umd-element-navigation-utility` + `umd-element-navigation-header` (with this project's logo and nav items)
 - The footer block — typically `umd-element-footer data-display="visual"` (with this project's footer logo and image)
 - End-of-body shadow-injection scripts (e.g. pathway aspect ratio, banner-promo gap, nav-header logo width)
 

@@ -40,10 +40,16 @@
        web-components.min.css. As those land upstream, drop these.
        ============================================================ */
 
-    /* umd-element-utility-header — present on every page (band above the
-       nav header). Not in upstream bundle as of v1.8.11. */
-    umd-element-utility-header:not(:defined) { content-visibility: hidden; }
-    umd-element-utility-header { display: block; container-type: normal; }
+    /* umd-element-utility-header — RETIRED 2026-09-08: the tag does not exist.
+       It was never a component, in any version — the design system's only
+       utility-bar tag is umd-element-navigation-utility, which is what actually
+       renders the UMD flag / "A Top 20 Public Research University" band. These
+       rules were written on the assumption that a real component had been left
+       out of web-components.min.css, so they gap-filled a phantom: the element
+       never upgraded, :not(:defined) always matched, and it sat on every page
+       at height 0 with no children. Do NOT re-add. If you want the band, use
+       umd-element-navigation-utility (data-alert-off="true" hides its alert
+       strip, which is how TEMPLATE.html has always rendered it). */
 
     /* umd-element-carousel* — RETIRED (upstream since web-styles-library@1.8.14): all six
        variants (plus new umd-element-carousel-people) now ship in upstream
@@ -813,7 +819,7 @@
     }
   </style>
 
-  <script src="https://unpkg.com/@universityofmaryland/web-components-library@1.19.5/dist/cdn.js"></script>
+  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
 
   <style>
     /* Brand chevron animation flanking the Transfer to UMD rich text and
@@ -1311,7 +1317,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <!-- 1. GLOBAL UNIVERSITY HEADER -->
   <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
   <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
-  <umd-element-utility-header></umd-element-utility-header>
 
   <umd-element-navigation-header
     sticky
@@ -1948,14 +1953,15 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       });
     });
 
-    // NOTE — no card-overlay injections on this page. The two documented ones
-    // (horizontal padding step-up, and the 300/220-char destructive text clamp)
-    // both target the IMAGE variant's shadow nodes: .card-overlay-image-container
-    // and .card-overlay-image-text-content. These cards are the COLOR variant
-    // (no slot="image"), whose shadow is .card-overlay-color — it has neither
+    // NOTE — no card-overlay injections on this page. The remaining documented
+    // one (the 300/220-char destructive text clamp) targets the IMAGE variant's
+    // .card-overlay-image-text-content. These cards are the COLOR variant
+    // (no slot="image"), whose shadow is .card-overlay-color — it has no such
     // node, and it does not clamp slot="text" at all (verified: the 451-char
     // Early Action paragraph renders in full, untouched). Carrying the
-    // injections here would have been dead code. See OVERRIDES.md.
+    // injection here would have been dead code. The horizontal padding step-up
+    // that used to be listed alongside it is retired — upstream 2.0.0 handles
+    // both variants via @container. See OVERRIDES.md.
 
   </script>
 

@@ -40,10 +40,16 @@
        web-components.min.css. As those land upstream, drop these.
        ============================================================ */
 
-    /* umd-element-utility-header — present on every page (band above the
-       nav header). Not in upstream bundle as of v1.8.11. */
-    umd-element-utility-header:not(:defined) { content-visibility: hidden; }
-    umd-element-utility-header { display: block; container-type: normal; }
+    /* umd-element-utility-header — RETIRED 2026-09-08: the tag does not exist.
+       It was never a component, in any version — the design system's only
+       utility-bar tag is umd-element-navigation-utility, which is what actually
+       renders the UMD flag / "A Top 20 Public Research University" band. These
+       rules were written on the assumption that a real component had been left
+       out of web-components.min.css, so they gap-filled a phantom: the element
+       never upgraded, :not(:defined) always matched, and it sat on every page
+       at height 0 with no children. Do NOT re-add. If you want the band, use
+       umd-element-navigation-utility (data-alert-off="true" hides its alert
+       strip, which is how TEMPLATE.html has always rendered it). */
 
     /* umd-element-carousel* — RETIRED (upstream since web-styles-library@1.8.14): all six
        variants (plus new umd-element-carousel-people) now ship in upstream
@@ -813,7 +819,7 @@
     }
   </style>
 
-  <script src="https://unpkg.com/@universityofmaryland/web-components-library@1.19.5/dist/cdn.js"></script>
+  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
 
   <style>
     /* Brand chevron animation flanking the Study Here rich text and
@@ -1182,7 +1188,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <!-- 1. GLOBAL UNIVERSITY HEADER -->
   <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
   <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
-  <umd-element-utility-header></umd-element-utility-header>
 
   <umd-element-navigation-header
     sticky
@@ -1572,36 +1577,31 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </section>
 
-  <!-- 11. RESOURCES — card carousel (full-bleed; component has its own lock + black bg)
-       Cards are type="image" over the brand red-chevron texture. type="image"
-       is REQUIRED — without it the image slot is ignored outright and the card
-       falls back to the text-only dark variant (registry-cards.json). -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-carousel-cards>
-      <h2 slot="headline">Resources for current and prospective Terps</h2>
-      <div slot="cards">
-        <umd-element-card-overlay type="image" data-theme="dark">
-          <img slot="image" src="../../page-builder/images/small/default/red-chevron.jpg" alt="" />
-          <p slot="headline"><a href="https://academiccatalog.umd.edu/"><span>Undergraduate Catalog</span></a></p>
-          <div slot="text"><p>The complete listing of UMD's undergraduate programs, requirements, and policies — your reference for everything academic.</p></div>
-          <div slot="actions">
-            <umd-element-call-to-action data-display="secondary" data-theme="dark" data-visual-size="standard">
-              <a href="https://academiccatalog.umd.edu/"><span>View the catalog</span></a>
-            </umd-element-call-to-action>
-          </div>
-        </umd-element-card-overlay>
-        <umd-element-card-overlay type="image" data-theme="dark">
-          <img slot="image" src="../../page-builder/images/small/default/red-chevron.jpg" alt="" />
-          <p slot="headline"><a href="https://careers.umd.edu/students"><span>Career Center</span></a></p>
-          <div slot="text"><p>Career counseling, internship placement, employer connections, and the tools to turn your degree into a meaningful first job.</p></div>
-          <div slot="actions">
-            <umd-element-call-to-action data-display="secondary" data-theme="dark" data-visual-size="standard">
-              <a href="https://careers.umd.edu/students"><span>Visit the Career Center</span></a>
-            </umd-element-call-to-action>
-          </div>
-        </umd-element-card-overlay>
+  <!-- 11. RESOURCES — dark section intro + dark icon-link cards. Same band as
+       how-to-apply/{freshman,transfer,international}-applicants.html so every
+       "Resources" block on the site reads identically: full-dark section,
+       dark section-intro, dark icon cards whose headline IS the link.
+
+       Two cards here, so the grid is umd-layout-grid-gap-two (gap-three would
+       leave a hole in the third column). -->
+  <section class="umd-layout-background-full-dark umd-layout-vertical-landing">
+    <div class="umd-layout-space-horizontal-larger">
+      <umd-element-section-intro data-theme="dark" class="umd-layout-vertical-landing-child">
+        <h2 slot="headline">Resources</h2>
+      </umd-element-section-intro>
+      <div class="umd-layout-grid-gap-two">
+        <umd-element-card-icon data-theme="dark">
+          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
+          <h3 slot="headline"><a href="https://academiccatalog.umd.edu/">Undergraduate Catalog</a></h3>
+          <p slot="text">The complete listing of UMD's undergraduate programs, requirements, and policies — your reference for everything academic.</p>
+        </umd-element-card-icon>
+        <umd-element-card-icon data-theme="dark">
+          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
+          <h3 slot="headline"><a href="https://careers.umd.edu/students">Career Center</a></h3>
+          <p slot="text">Career counseling, internship placement, employer connections, and the tools to turn your degree into a meaningful first job.</p>
+        </umd-element-card-icon>
       </div>
-    </umd-element-carousel-cards>
+    </div>
   </section>
 
   <!-- 12. STAY CONNECTED — banner-promo (gold default) inside larger lock -->

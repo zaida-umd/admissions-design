@@ -2,7 +2,7 @@
 """Inline the shared site chrome into every page under pages/ (recursively).
 
 Source of truth
-  shared/header.html          header stack (nav-utility + utility-header +
+  shared/header.html          header stack (nav-utility +
                               navigation-header with the project nav items)
   shared/footer.html          visual footer
   shared/chrome.css           CSS companions the chrome markup depends on
