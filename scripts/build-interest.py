@@ -190,17 +190,22 @@ def render(slug, data, programs, colleges_by_slug):
 
 {_chrome.block('header', out)}
 
-  <!-- 3. HERO — small background, left-aligned text -->
+  <!-- 3. HERO — small background, centered text.
+       The eyebrow names the SECTION, not the interest — every interest page
+       carries the same one, the way Academics / How to Apply / Tuition & Aid
+       label their own pages. It is hard-coded here rather than read from
+       interests-data.json for that reason: it is a property of the template,
+       not of the interest.
+
+       No slot="actions" here. "Explore All Programs" sits under the intro
+       copy below instead, matching colleges-schools.html — the sibling page
+       on this same interior lockup, carrying the same CTA to the same place. -->
   <section class="umd-layout-vertical-landing">
-    <umd-element-hero data-layout-height="small">
+    <umd-element-hero data-layout-height="small" data-layout-text="center">
       <img slot="image" src="{e(hero['image'])}" alt="{e(hero['alt'])}" />
+      <p slot="eyebrow">Programs by Interest</p>
       <h1 slot="headline">{hero['headline']}</h1>
       <div slot="text"><p>{hero['text']}</p></div>
-      <div slot="actions">
-        <umd-element-call-to-action data-display="primary">
-          <a href="programs.html">Explore All Programs</a>
-        </umd-element-call-to-action>
-      </div>
     </umd-element-hero>
   </section>
 
@@ -213,6 +218,11 @@ def render(slug, data, programs, colleges_by_slug):
       <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">{intro['lead']}</p>
       <div class="umd-text-rich-advanced">
         <p>{intro['text']}</p>
+        <div class="umd-layout-grid-inline-tablet-rows" style="margin-top: 16px;">
+          <umd-element-call-to-action data-display="primary">
+            <a href="programs.html">Explore All Programs</a>
+          </umd-element-call-to-action>
+        </div>
       </div>
     </div>
   </section>
