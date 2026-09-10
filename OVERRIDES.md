@@ -10,13 +10,61 @@ Source: **`shared/chrome-scripts.html`** — this is the one shadow injection dr
 
 Pages using this: all twelve (verified rendering at `max-width: 320px`).
 
-## Pathway 1:1 image aspect ratio
+## Pathway 6:5 image aspect ratio
 
-`umd-element-pathway` has no CSS variable / `::part` hook for the image container; the design calls for a 1:1 image crop, so we shadow-inject `.pathway-image-container, .image-container, .umd-asset-image-wrapper-scaled { aspect-ratio: 1/1 !important; height: auto !important }` plus an `object-fit: cover` rule on the inner `<img>`.
+**Was 1:1 until 2026-09-10.** Changed to 6:5 for a uniform crop across the site,
+and extended to the one page that had been left out.
 
-**It applies to `data-display="overlay"` too, and there it is load-bearing rather than cosmetic.** The overlay variant lays its image out as a grid column (not as a full-bleed background), so without the cap the column takes the source photo's intrinsic aspect and can outgrow the text column — which then drives the height of the whole component. On `pages/how-to-apply/freshman-applicants.html` § "Making Sure Your UMD Application is Complete", a 607×932 portrait photo rendered 996px tall in a 649px column against an 816px text column, making the section 1316px. Capping at 1:1 puts the image at 649px, hands the height back to the text, and takes the section to 1136px. Don't scope the injection to `:not([data-display])` on the assumption that overlay uses a background image — it doesn't.
+`umd-element-pathway` has no CSS variable / `::part` hook for the image
+container, so this is shadow CSS:
 
-Pages using this: `pages/academics/index.html`, `pages/student-life/index.html`, `pages/tuition/index.html`, `pages/how-to-apply/freshman-applicants.html` (two overlay pathways, both capped).
+```css
+.pathway-image-container, .image-container, .umd-asset-image-wrapper-scaled {
+  aspect-ratio: 6 / 5 !important;
+  height: auto !important;
+}
+/* + width/height 100% and object-fit: cover on the inner <img> */
+```
+
+`height: auto` is load-bearing, not tidiness: it is what lets `aspect-ratio`
+resolve a definite height, which the sticky variant requires (see below).
+
+**It applies to `data-display="overlay"` too, and there it is load-bearing rather than cosmetic.** The overlay variant lays its image out as a grid column (not as a full-bleed background), so without the cap the column takes the source photo's intrinsic aspect and can outgrow the text column — which then drives the height of the whole component. On `pages/how-to-apply/freshman-applicants.html` § "Making Sure Your UMD Application is Complete", a 607×932 portrait photo rendered 996px tall in a 649px column against an 816px text column, making the section 1316px. Capping it hands the height back to the text. Don't scope the injection to `:not([data-display])` on the assumption that overlay uses a background image — it doesn't.
+
+### The sticky variant takes the cap too — the old note saying otherwise was wrong
+
+`pages/personas/prospective-students.html` carried a comment explaining why its
+four sticky pathways were deliberately left uncapped: *"a sticky pathway needs
+its image column to run the full height of the text column, which is what makes
+it stick."* Both halves of that are false.
+
+- `position: sticky` needs a **definite** height, not a full one, and
+  `aspect-ratio` + `height: auto` supplies one (474px at desktop). Measured
+  after capping: still `position: sticky`, still resolving 474px.
+- The image was never running full height anyway — 656px inside a 1194px
+  component. An image column that genuinely matched the text column would have
+  nothing to stick against.
+
+The four component heights are byte-identical before and after the cap
+(1194 / 1167 / 675 / 751), because the text column was already the tallest
+child. That page's cap rides along in the existing applicant-spotlight
+injection rather than as a second pass over the same shadow roots.
+
+### Where it lives
+
+Ten pages carry pathways, and all ten are capped: `pages/index.html`,
+`academics/index.html`, `academics/interest-engineering-technology.html`,
+`academics/programs.html`, `apply-now/index.html`, `how-to-apply/index.html`
+and its three applicant pages, `personas/prospective-students.html`,
+`tuition/index.html`. Two are generated — `scripts/build-programs.py` and
+`scripts/build-interest.py` carry their own copy of the payload, so a ratio
+change has to touch those too or the next build reverts it.
+
+*(An earlier version of this list named `pages/student-life/index.html`. That
+page has no `umd-element-pathway` at all — the entry was stale.)*
+
+**Verified 2026-09-10:** 28 pathways across the 10 pages, every one rendering
+569×474 — ratio 1.200 — across all three variants and both image positions.
 
 ## Overlay pathway as a dark editorial block
 

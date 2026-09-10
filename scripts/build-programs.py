@@ -369,7 +369,7 @@ BODY = r'''  </style>
     customElements.whenDefined('umd-element-pathway').then(() => {
       document.querySelectorAll('umd-element-pathway').forEach(el => {
         const style = document.createElement('style');
-        style.textContent = '.pathway-image-container,.image-container,.umd-asset-image-wrapper-scaled{aspect-ratio:1/1!important;height:auto!important}.pathway-image-container img,.image-container img,.umd-asset-image-wrapper-scaled img{width:100%!important;height:100%!important;object-fit:cover!important}';
+        style.textContent = '.pathway-image-container,.image-container,.umd-asset-image-wrapper-scaled{aspect-ratio:6/5!important;height:auto!important}.pathway-image-container img,.image-container img,.umd-asset-image-wrapper-scaled img{width:100%!important;height:100%!important;object-fit:cover!important}';
         el.shadowRoot && el.shadowRoot.appendChild(style);
       });
     });

@@ -2069,7 +2069,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     // image's intrinsic ratio. Inject shadow CSS once each pathway hydrates.
     (function () {
       const PATHWAY_SQUARE_CSS =
-        '.pathway-image-container,.pathway-image-container-wrapper,.image-container,.umd-asset-image-wrapper-scaled{aspect-ratio:1/1!important;height:auto!important}' +
+        '.pathway-image-container,.pathway-image-container-wrapper,.image-container,.umd-asset-image-wrapper-scaled{aspect-ratio:6/5!important;height:auto!important}' +
         '.image-container img,.umd-asset-image-wrapper-scaled img{object-fit:cover!important;width:100%!important;height:100%!important}';
       function inject(el) {
         if (!el.shadowRoot || el.__pathwaySquareInjected) return;

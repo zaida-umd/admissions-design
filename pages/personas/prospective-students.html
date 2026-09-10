@@ -1895,14 +1895,37 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     // Only .umd-campaign-small's size ramp is re-keyed, from viewport media
     // queries to CONTAINER queries — see the note on that rule below.
     //
-    // NOTE: no 1:1 aspect-ratio injection on this page. That override (see
-    // OVERRIDES.md) is for the STANDARD pathway; a sticky pathway needs its
-    // image column to run the full height of the text column, which is what
-    // makes it stick.
+    // The 6:5 image cap (see OVERRIDES.md) IS applied here, in the CSS array
+    // below. It used to be omitted on the grounds that "a sticky pathway needs
+    // its image column to run the full height of the text column, which is what
+    // makes it stick" — that was wrong on both counts. position:sticky needs a
+    // DEFINITE height, not a full one, and aspect-ratio + height:auto gives it
+    // one (474px at desktop). The image was never running full height anyway:
+    // 656px inside a 1194px component. Measured after capping — sticky intact,
+    // component heights unchanged, ratio exactly 1.200 on all four.
     (function () {
       var SANS = "'Interstate', Helvetica, Arial, Verdana, sans-serif";
       var CAMPAIGN = "'Barlow Condensed', 'Arial Narrow', Arial, sans-serif";
       var CSS = [
+        /* --- 6:5 image crop, uniform with every other pathway on the site.
+           The component exposes no CSS variable or ::part for the image
+           container, so it has to be shadow CSS. height:auto is load-bearing:
+           it is what lets aspect-ratio resolve a definite height, which is
+           what position:sticky requires. */
+        '.pathway-image-container,',
+        '.image-container,',
+        '.umd-asset-image-wrapper-scaled {',
+        '  aspect-ratio: 6 / 5 !important;',
+        '  height: auto !important;',
+        '}',
+        '.pathway-image-container img,',
+        '.image-container img,',
+        '.umd-asset-image-wrapper-scaled img {',
+        '  width: 100% !important;',
+        '  height: 100% !important;',
+        '  object-fit: cover !important;',
+        '}',
+
         '.text-lockup-medium-stats { align-items: start; }',
         '.text-lockup-medium-stats p,',
         '.text-lockup-medium-stats h3 { margin: 0; }',
