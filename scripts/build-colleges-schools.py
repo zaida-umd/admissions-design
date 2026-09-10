@@ -580,13 +580,9 @@ page = f'''{head_top}
   <section class="umd-layout-vertical-landing">
     <umd-element-hero data-layout-height="small">
       <img slot="image" src="../../images/colleges-schools/hero-sundial.jpg" alt="Sundial on McKeldin Mall" />
+      <p slot="eyebrow">Academics</p>
       <h1 slot="headline">Colleges &amp; Schools</h1>
       <div slot="text"><p>Within the University of Maryland&#8217;s 12 colleges &amp; schools, you can choose from more than 100 majors. No matter your interests, we have you covered.</p></div>
-      <div slot="actions">
-        <umd-element-call-to-action data-display="primary">
-          <a href="programs.html">Explore All Programs</a>
-        </umd-element-call-to-action>
-      </div>
     </umd-element-hero>
   </section>
 
@@ -600,6 +596,11 @@ page = f'''{head_top}
       <p class="umd-sans-large mb-md text-black">Discover which of our colleges and schools inspire your fearless ideas and review their list of majors to learn more about academics at UMD.</p>
       <div class="umd-text-rich-advanced">
         <p>Our colleges and schools are researching hot topics such as alternative energy, advising federal officials on homeland security, working with the state to reduce children&#8217;s obesity and investigating many other pressing issues. You can work side-by-side with faculty at the top of their fields: Pulitzer Prize recipients, Nobel laureates, and Emmy and Tony winners. Numbering more than 4,000, our faculty also include world-renowned performers, successful entrepreneurs and big-name journalists, all ready to share their experiences and expertise with you.</p>
+        <div class="umd-layout-grid-inline-tablet-rows" style="margin-top: 16px;">
+          <umd-element-call-to-action data-display="primary">
+            <a href="programs.html">Explore All Programs</a>
+          </umd-element-call-to-action>
+        </div>
       </div>
     </div>
   </section>
