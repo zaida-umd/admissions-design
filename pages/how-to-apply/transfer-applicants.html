@@ -1558,17 +1558,19 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </umd-element-sticky-columns>
   </section>
 
-  <!-- 5. CHOOSING A MAJOR — WHITE OVERLAY pathway on the dark band, image left.
-       data-theme="white" is the white panel (the overlay variant's theme names the
-       PANEL, not the surround), which lifts off the black and breaks up the run.
-       NOT "light" — that is a GRAY panel and it also adds 80px 0 padding to
-       .pathway-overlay-container-lock-wrapper, inflating this pathway from 758
-       to 918px. See OVERRIDES.md § "Overlay pathway on a dark band".
+  <!-- 5. CHOOSING A MAJOR — standard pathway on the dark band, image left.
+       No data-display: this is the plain two-column pathway, sitting directly on
+       the section's dark background rather than in an overlay panel floated over
+       it. data-theme="dark" is what carries the type over to light; on the
+       STANDARD variant it is purely cosmetic, so none of the overlay theme's
+       80px lock-wrapper padding comes with it (that penalty applies to
+       dark/light/maryland on data-display="overlay" only — see OVERRIDES.md
+       § "Overlay pathway on a dark band", which still governs §7 below).
        First of three consecutive dark bands (5-7). No umd-layout-vertical-landing:
        the next section is also dark, so its margin would punch a white gap
        (RULES §19). .umd-layout-background-full-dark supplies the 48/80/104px pad. -->
   <section class="umd-layout-background-full-dark">
-    <umd-element-pathway data-display="overlay" data-theme="white" data-layout-image-position="left">
+    <umd-element-pathway data-theme="dark" data-layout-image-position="left">
       <img slot="image" src="../../images/transfer-applicants/students-esj.jpg" alt="Students walking into the Edward St. John Learning and Teaching Center." />
       <h2 slot="headline">Choosing a Major</h2>
       <div slot="text">
