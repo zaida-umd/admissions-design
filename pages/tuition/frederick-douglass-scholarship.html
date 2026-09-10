@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
-  <title>Nico Magpantay — Undergraduate Admissions | University of Maryland</title>
+  <title>Frederick Douglass Scholarship — Undergraduate Admissions | University of Maryland</title>
 
   <!-- ============================================================
        UMD Critical CSS — Hybrid CDN + Local
@@ -821,169 +821,6 @@
 
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
 
-  <!-- Page CSS gets its OWN style block, after cdn.js -- it is deliberately
-       NOT appended to the inlined critical.css above. tools/inline-critical.py
-       rewrites the FIRST style block in a file and leaves later ones alone, so
-       page CSS sitting inside that block is (a) invisible to --check, which
-       then reports the page as permanently stale, and (b) DELETED the moment
-       the tool is run over pages/. Cascade order is unchanged: critical <
-       page CSS < chrome CSS, exactly as when this sat at the tail of the
-       critical block. (No literal style tag in this comment on purpose -- the
-       repo's tooling finds these blocks by regex.) -->
-  <style>
-    /* ============================================================
-       26. ADMISSION REPRESENTATIVES — intro lockup + rep pages
-       ============================================================ */
-
-    /* --- intro lockup with brand chevron (landing page) --------
-       Same treatment as how-to-apply/index.html and tuition/index.html:
-       rule, uppercase eyebrow, rich text, with the brand animation
-       riding behind it and overlapping ~180px up into the hero.
-       The animation hardcodes its inner container to width:100vw /
-       height:50vw and anchors chevrons to right:0, so the host must
-       span full width -- sizing or clipping it does not work. */
-    .reps-intro-section {
-      position: relative;
-      overflow: visible;
-      z-index: 100;
-    }
-
-    .reps-intro-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .reps-chevron {
-      position: absolute;
-      top: -180px;
-      left: 0;
-      right: 0;
-      bottom: -80px;
-      pointer-events: none;
-      z-index: 1;
-      overflow: visible;
-    }
-
-    .reps-chevron > umd-element-brand-logo-animation {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: block;
-    }
-
-    @media (max-width: 1023px) {
-      .reps-chevron { display: none; }
-    }
-
-    /* --- rep grid ----------------------------------------------
-       No grid CSS of its own. The cards are the documented border-grid
-       pattern exactly as LAYOUT-PATTERNS.md describes it:
-       umd-layout-grid-border-four + class="umd-shell-person-grid-helper"
-       on every umd-element-person host (that class is the container-query
-       target -- without it the 24/32/48px cell padding never applies).
-       Partial rows are handled by critical.css §19's :not(:has(...)) rules,
-       so 24 reps in a 4-up grid needs no filler markup.
-
-       The one thing added: the grid's own left/right border is drawn by
-       layout.min.css against the cell edge, and a headshot sitting flush
-       in a 24px cell reads as unaligned next to a name that wraps to two
-       lines. umd-layout-grid-child-fill-height equalises the cells so the
-       job-title baselines line up across a row. */
-
-    /* --- search page: filter form ------------------------------
-       The CMS person-index template (omc.umd.edu/people) is built almost
-       entirely from design-system classes that ARE in our bundles:
-       umd-layout-background-highlight-light (grey panel + red left rule),
-       umd-layout-grid-gap-stacked / -two, umd-layout-grid-inline-stretch,
-       umd-text-line-trailing-light, umd-field-select-wrapper, umd-field-input,
-       umd-action-outline, umd-skip-content, sr-only.
-
-       What is NOT in our bundles, and is therefore reproduced below:
-         - the `umd-shell-*` classes (shellcraft site CSS, not the DS)
-         - the Tailwind utilities the template leans on for the search row
-           (flex, gap-min, items-center, aspect-square, bg-red, h-[44px])
-       Measured against the loaded bundles, not assumed. The rules below are
-       the "minimal lift" from briefs/experts-filter.md, which documents this
-       same search bar on the experts page. */
-    .reps-search-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .reps-search-row input { flex: 1; }
-    /* 44x44 red submit, matching the template's Tailwind box exactly. */
-    .reps-search-submit {
-      flex: none;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--umd-color-red, #e21833);
-      border: 0;
-      cursor: pointer;
-      transition: background-color .5s;
-    }
-    .reps-search-submit:hover,
-    .reps-search-submit:focus-visible { background: #a90007; }
-    .reps-search-submit svg { width: 20px; height: 20px; fill: #fff; }
-
-    /* Gap between the results grid and whatever follows it.
-
-       The DS vertical rhythm classes are margin-BOTTOM only -- measured,
-       umd-layout-vertical-landing is `margin-bottom: 120px; margin-top: 0`
-       (the same thing CLAUDE.md notes about -child, and it holds for the
-       parent class too). The grid's own wrapper is a bare
-       umd-layout-space-horizontal-larger with no vertical class, so nothing
-       separated it from the next block and both the Load More button and the
-       trailing copy sat flush against the last row of cards.
-
-       Putting the space on the WRAPPER rather than on either follower is what
-       makes it hold in both states: Load More is display:none when every match
-       is already shown, so a margin on that section would vanish with it and
-       the copy would jump back up against the grid the moment a filter
-       narrowed the results. Followers have margin-top: 0, so there is no
-       collapsing to reason about -- the gap is exactly this value. */
-    .reps-results-wrap { margin-bottom: 80px; }
-
-    /* Results count + empty state. The template's .umd-shell-pagination-results
-       is site CSS, not DS, so the type is set here. */
-    .reps-results-status {
-      font-size: 14px;
-      color: var(--umd-color-gray-dark, #757575);
-      margin-top: 24px;
-    }
-    .reps-empty { padding: 48px 0; text-align: center; }
-    .reps-load-more { display: flex; justify-content: center; }
-    /* JS hides this when every match is already on screen; without JS the
-       whole set is rendered, so the button has nothing to do and stays gone. */
-    .reps-load-more[hidden] { display: none; }
-
-    /* --- territory list (bio pages) ----------------------------
-       The territories are a plain list, but a rep can cover nine of them
-       (Abigail Trice) or none at all, so a single column runs long and a
-       fixed multi-column grid leaves a ragged hole. Columns that fill on
-       width keep both ends honest. */
-    .rep-regions-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px 32px;
-    }
-    @media (min-width: 650px) {
-      .rep-regions-list { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (min-width: 1024px) {
-      .rep-regions-list { grid-template-columns: repeat(3, 1fr); }
-    }
-    .rep-regions-list li {
-      border-top: 1px solid var(--umd-color-gray-light, #e6e6e6);
-      padding-top: 12px;
-    }
-  </style>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
 /* ============================================================
@@ -1307,6 +1144,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 </head>
 <body>
 
+  <!-- 1. GLOBAL UNIVERSITY HEADER -->
   <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
   <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
 
@@ -1459,12 +1297,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/apply/admission-review-process-factors"><span>Admission Review Process &amp; Factors</span></a>
         <a href="https://admissions.umd.edu/apply/application-faqs"><span>Application FAQs</span></a>
       </div>
-      <div data-parent-ref="tuition">
+      <div data-parent-ref="tuition" data-active>
         <a href="../../pages/tuition/"><span>Overview</span></a>
         <a href="https://admissions.umd.edu/tuition/cost-of-attendance"><span>Cost of Attendance</span></a>
         <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships"><span>Freshman Merit Scholarships</span></a>
         <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
-        <a href="../../pages/tuition/frederick-douglass-scholarship.html"><span>Frederick Douglass Scholarship</span></a>
+        <a href="../../pages/tuition/frederick-douglass-scholarship.html" data-selected><span>Frederick Douglass Scholarship</span></a>
         <a href="https://financialaid.umd.edu/"><span>Office of Student Financial Aid</span></a>
       </div>
     </div>
@@ -1472,91 +1310,138 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </umd-element-navigation-header>
   <!-- SHARED:header:END -->
 
-  <!-- 3. PERSON HERO — the DS's own profile-page hero. It owns the breadcrumb
-       (registry-person.json: "do not also render a standalone
-       umd-element-breadcrumb"), so this page has none of its own. -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-person-hero>
-      <!-- The slot takes a umd-element-breadcrumb, NOT a bare <nav>: the
-           component validates its slots and logs 'Slot "breadcrumb" contains
-           invalid elements. Allowed: umd-element-breadcrumb' for anything
-           else. registry-person.json's "do not also render a standalone
-           umd-element-breadcrumb" means put it HERE rather than separately on
-           the page -- not that the slot takes hand-rolled markup.
+  <main id="main-content">
+    <!-- 2. HERO — minimal, dark, with the UMD chevron pattern in the image
+         slot. The pattern is decoration, not content: alt="" keeps it out of
+         the accessibility tree so the h1 is the page's first announced thing. -->
+    <section>
+      <umd-element-hero-minimal data-theme="dark">
+        <h1 slot="headline">Frederick Douglass Scholarship</h1>
+        <img slot="image" src="../../images/tuition/ff-pattern-hero.png" alt="" />
+      </umd-element-hero-minimal>
+    </section>
 
-           The paths markup is RULES.md §"Breadcrumb", not the <ol>/<li>
-           shown in registry-navigation.json. The registry example is wrong:
-           the DS draws its separators with `.breadcrumb-path + *::before`, so
-           the paths have to be ADJACENT SIBLINGS. Wrapping each in its own
-           <li> gives every anchor a container to itself, the selector never
-           matches, and the trail renders as one run-on string
-           ("HomeAdmission RepresentativesAbigail Trice"). Flat <a> siblings
-           plus a <p> for the current page -- each with its own <span>, which
-           is what the hover underline animates. -->
-      <umd-element-breadcrumb slot="breadcrumb">
+    <!-- 3. BREADCRUMB — own horizontal lock and interior spacing. -->
+    <div class="umd-layout-space-horizontal-larger umd-layout-space-vertical-interior">
+      <umd-element-breadcrumb>
         <div slot="paths">
           <a href="../../pages/" aria-label="Return Home"><span aria-hidden="true">Home</span></a>
-          <a href="index.html"><span>Admission Representatives</span></a>
-          <p aria-label="Current Page"><span>Nico Magpantay</span></p>
+          <a href="../../pages/tuition/"><span>Tuition &amp; Aid</span></a>
+          <p aria-label="Current Page"><span>Frederick Douglass Scholarship</span></p>
         </div>
       </umd-element-breadcrumb>
-      <img slot="image" src="../../images/admission-representatives/nico-magpantay.jpg" alt="Portrait of Nico Magpantay, Admission Counselor" />
-      <h1 slot="name">Nico Magpantay</h1>
-      <p slot="job-title">Admission Counselor</p>
-      <!-- NO slot="association". registry-person.json lists it, but
-           umd-element-person-hero silently drops it: the component rebuilds
-           its text lockup from the light DOM and only reads name + job-title
-           (verified against the rendered shadow tree in cdn.js@1.18.12). The
-           unit name would have been dead markup, so it is not emitted. -->
-      <!-- The email slot IS the contact action -- no slot="actions" CTA.
-           Both pointed at the same mailto, so the button restated the link
-           directly above it. The visible text is "Email <first name>" rather
-           than the address; the aria-label still names the actual inbox, so
-           the destination is not lost for a screen reader. -->
-      <a slot="email" href="mailto:ApplyMaryland@umd.edu?subject=Student%20Inquiry%20for%20Nico%20Magpantay" aria-label="Email Nico at ApplyMaryland@umd.edu"><span>Email Nico</span></a>
-    </umd-element-person-hero>
-  </section>
+    </div>
 
-  <!-- 4. BIO — the source modal's "Favorite Maryland Moment". Narrow -small
-       lock and the same rule + uppercase eyebrow lockup the interior pages use. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-small">
-      <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
-      <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">Favorite Maryland Moment</p>
-      <div class="umd-text-rich-advanced">
-        <p>My friends and I would always hop onto the Metro and before we knew it, we were in our nation&#x27;s capital. Washington D.C. is home to many free museums and lots of different events! It is always fun to catch a Capitals game or a Nationals game!</p>
+    <!-- 4. COLUMNS — sidebar + content, own horizontal wrapper. -->
+    <div class="umd-layout-space-horizontal-larger">
+      <div class="umd-layout-space-columns-left">
+        <!-- The slide mirrors the Tuition &amp; Aid group in shared/header.html.
+             The sidebar is page content, not a shared region, so it is not
+             stamped by scripts/_chrome.py -- data-active / data-selected are
+             written here by hand. -->
+        <div id="umd-shell-sidebar-container">
+          <umd-element-nav-slider>
+            <div slot="primary-slide-links">
+              <a href="../../pages/tuition/" data-child-ref="tuition"><span>Tuition &amp; Aid</span></a>
+            </div>
+            <div slot="children-slides">
+              <div data-active data-parent-ref="tuition">
+                <a href="../../pages/tuition/"><span>Overview</span></a>
+                <a href="https://admissions.umd.edu/tuition/cost-of-attendance"><span>Cost of Attendance</span></a>
+                <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships"><span>Freshman Merit Scholarships</span></a>
+                <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
+                <a href="frederick-douglass-scholarship.html" data-selected><span>Frederick Douglass Scholarship</span></a>
+                <a href="https://financialaid.umd.edu/"><span>Office of Student Financial Aid</span></a>
+              </div>
+            </div>
+          </umd-element-nav-slider>
+        </div>
+
+        <div id="umd-shell-content" class="max-w-[800px]">
+          <!-- 5. INTRO — statue photo with caption, then the lede. -->
+          <section class="umd-layout-space-vertical-interior">
+            <!-- Wrapped mode: slot="text" is what activates it, and
+                 data-layout-alignment="right" floats the image (and its
+                 caption with it) to the right with the copy running down the
+                 left. Without slot="text" the component renders the image
+                 full-width and the alignment attribute does nothing. -->
+            <umd-element-media-inline data-layout-alignment="right">
+              <img slot="image" src="../../images/tuition/frederick-douglass-statue.jpg"
+                   alt="The Frederick Douglass statue on the University of Maryland campus, seen against the trees of Hornbake Plaza." />
+              <div class="umd-text-rich-advanced" slot="text">
+                <p>The Frederick Douglass Scholarship (FDS) is a prestigious University of Maryland (UMD) scholarship for academically talented transfer students from Maryland community colleges.</p>
+                <p>This exceptional merit-based scholarship honors the life and legacy of Frederick Douglass, who made lasting contributions to American history through his work as an abolitionist, suffragist, author and agent of positive change. 30 full and 15 partial tuition scholarships are awarded to students who are selected from a rigorous review and interview process.</p>
+                <p>The FDS application must be submitted no later than March 1 by 5:00 p.m. Selected students will be invited to interview in late March or early April as part of the final scholarship review process. Scholarship recipients will be notified by the end of April. If you have any questions please email <a href="mailto:FDS@umd.edu">FDS@umd.edu</a>.</p>
+              </div>
+              <div slot="caption">
+                <p>Frederick Douglass statue located in Hornbake Plaza.</p>
+              </div>
+            </umd-element-media-inline>
+          </section>
+
+          <!-- 6. ELIGIBILITY -->
+          <section class="umd-layout-space-vertical-interior">
+            <hr class="umd-text-divider" />
+            <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Eligibility</h2>
+
+            <div class="umd-text-rich-advanced">
+              <p>In order to be eligible for the Frederick Douglass Scholarship, students must:</p>
+              <ul>
+                <li>Be an admitted UMD student for the current spring semester or a transfer applicant with a completed and submitted application (including all required documents) for the upcoming fall semester with no previous degree-seeking status at the university.</li>
+                <li>Be a Maryland resident at the time of applying. This is determined by the applicant&rsquo;s response to the residency questions on the admission application. UMD adheres to the Board of Regents&rsquo; <a href="https://registrar.umd.edu/residency-reclassification" target="_blank" rel="noopener noreferrer">residency classification policies</a>.</li>
+                <li>Be a U.S. citizen, permanent resident, or qualify for in-state status by way of the <a href="https://registrar.umd.edu/residency-reclassification/non-resident-tuition-exemptions/maryland-dream-act" target="_blank" rel="noopener noreferrer">non-resident tuition exemption status</a> at the time of applying.</li>
+                <li>Have a cumulative GPA of 3.5 or higher for all college work, including work from institutions other than Maryland community colleges.</li>
+                <li>Earned an associate&rsquo;s degree from a Maryland community college, have completed, or be in the process of completing 56 college credits with the most recent 30 credits earned at a Maryland community college. The degree or credits must be earned by the end of the spring semester during which the application is being completed.</li>
+                <li>Students completing their 56th credit at the time of applying must reflect that courses are in progress on their transcript or on the transfer application.</li>
+                <li>Show English language proficiency, as demonstrated through a review of all materials submitted with the application.</li>
+              </ul>
+              <p>If you have questions about scholarship criteria, application completion or residency status, please email <a href="mailto:FDS@umd.edu">FDS@umd.edu</a> before March 1. It is the applicant&rsquo;s responsibility to ensure all scholarship and admission materials are submitted and received by the March 1 application deadline. It is also the applicant&rsquo;s responsibility to resolve any outstanding residency concerns affecting their status as qualifying for in-state tuition status or documents related to their admission application as outlined above. It is recommended that the applicant inquires 7&ndash;10 business days prior to the deadline for best consideration. Any discrepancies must be resolved within five business days following the deadline, including the receipt of any additional documentation required for review and final residency determination.</p>
+            </div>
+          </section>
+
+          <!-- 7. HOW TO APPLY -->
+          <section class="umd-layout-space-vertical-interior">
+            <hr class="umd-text-divider" />
+            <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">How to Apply</h2>
+
+            <div class="umd-text-rich-advanced">
+              <p>To apply for the Frederick Douglass Scholarship, candidates must submit the following required materials by March 1:</p>
+              <ol>
+                <li>A completed <a href="../../pages/how-to-apply/transfer-applicants.html">transfer application</a> for admission.</li>
+                <li>A completed FDS application.
+                  <ul>
+                    <li>Students applying to UMD for the fall semester must complete the FDS application online by March 1 to be considered for the scholarship. Transfer students recently admitted for the spring semester are eligible to apply as well by March 1.</li>
+                  </ul>
+                </li>
+                <li>Official transcripts from all post-secondary institutions attended.</li>
+                <li>An activities and awards list or resume detailing your extracurricular and personal activities, including dates, and describing your involvement and participation.</li>
+                <li>A 500 word, typed and double-spaced essay on the following topic: Describe the neighborhood or community you grew up in. How has it shaped your dreams and aspirations, and how do you intend to use your educational and professional goals to impact UMD and beyond?</li>
+                <li>Two letters of recommendation, one of which must be from a community college faculty member and one from an individual of your choosing. All recommendation letters must be submitted to <a href="mailto:FDS@umd.edu">FDS@umd.edu</a> directly from the recommenders.</li>
+              </ol>
+              <p><strong>Note:</strong> The Frederick Douglass Scholarship has replaced the Transfer Academic Excellence Scholarship.</p>
+            </div>
+          </section>
+
+          <!-- 8. STAY CONNECTED — banner promo. Interior pages use the
+               *-interior spacing scale; umd-layout-vertical-landing is
+               landing-page only. -->
+          <section class="umd-layout-space-vertical-interior">
+            <umd-element-banner-promo>
+              <h2 slot="headline">There is a lot more to learn about UMD</h2>
+              <p slot="text">Let&rsquo;s stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Join the mailing list</a> or <a href="https://admissions.umd.edu/connect">connect</a>!</p>
+              <div slot="actions" class="banner-promo-actions">
+                <umd-element-call-to-action data-display="primary">
+                  <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Subscribe</a>
+                </umd-element-call-to-action>
+              </div>
+            </umd-element-banner-promo>
+          </section>
+        </div>
       </div>
     </div>
-  </section>
+  </main>
 
-  <!-- 5. TERRITORIES — the modal's region list. Columns fill on width
-       (page CSS §26); a rep can cover one territory or nine. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-small">
-      <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
-      <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">Territories</p>
-      <ul class="rep-regions-list">
-          <li>Massachusetts</li>
-          <li>Maryland - Carroll County</li>
-          <li>Virginia - Tidewater Region</li>
-          <li>Virginia - Richmond</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- 6. BACK TO THE DIRECTORY — the only navigation off this page, and the
-       thing the modal used to give for free by closing. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-small">
-      <umd-element-call-to-action data-display="secondary">
-        <a href="index.html">All Admission Representatives</a>
-      </umd-element-call-to-action>
-    </div>
-  </section>
-
-  <!-- SCROLL TO TOP — fixed 24px from viewport bottom-right (pin lives in shared/chrome.css) -->
-  <umd-element-scroll-top data-layout-fixed="true"></umd-element-scroll-top>
-
+  <!-- 9. FOOTER — visual -->
   <!-- SHARED:footer:START — generated from shared/footer.html; do not edit here -->
   <umd-element-footer data-display="visual">
     <a slot="logo" href="../../pages/">
@@ -1661,6 +1546,5 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     })();
   </script>
   <!-- SHARED:chrome-scripts:END -->
-
 </body>
 </html>

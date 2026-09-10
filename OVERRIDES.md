@@ -10,13 +10,61 @@ Source: **`shared/chrome-scripts.html`** — this is the one shadow injection dr
 
 Pages using this: all twelve (verified rendering at `max-width: 320px`).
 
-## Pathway 1:1 image aspect ratio
+## Pathway 6:5 image aspect ratio
 
-`umd-element-pathway` has no CSS variable / `::part` hook for the image container; the design calls for a 1:1 image crop, so we shadow-inject `.pathway-image-container, .image-container, .umd-asset-image-wrapper-scaled { aspect-ratio: 1/1 !important; height: auto !important }` plus an `object-fit: cover` rule on the inner `<img>`.
+**Was 1:1 until 2026-09-10.** Changed to 6:5 for a uniform crop across the site,
+and extended to the one page that had been left out.
 
-**It applies to `data-display="overlay"` too, and there it is load-bearing rather than cosmetic.** The overlay variant lays its image out as a grid column (not as a full-bleed background), so without the cap the column takes the source photo's intrinsic aspect and can outgrow the text column — which then drives the height of the whole component. On `pages/how-to-apply/freshman-applicants.html` § "Making Sure Your UMD Application is Complete", a 607×932 portrait photo rendered 996px tall in a 649px column against an 816px text column, making the section 1316px. Capping at 1:1 puts the image at 649px, hands the height back to the text, and takes the section to 1136px. Don't scope the injection to `:not([data-display])` on the assumption that overlay uses a background image — it doesn't.
+`umd-element-pathway` has no CSS variable / `::part` hook for the image
+container, so this is shadow CSS:
 
-Pages using this: `pages/academics/index.html`, `pages/student-life/index.html`, `pages/tuition/index.html`, `pages/how-to-apply/freshman-applicants.html` (two overlay pathways, both capped).
+```css
+.pathway-image-container, .image-container, .umd-asset-image-wrapper-scaled {
+  aspect-ratio: 6 / 5 !important;
+  height: auto !important;
+}
+/* + width/height 100% and object-fit: cover on the inner <img> */
+```
+
+`height: auto` is load-bearing, not tidiness: it is what lets `aspect-ratio`
+resolve a definite height, which the sticky variant requires (see below).
+
+**It applies to `data-display="overlay"` too, and there it is load-bearing rather than cosmetic.** The overlay variant lays its image out as a grid column (not as a full-bleed background), so without the cap the column takes the source photo's intrinsic aspect and can outgrow the text column — which then drives the height of the whole component. On `pages/how-to-apply/freshman-applicants.html` § "Making Sure Your UMD Application is Complete", a 607×932 portrait photo rendered 996px tall in a 649px column against an 816px text column, making the section 1316px. Capping it hands the height back to the text. Don't scope the injection to `:not([data-display])` on the assumption that overlay uses a background image — it doesn't.
+
+### The sticky variant takes the cap too — the old note saying otherwise was wrong
+
+`pages/personas/prospective-students.html` carried a comment explaining why its
+four sticky pathways were deliberately left uncapped: *"a sticky pathway needs
+its image column to run the full height of the text column, which is what makes
+it stick."* Both halves of that are false.
+
+- `position: sticky` needs a **definite** height, not a full one, and
+  `aspect-ratio` + `height: auto` supplies one (474px at desktop). Measured
+  after capping: still `position: sticky`, still resolving 474px.
+- The image was never running full height anyway — 656px inside a 1194px
+  component. An image column that genuinely matched the text column would have
+  nothing to stick against.
+
+The four component heights are byte-identical before and after the cap
+(1194 / 1167 / 675 / 751), because the text column was already the tallest
+child. That page's cap rides along in the existing applicant-spotlight
+injection rather than as a second pass over the same shadow roots.
+
+### Where it lives
+
+Ten pages carry pathways, and all ten are capped: `pages/index.html`,
+`academics/index.html`, `academics/interest-engineering-technology.html`,
+`academics/programs.html`, `apply-now/index.html`, `how-to-apply/index.html`
+and its three applicant pages, `personas/prospective-students.html`,
+`tuition/index.html`. Two are generated — `scripts/build-programs.py` and
+`scripts/build-interest.py` carry their own copy of the payload, so a ratio
+change has to touch those too or the next build reverts it.
+
+*(An earlier version of this list named `pages/student-life/index.html`. That
+page has no `umd-element-pathway` at all — the entry was stale.)*
+
+**Verified 2026-09-10:** 28 pathways across the 10 pages, every one rendering
+569×474 — ratio 1.200 — across all three variants and both image positions.
 
 ## Overlay pathway as a dark editorial block
 
@@ -25,9 +73,13 @@ Pages using this: `pages/academics/index.html`, `pages/student-life/index.html`,
 Two things to know before using it:
 
 - **The panel deliberately overflows the viewport.** At 1440px it spans x 408 → 2381 (1973px wide) — the excess is suppressed by `critical.css` §21's `body { overflow-x: clip }`, exactly as with the hero-grid animation. Measured horizontal overflow stays 0; don't "fix" it with a width cap.
-- **Stacking it above a `umd-layout-background-full-dark` section leaves a 120px white gap between two dark blocks of different widths** (the inset panel vs the full-bleed band). RULES §19's collapse rule doesn't fire, because the pathway's section isn't itself a dark section. On `pages/how-to-apply/freshman-applicants.html` this was judged to read correctly — the image sitting on white at the left gives the pathway its own identity, so the two register as separate dark moments rather than one interrupted band. Worth re-checking by eye on any other page that stacks them.
+- **Stacking it above a `umd-layout-background-full-dark` section leaves a 120px white gap between two dark blocks of different widths** (the inset panel vs the full-bleed band). RULES §19's collapse rule doesn't fire, because the pathway's section isn't itself a dark section. This was live on `pages/how-to-apply/freshman-applicants.html` § "Choosing A Major" and judged acceptable at the time; **the section went un-themed on 2026-09-10**, so that stack no longer exists anywhere in the project and the 120px is now an ordinary light→dark section rhythm. Worth re-checking by eye on any page that reintroduces the stack.
 
-Pages using this: `pages/how-to-apply/freshman-applicants.html` (§ "Choosing A Major" dark, § "Making Sure Your UMD Application is Complete" light).
+Pages using the DARK overlay pathway: **none currently.** `pages/how-to-apply/freshman-applicants.html` § "Choosing A Major" was the last one; it dropped `data-theme` on 2026-09-10.
+
+**Removing the theme is not only a colour change.** On `data-display="overlay"`, `dark` / `light` / `maryland` each add `padding: 80px 0` to `.pathway-overlay-container-lock-wrapper` at container width ≥ 800px. Dropping the attribute drops that too — "Choosing A Major" went from 918px to 758px, exactly the 160px the registry predicts. Everything else the component handles itself: it swapped its rich-text class back from `umd-text-rich-advanced-dark` to `umd-text-rich-advanced`, so the headline went black, body copy to #454545, and the two inline links to black text with the black 1px gradient underline — no page CSS involved.
+
+Prefer **omitting** `data-theme` to setting `data-theme="white"`. They render identically, but `white` is implemented by fall-through rather than parsed (the component reads only dark/light/maryland), so it reads as a setting when it is really the absence of one — and a misspelling of it renders identically to a correct spelling.
 
 ## Banner-promo stacked actions
 
@@ -1256,3 +1308,137 @@ Two consequences worth keeping:
 
 Elements created by `innerHTML` on a **detached** container do not upgrade until
 they are connected, which is what makes this safe: they render once, on append.
+
+---
+
+## Tables: the hook is `.umd-text-rich-advanced`, not a table class (2026-09-09)
+
+Found while building an interior page whose body was one large table. The
+source markup wrapped it in a `.umd-text-rich-table` / `-scroll` / `-total`
+class family. **None of those class names exist** — not in
+`web-styles-library`, not in `critical.css`, not anywhere in the page-builder.
+The table shipped with browser-default borders and nothing errored to say so.
+
+The real hook is the rich-text wrapper. `element.min.css` styles tables
+*descended from* `.umd-text-rich-advanced` (or `.umd-rich-text`):
+
+```css
+:is(.umd-text-rich-advanced, .umd-rich-text) table {
+  border-collapse: collapse; display: block; overflow-x: auto;
+  table-layout: fixed; max-width: 100%;
+}
+… table) thead th   { background: #F1F1F1; color: #000; text-align: left }
+… table) tbody tr   { border-top: 1px solid #E6E6E6 }
+… table) tr:nth-child(even) { background: #FAFAFA }
+… table) th, … td   { padding: 24px; vertical-align: top }
+```
+
+So a **plain `<table>` inside a `.umd-text-rich-advanced` div** is fully
+styled with zero page CSS; a `<table>` outside one is unstyled. Do not
+hand-roll table classes — check for a rich-text ancestor first.
+
+`thead th` keeps its black text because `:is(:is(.umd-text-rich-advanced,…)
+table) thead th` out-specifies §7's `.umd-text-rich-advanced * { color: #454545 }`.
+Body cells do take #454545, which is correct — they are body copy.
+
+Three things upstream leaves open, for whenever a table lands in this project again:
+
+- **width.** `display: block` is what gives the table its mobile scroll, but it
+  also makes the table shrink-to-fit instead of filling the content column.
+  `width: 100%` restores the full-width reading; `table-layout: fixed` then
+  splits the data columns evenly.
+- **a summary/total row.** No upstream hook, and any override has to beat
+  `tr:nth-child(even)` — so the selector has to be doubled with `:nth-child(even)`.
+- **keyboard access.** Upstream makes the *table itself* the scroll container,
+  so a table that overflows needs `tabindex="0"` or it is unreachable by
+  keyboard (WCAG 2.1.1). Put the tabindex on the `<table>` rather than on a
+  wrapping `role="region"` div, so the element keeps its table role and its
+  `<caption>` keeps naming it.
+
+## `<ol>` in `.umd-text-rich-advanced` is fully styled — do not "fix" it (2026-09-10)
+
+Worth stating because the computed styles look broken and are not. Upstream sets
+`list-style-type: none !important` on `<ol>` inside the rich-text wrapper, so a
+`getComputedStyle` probe reports no marker and the obvious reaction is to add
+`list-style: decimal` back. Don't — the marker is drawn as a `::before`
+pseudo-element instead:
+
+```css
+:is(… ol, …) > li::before {
+  content: counter(item);
+  border-right: 1px solid #E21833;   /* the UMD numbered-list red rule */
+  padding-right: 8px;
+  position: absolute; right: calc(100% - 32px);
+}
+```
+
+That red rule beside the numeral is the design-system treatment, and the
+`!important` means a page-level `list-style` cannot win anyway — it only breaks
+the `padding-left: 40px` the pseudo-element is positioned against. A nested
+`<ul>` inside an `<ol>` is handled the same way (`content: "•"`). A plain
+`<ol>` in a `.umd-text-rich-advanced` div needs **no page CSS at all**. See
+`pages/tuition/frederick-douglass-scholarship.html`.
+
+## `umd-element-banner-promo` cannot stack actions — the injection was cargo (2026-09-10)
+
+Removed from all 11 pages that carried it, plus `scripts/build-programs.py` and
+`scripts/build-representatives.py`, on 2026-09-10. What it claimed to do was
+not a thing the component does.
+
+The component reads the slot with **`querySelector`** — singular — and hands
+that one element straight through:
+
+```js
+JG = ({actions}) => actions
+  ? new F(actions).withClassName("banner-promo-actions").withStyles({element:{
+      "@container (max-width: …)": {marginTop: sm},
+      "@container (min-width: …)": {maxWidth: "30%", marginLeft: md}}}).build()
+  : null
+```
+
+Three consequences, none of them obvious from the markup:
+
+1. **There is no multi-action layout.** The component stamps
+   `.banner-promo-actions` onto whatever single element you slot and gives it
+   `max-width: 30%; margin-left: 24px` — no display, no flex, no gap. Anything
+   beyond one action is the page's own problem.
+2. **`class="banner-promo-actions"` in page markup is redundant** — the
+   component applies that class itself. Ours is left in place only because it
+   is what `critical.css` §12 styles if the component never upgrades.
+3. **`critical.css` §12 is dead for the upgraded component.** banner-promo
+   *clones* `slot="text"` and `slot="actions"` into its shadow root rather than
+   projecting them through a real `<slot>`, so a light-DOM class cannot reach
+   the rendered copies. The originals stay in the document at 0×0. §12 is left
+   alone here because `critical.css` lives in the shared page-builder submodule
+   and the rule is a plausible no-JS fallback — but it is not what styles the
+   promo you see.
+
+**Measuring the light-DOM originals is a trap.** They are still queryable and
+still report computed styles — default-blue links, 0×0 boxes — none of which is
+what renders. Always reach through `el.shadowRoot` when checking a banner promo.
+
+Removing the injection changed nothing visually: the actions box measures
+155×44 at the same coordinates with `display: block` as it did with the
+injected column flex, because there is only ever one action in it.
+
+## `umd-element-media-inline` — `slot="text"` is what turns on wrapping (2026-09-10)
+
+`data-layout-alignment="right"` on its own does nothing. The component picks its
+mode from which slots are present:
+
+| Slots | Mode |
+|---|---|
+| `image` | standard — image full width |
+| `image` + `caption` | caption — image full width, credit line beneath |
+| `image` + `text` | **wrapped** — image floats, copy wraps around it |
+
+So floating an image right means moving the body copy *inside* the component as
+`<div class="umd-text-rich-advanced" slot="text">`, not leaving it in a sibling
+div. The caption floats with the image rather than staying under the whole
+block. Unlike banner-promo, this component projects `slot="text"` through a real
+`<slot>`, so the light-DOM copy stays live and page CSS does reach it.
+
+Verified at 1280px: image and caption both flush to the content column's right
+edge (371px of 775px), every line of copy stopping short of the float. At 375px
+the float collapses to stacked, which is the design system's own behaviour.
+See `pages/tuition/frederick-douglass-scholarship.html`.

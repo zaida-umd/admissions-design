@@ -301,7 +301,7 @@ def render(slug, data, programs, colleges_by_slug):
   (function () {{
     var CSS = '.pathway-image-container,.image-container,' +
               '.umd-asset-image-wrapper-scaled' +
-              '{{aspect-ratio:1/1 !important;height:auto !important;}}' +
+              '{{aspect-ratio:6/5 !important;height:auto !important;}}' +
               '.pathway-image-container img,.image-container img' +
               '{{object-fit:cover;width:100%;height:100%;}}';
     function inject(el) {{

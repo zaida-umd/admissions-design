@@ -1430,6 +1430,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">Cost of Attendance</a>
           <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships">Freshman Merit Scholarships</a>
           <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships">Transfer Merit Scholarships</a>
+          <a href="../../pages/tuition/frederick-douglass-scholarship.html">Frederick Douglass Scholarship</a>
           <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
@@ -1509,6 +1510,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/tuition/cost-of-attendance"><span>Cost of Attendance</span></a>
         <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships"><span>Freshman Merit Scholarships</span></a>
         <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
+        <a href="../../pages/tuition/frederick-douglass-scholarship.html"><span>Frederick Douglass Scholarship</span></a>
         <a href="https://financialaid.umd.edu/"><span>Office of Student Financial Aid</span></a>
       </div>
     </div>
@@ -1656,22 +1658,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     customElements.whenDefined('umd-element-pathway').then(() => {
       document.querySelectorAll('umd-element-pathway').forEach(el => {
         const style = document.createElement('style');
-        style.textContent = '.pathway-image-container,.image-container,.umd-asset-image-wrapper-scaled{aspect-ratio:1/1!important;height:auto!important}.pathway-image-container img,.image-container img,.umd-asset-image-wrapper-scaled img{width:100%!important;height:100%!important;object-fit:cover!important}';
+        style.textContent = '.pathway-image-container,.image-container,.umd-asset-image-wrapper-scaled{aspect-ratio:6/5!important;height:auto!important}.pathway-image-container img,.image-container img,.umd-asset-image-wrapper-scaled img{width:100%!important;height:100%!important;object-fit:cover!important}';
         el.shadowRoot && el.shadowRoot.appendChild(style);
       });
     });
-
-    // umd-element-banner-promo — stack actions vertically with 8px gap.
-    // Banner-promo reprojects slot="actions" into shadow DOM under
-    // .banner-promo-actions with no gap when stacked.
-    customElements.whenDefined('umd-element-banner-promo').then(() => {
-      document.querySelectorAll('umd-element-banner-promo').forEach(el => {
-        const style = document.createElement('style');
-        style.textContent = '.banner-promo-actions{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}';
-        el.shadowRoot && el.shadowRoot.appendChild(style);
-      });
-    });
-
 
     // GRID ENTRY ANIMATIONS — auto-applied to layout grids. Mirrors the
     // upstream observeGridAnimations() logic but expands the selector
