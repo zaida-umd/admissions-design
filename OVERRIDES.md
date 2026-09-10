@@ -73,9 +73,13 @@ page has no `umd-element-pathway` at all — the entry was stale.)*
 Two things to know before using it:
 
 - **The panel deliberately overflows the viewport.** At 1440px it spans x 408 → 2381 (1973px wide) — the excess is suppressed by `critical.css` §21's `body { overflow-x: clip }`, exactly as with the hero-grid animation. Measured horizontal overflow stays 0; don't "fix" it with a width cap.
-- **Stacking it above a `umd-layout-background-full-dark` section leaves a 120px white gap between two dark blocks of different widths** (the inset panel vs the full-bleed band). RULES §19's collapse rule doesn't fire, because the pathway's section isn't itself a dark section. On `pages/how-to-apply/freshman-applicants.html` this was judged to read correctly — the image sitting on white at the left gives the pathway its own identity, so the two register as separate dark moments rather than one interrupted band. Worth re-checking by eye on any other page that stacks them.
+- **Stacking it above a `umd-layout-background-full-dark` section leaves a 120px white gap between two dark blocks of different widths** (the inset panel vs the full-bleed band). RULES §19's collapse rule doesn't fire, because the pathway's section isn't itself a dark section. This was live on `pages/how-to-apply/freshman-applicants.html` § "Choosing A Major" and judged acceptable at the time; **the section went un-themed on 2026-09-10**, so that stack no longer exists anywhere in the project and the 120px is now an ordinary light→dark section rhythm. Worth re-checking by eye on any page that reintroduces the stack.
 
-Pages using this: `pages/how-to-apply/freshman-applicants.html` (§ "Choosing A Major" dark, § "Making Sure Your UMD Application is Complete" light).
+Pages using the DARK overlay pathway: **none currently.** `pages/how-to-apply/freshman-applicants.html` § "Choosing A Major" was the last one; it dropped `data-theme` on 2026-09-10.
+
+**Removing the theme is not only a colour change.** On `data-display="overlay"`, `dark` / `light` / `maryland` each add `padding: 80px 0` to `.pathway-overlay-container-lock-wrapper` at container width ≥ 800px. Dropping the attribute drops that too — "Choosing A Major" went from 918px to 758px, exactly the 160px the registry predicts. Everything else the component handles itself: it swapped its rich-text class back from `umd-text-rich-advanced-dark` to `umd-text-rich-advanced`, so the headline went black, body copy to #454545, and the two inline links to black text with the black 1px gradient underline — no page CSS involved.
+
+Prefer **omitting** `data-theme` to setting `data-theme="white"`. They render identically, but `white` is implemented by fall-through rather than parsed (the component reads only dark/light/maryland), so it reads as a setting when it is really the absence of one — and a misspelling of it renders identically to a correct spelling.
 
 ## Banner-promo stacked actions
 

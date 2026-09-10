@@ -1577,9 +1577,15 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </umd-element-sticky-columns>
   </section>
 
-  <!-- 5. CHOOSING A MAJOR — pathway, image left -->
+  <!-- 5. CHOOSING A MAJOR — pathway, image left.
+       No data-theme: on data-display="overlay" the theme is not purely
+       cosmetic — dark/light/maryland each add `padding: 80px 0` to the
+       overlay lock wrapper at container width >= 800px, and omitting it is
+       the only way to sit tight to the content. (data-theme="white" renders
+       identically but is fall-through rather than parsed, so it reads as a
+       setting when it is really the absence of one.) -->
   <section class="umd-layout-vertical-landing">
-    <umd-element-pathway data-display="overlay" data-theme="dark" data-layout-image-position="left">
+    <umd-element-pathway data-display="overlay" data-layout-image-position="left">
       <img slot="image" src="../../images/freshman-applicants/students-esj.jpg" alt="Students walking into the Edward St. John Learning and Teaching Center." />
       <h2 slot="headline">Choosing A Major</h2>
       <div slot="text">
