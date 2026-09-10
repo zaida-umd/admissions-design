@@ -374,18 +374,6 @@ BODY = r'''  </style>
       });
     });
 
-    // umd-element-banner-promo — stack actions vertically with 8px gap.
-    // Banner-promo reprojects slot="actions" into shadow DOM under
-    // .banner-promo-actions with no gap when stacked.
-    customElements.whenDefined('umd-element-banner-promo').then(() => {
-      document.querySelectorAll('umd-element-banner-promo').forEach(el => {
-        const style = document.createElement('style');
-        style.textContent = '.banner-promo-actions{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}';
-        el.shadowRoot && el.shadowRoot.appendChild(style);
-      });
-    });
-
-
     // GRID ENTRY ANIMATIONS — auto-applied to layout grids. Mirrors the
     // upstream observeGridAnimations() logic but expands the selector
     // set to all umd-layout-grid-* containers so authors don't need to

@@ -1256,3 +1256,137 @@ Two consequences worth keeping:
 
 Elements created by `innerHTML` on a **detached** container do not upgrade until
 they are connected, which is what makes this safe: they render once, on append.
+
+---
+
+## Tables: the hook is `.umd-text-rich-advanced`, not a table class (2026-09-09)
+
+Found while building an interior page whose body was one large table. The
+source markup wrapped it in a `.umd-text-rich-table` / `-scroll` / `-total`
+class family. **None of those class names exist** — not in
+`web-styles-library`, not in `critical.css`, not anywhere in the page-builder.
+The table shipped with browser-default borders and nothing errored to say so.
+
+The real hook is the rich-text wrapper. `element.min.css` styles tables
+*descended from* `.umd-text-rich-advanced` (or `.umd-rich-text`):
+
+```css
+:is(.umd-text-rich-advanced, .umd-rich-text) table {
+  border-collapse: collapse; display: block; overflow-x: auto;
+  table-layout: fixed; max-width: 100%;
+}
+… table) thead th   { background: #F1F1F1; color: #000; text-align: left }
+… table) tbody tr   { border-top: 1px solid #E6E6E6 }
+… table) tr:nth-child(even) { background: #FAFAFA }
+… table) th, … td   { padding: 24px; vertical-align: top }
+```
+
+So a **plain `<table>` inside a `.umd-text-rich-advanced` div** is fully
+styled with zero page CSS; a `<table>` outside one is unstyled. Do not
+hand-roll table classes — check for a rich-text ancestor first.
+
+`thead th` keeps its black text because `:is(:is(.umd-text-rich-advanced,…)
+table) thead th` out-specifies §7's `.umd-text-rich-advanced * { color: #454545 }`.
+Body cells do take #454545, which is correct — they are body copy.
+
+Three things upstream leaves open, for whenever a table lands in this project again:
+
+- **width.** `display: block` is what gives the table its mobile scroll, but it
+  also makes the table shrink-to-fit instead of filling the content column.
+  `width: 100%` restores the full-width reading; `table-layout: fixed` then
+  splits the data columns evenly.
+- **a summary/total row.** No upstream hook, and any override has to beat
+  `tr:nth-child(even)` — so the selector has to be doubled with `:nth-child(even)`.
+- **keyboard access.** Upstream makes the *table itself* the scroll container,
+  so a table that overflows needs `tabindex="0"` or it is unreachable by
+  keyboard (WCAG 2.1.1). Put the tabindex on the `<table>` rather than on a
+  wrapping `role="region"` div, so the element keeps its table role and its
+  `<caption>` keeps naming it.
+
+## `<ol>` in `.umd-text-rich-advanced` is fully styled — do not "fix" it (2026-09-10)
+
+Worth stating because the computed styles look broken and are not. Upstream sets
+`list-style-type: none !important` on `<ol>` inside the rich-text wrapper, so a
+`getComputedStyle` probe reports no marker and the obvious reaction is to add
+`list-style: decimal` back. Don't — the marker is drawn as a `::before`
+pseudo-element instead:
+
+```css
+:is(… ol, …) > li::before {
+  content: counter(item);
+  border-right: 1px solid #E21833;   /* the UMD numbered-list red rule */
+  padding-right: 8px;
+  position: absolute; right: calc(100% - 32px);
+}
+```
+
+That red rule beside the numeral is the design-system treatment, and the
+`!important` means a page-level `list-style` cannot win anyway — it only breaks
+the `padding-left: 40px` the pseudo-element is positioned against. A nested
+`<ul>` inside an `<ol>` is handled the same way (`content: "•"`). A plain
+`<ol>` in a `.umd-text-rich-advanced` div needs **no page CSS at all**. See
+`pages/tuition/frederick-douglass-scholarship.html`.
+
+## `umd-element-banner-promo` cannot stack actions — the injection was cargo (2026-09-10)
+
+Removed from all 11 pages that carried it, plus `scripts/build-programs.py` and
+`scripts/build-representatives.py`, on 2026-09-10. What it claimed to do was
+not a thing the component does.
+
+The component reads the slot with **`querySelector`** — singular — and hands
+that one element straight through:
+
+```js
+JG = ({actions}) => actions
+  ? new F(actions).withClassName("banner-promo-actions").withStyles({element:{
+      "@container (max-width: …)": {marginTop: sm},
+      "@container (min-width: …)": {maxWidth: "30%", marginLeft: md}}}).build()
+  : null
+```
+
+Three consequences, none of them obvious from the markup:
+
+1. **There is no multi-action layout.** The component stamps
+   `.banner-promo-actions` onto whatever single element you slot and gives it
+   `max-width: 30%; margin-left: 24px` — no display, no flex, no gap. Anything
+   beyond one action is the page's own problem.
+2. **`class="banner-promo-actions"` in page markup is redundant** — the
+   component applies that class itself. Ours is left in place only because it
+   is what `critical.css` §12 styles if the component never upgrades.
+3. **`critical.css` §12 is dead for the upgraded component.** banner-promo
+   *clones* `slot="text"` and `slot="actions"` into its shadow root rather than
+   projecting them through a real `<slot>`, so a light-DOM class cannot reach
+   the rendered copies. The originals stay in the document at 0×0. §12 is left
+   alone here because `critical.css` lives in the shared page-builder submodule
+   and the rule is a plausible no-JS fallback — but it is not what styles the
+   promo you see.
+
+**Measuring the light-DOM originals is a trap.** They are still queryable and
+still report computed styles — default-blue links, 0×0 boxes — none of which is
+what renders. Always reach through `el.shadowRoot` when checking a banner promo.
+
+Removing the injection changed nothing visually: the actions box measures
+155×44 at the same coordinates with `display: block` as it did with the
+injected column flex, because there is only ever one action in it.
+
+## `umd-element-media-inline` — `slot="text"` is what turns on wrapping (2026-09-10)
+
+`data-layout-alignment="right"` on its own does nothing. The component picks its
+mode from which slots are present:
+
+| Slots | Mode |
+|---|---|
+| `image` | standard — image full width |
+| `image` + `caption` | caption — image full width, credit line beneath |
+| `image` + `text` | **wrapped** — image floats, copy wraps around it |
+
+So floating an image right means moving the body copy *inside* the component as
+`<div class="umd-text-rich-advanced" slot="text">`, not leaving it in a sibling
+div. The caption floats with the image rather than staying under the whole
+block. Unlike banner-promo, this component projects `slot="text"` through a real
+`<slot>`, so the light-DOM copy stays live and page CSS does reach it.
+
+Verified at 1280px: image and caption both flush to the content column's right
+edge (371px of 775px), every line of copy stopping short of the float. At 375px
+the float collapses to stacked, which is the design system's own behaviour.
+See `pages/tuition/frederick-douglass-scholarship.html`.

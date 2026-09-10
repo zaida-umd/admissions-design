@@ -956,17 +956,6 @@
       pointer-events: none;
     }
 
-    /* BANNER-PROMO STACKED ACTIONS — add 8px vertical gap between
-       the primary and secondary CTA when they wrap to a column. The
-       slotted CTAs render inline by default; this stacks them with
-       a small consistent gap. */
-    .banner-promo-actions {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 8px;
-    }
-
     /* RICH-TEXT HEADING SCALING
        Section headings inside a .umd-text-rich-advanced block are
        <h2 class="text-black umd-sans-extralarge-bold">.
@@ -1462,6 +1451,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">Cost of Attendance</a>
           <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships">Freshman Merit Scholarships</a>
           <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships">Transfer Merit Scholarships</a>
+          <a href="../pages/tuition/frederick-douglass-scholarship.html">Frederick Douglass Scholarship</a>
           <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
@@ -1541,6 +1531,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/tuition/cost-of-attendance"><span>Cost of Attendance</span></a>
         <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships"><span>Freshman Merit Scholarships</span></a>
         <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
+        <a href="../pages/tuition/frederick-douglass-scholarship.html"><span>Frederick Douglass Scholarship</span></a>
         <a href="https://financialaid.umd.edu/"><span>Office of Student Financial Aid</span></a>
       </div>
     </div>
@@ -1994,13 +1985,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <div class="umd-layout-space-horizontal-larger">
       <umd-element-banner-promo>
         <h2 slot="headline">There is a lot more to learn about UMD</h2>
-        <p slot="text">Let's stay in touch!</p>
+        <p slot="text">Let's stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Join the mailing list</a> or <a href="https://admissions.umd.edu/connect">connect</a>!</p>
         <div slot="actions" class="banner-promo-actions">
           <umd-element-call-to-action data-display="primary">
-            <a href="#mailing-list">Join the Mailing List</a>
-          </umd-element-call-to-action>
-          <umd-element-call-to-action data-display="secondary">
-            <a href="#connect">Connect</a>
+            <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Subscribe</a>
           </umd-element-call-to-action>
         </div>
       </umd-element-banner-promo>
@@ -2125,29 +2113,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         document.querySelectorAll('umd-element-hero-grid').forEach(inject);
       }
       customElements.whenDefined('umd-element-hero-grid').then(() => {
-        applyAll();
-        setTimeout(applyAll, 0);
-        setTimeout(applyAll, 250);
-      });
-    })();
-
-    // BANNER-PROMO ACTIONS GAP — banner-promo reprojects slot="actions"
-    // into its shadow DOM under .banner-promo-actions. Inject column-flex
-    // with 8px gap so the stacked CTAs aren't flush against each other.
-    (function () {
-      const BANNER_PROMO_ACTIONS_CSS =
-        '.banner-promo-actions{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}';
-      function inject(el) {
-        if (!el.shadowRoot || el.__bannerPromoActionsInjected) return;
-        const style = document.createElement('style');
-        style.textContent = BANNER_PROMO_ACTIONS_CSS;
-        el.shadowRoot.appendChild(style);
-        el.__bannerPromoActionsInjected = true;
-      }
-      function applyAll() {
-        document.querySelectorAll('umd-element-banner-promo').forEach(inject);
-      }
-      customElements.whenDefined('umd-element-banner-promo').then(() => {
         applyAll();
         setTimeout(applyAll, 0);
         setTimeout(applyAll, 250);

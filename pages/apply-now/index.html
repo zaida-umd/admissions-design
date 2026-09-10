@@ -1272,6 +1272,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">Cost of Attendance</a>
           <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships">Freshman Merit Scholarships</a>
           <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships">Transfer Merit Scholarships</a>
+          <a href="../../pages/tuition/frederick-douglass-scholarship.html">Frederick Douglass Scholarship</a>
           <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
@@ -1351,6 +1352,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/tuition/cost-of-attendance"><span>Cost of Attendance</span></a>
         <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships"><span>Freshman Merit Scholarships</span></a>
         <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
+        <a href="../../pages/tuition/frederick-douglass-scholarship.html"><span>Frederick Douglass Scholarship</span></a>
         <a href="https://financialaid.umd.edu/"><span>Office of Student Financial Aid</span></a>
       </div>
     </div>
@@ -1539,13 +1541,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <div class="umd-layout-space-horizontal-larger">
       <umd-element-banner-promo>
         <h2 slot="headline">There is a lot more to learn about UMD</h2>
-        <p slot="text">So let's stay in touch!</p>
+        <p slot="text">Let's stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Join the mailing list</a> or <a href="https://admissions.umd.edu/connect">connect</a>!</p>
         <div slot="actions" class="banner-promo-actions">
           <umd-element-call-to-action data-display="primary">
-            <a href="https://apply.umd.edu/register/request-info">Join Our Mailing List</a>
-          </umd-element-call-to-action>
-          <umd-element-call-to-action data-display="secondary">
-            <a href="https://admissions.umd.edu/connect">Connect</a>
+            <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Subscribe</a>
           </umd-element-call-to-action>
         </div>
       </umd-element-banner-promo>
@@ -1645,16 +1644,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       });
     });
 
-    // umd-element-banner-promo — stack actions vertically with 8px gap.
-    // Banner-promo reprojects slot="actions" into shadow DOM under
-    // .banner-promo-actions with no gap when stacked.
-    customElements.whenDefined('umd-element-banner-promo').then(() => {
-      document.querySelectorAll('umd-element-banner-promo').forEach(el => {
-        const style = document.createElement('style');
-        style.textContent = '.banner-promo-actions{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}';
-        el.shadowRoot && el.shadowRoot.appendChild(style);
-      });
-    });
 
     // NOTE — no card-overlay injections on this page. The remaining documented
     // one (the 300/220-char destructive text clamp) targets the IMAGE variant's

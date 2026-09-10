@@ -399,8 +399,6 @@ def render_landing(doc):
 
 %(chrome_scripts)s
 
-%(promo_script)s
-
 %(person_link_script)s
 
   <!-- Canonical grid-entry animations (page-builder/CLAUDE.md: never inline). -->
@@ -417,7 +415,6 @@ def render_landing(doc):
         header=_chrome.block('header', out),
         footer=_chrome.block('footer', out),
         chrome_scripts=_chrome.block('chrome-scripts', out),
-        promo_script=BANNER_PROMO_SCRIPT,
         person_link_script=PERSON_LINK_SCRIPT,
         hero_img=e(hero['image']), hero_alt=e(hero['alt']),
         hero_headline=hero['headline'], hero_text=hero['text'],
@@ -463,22 +460,6 @@ PERSON_LINK_SCRIPT = '''  <!-- Person-card link affordance — page-content-driv
     };
     customElements.whenDefined('umd-element-person')
       .then(() => window.umdInjectPersonLinkCss());
-  </script>'''
-
-
-# The banner-promo injection is page-content-driven (OVERRIDES.md), so it ships
-# with the page that has the element rather than with shared/.
-BANNER_PROMO_SCRIPT = '''  <!-- Banner-promo shadow injection — page-content-driven (OVERRIDES.md).
-       banner-promo reprojects slot="actions" into its shadow root under
-       .banner-promo-actions with no gap when the actions stack. -->
-  <script>
-    customElements.whenDefined('umd-element-banner-promo').then(() => {
-      document.querySelectorAll('umd-element-banner-promo').forEach(el => {
-        const style = document.createElement('style');
-        style.textContent = '.banner-promo-actions{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}';
-        el.shadowRoot && el.shadowRoot.appendChild(style);
-      });
-    });
   </script>'''
 
 
@@ -686,8 +667,6 @@ def render_search(doc):
 
 %(chrome_scripts)s
 
-%(promo_script)s
-
 %(person_link_script)s
 
 %(filter_script)s
@@ -709,7 +688,6 @@ def render_search(doc):
         header=_chrome.block('header', out),
         footer=_chrome.block('footer', out),
         chrome_scripts=_chrome.block('chrome-scripts', out),
-        promo_script=BANNER_PROMO_SCRIPT,
         person_link_script=PERSON_LINK_SCRIPT,
         filter_script=FILTER_SCRIPT % {'page_size': PAGE_SIZE},
         hero_img=e(hero['image']), hero_alt=e(hero['alt']),

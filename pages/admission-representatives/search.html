@@ -1384,6 +1384,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">Cost of Attendance</a>
           <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships">Freshman Merit Scholarships</a>
           <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships">Transfer Merit Scholarships</a>
+          <a href="../../pages/tuition/frederick-douglass-scholarship.html">Frederick Douglass Scholarship</a>
           <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
@@ -1463,6 +1464,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/tuition/cost-of-attendance"><span>Cost of Attendance</span></a>
         <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships"><span>Freshman Merit Scholarships</span></a>
         <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
+        <a href="../../pages/tuition/frederick-douglass-scholarship.html"><span>Frederick Douglass Scholarship</span></a>
         <a href="https://financialaid.umd.edu/"><span>Office of Student Financial Aid</span></a>
       </div>
     </div>
@@ -1906,19 +1908,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     })();
   </script>
   <!-- SHARED:chrome-scripts:END -->
-
-  <!-- Banner-promo shadow injection — page-content-driven (OVERRIDES.md).
-       banner-promo reprojects slot="actions" into its shadow root under
-       .banner-promo-actions with no gap when the actions stack. -->
-  <script>
-    customElements.whenDefined('umd-element-banner-promo').then(() => {
-      document.querySelectorAll('umd-element-banner-promo').forEach(el => {
-        const style = document.createElement('style');
-        style.textContent = '.banner-promo-actions{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}';
-        el.shadowRoot && el.shadowRoot.appendChild(style);
-      });
-    });
-  </script>
 
   <!-- Person-card link affordance — page-content-driven (OVERRIDES.md).
        umd-element-person styles a linked and an unlinked name the same; this
