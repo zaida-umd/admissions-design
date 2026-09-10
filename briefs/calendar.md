@@ -8,20 +8,29 @@
 The admissions events calendar, recreated in the design system. Replaces
 <https://admissions.umd.edu/calendar?date=2026-08-20&layout=list>.
 
-Two layouts, toggled: an event **list** and a full **month grid**, matching the
-live site's `?layout=list` / `?layout=grid`.
+One layout: a **filter rail on the left and a flat, chronological event list on
+the right**, modelled on <https://calendar.umd.edu/search>.
 
 | Piece | Comes from |
 |---|---|
-| Event rows (list view) | `umd-element-event data-display="list"` (DS event card, list variant) |
-| Filter band across the top | the page-builder **Filter Band** pattern (`LAYOUT-PATTERNS.md`) |
-| Control bar | the live calendar's `.main-controls` — month cursor, prev/next/Today, List/Calendar toggle |
-| Mini calendar in the list rail | the right-rail month grid on <https://calendar.umd.edu> |
-| Month grid | original; the live grid's cells hold only a date number |
-| Month pager | the `umd-shell-pagination` pattern from <https://today.umd.edu/tags/athletics> |
+| Event rows | `umd-element-event data-display="list"` (DS event card, list variant) |
+| Filter rail | the programs page's rail (`scripts/build-programs.py`) — same `pf-*` markup, accordions, "Show all N", pills and reset CTA |
+| Date range picker | the Start/End `input[type=date]` pair on <https://calendar.umd.edu/search> |
+| Load More | the live search page's "Load More Events" button |
 
-There is no search field — the live calendar has none, and four selects over 64
-events do not need one.
+There is no search field. The live calendar's own list has none, and the search
+page's text input was dropped here deliberately — four facets and a date range
+over 64 events do not need one.
+
+### Simplified 2026-09-10
+
+The page used to carry a month cursor with a prev/next/Today control bar, a
+List | Calendar toggle, a full month grid, a mini-calendar rail, a
+`umd-shell-pagination` month pager, and a static "Upcoming Events" block. All of
+it is gone. The last one went because with the list running from today it was
+literally its own first six rows; everything else went with the month cursor,
+which no longer has anything to drive now that pagination counts events rather
+than months.
 
 ## Content
 
@@ -45,56 +54,66 @@ Facet vocabularies match the live filter menu:
 | College or School | the eight colleges that actually tag events |
 
 The live site nests colleges *inside* its Event Type select, so that one
-control mixes two dimensions. Here they are their own select — four controls
-fit the band's `umd-layout-grid-gap-four` row exactly.
+control mixes two dimensions. Here they are their own rail group, which is what
+lets a reader hold a college and an event type at the same time.
 
 ## Behavior
 
-- **Page order is** filter band → active pills → control bar → count → results.
-  The band answers "which events"; the control bar answers "when, and shown
-  how", so it sits directly above the results it labels.
-- **One date cursor, one month per page.** `state.from` defaults to today
-  (2026-08-20) and **both views window to its month**. Month nav moves the
-  cursor to the 1st of the next/previous month, "Today" returns it to today.
-  There is no results-count line — the month is the count's job now.
-- **No group heading in the list.** One month per page, and the control bar
-  above already names it. The cards sit directly in `#cal-list` with no
-  wrapper — that adjacency is what gives them their upstream divider.
-- **The pager** under the list is the `umd-shell-pagination` pattern with
-  numbered pages: first · … · prev · **current** · next · … · last, clamped to
-  the months the data covers. **Page N is the Nth month**, so a page step is a
-  month step; the month rides in each button's `aria-label`. Its CSS is **not**
-  in the styles package (see OVERRIDES.md) and is restated from the live page.
-- **Facets are shared by both views.** They filter the event set; each view then
-  applies its own date window, so switching views never changes what matched.
-- **One value per facet** (single `<select>`, as on the live site). The
-  removable "Filtered by:" pills and the live count sit under the band.
-- **The mini calendar rides the same cursor.** It shows the control bar's month,
-  underlines days that have matching events, and a day click moves the cursor
-  and scrolls to that day's ribbon. It has no month arrows of its own — the
-  control bar owns the month. Only a *picked* day gets the red ring; moving
-  months clears it, since month nav snaps the cursor to the 1st.
-- **The rail is list-view only, on the right** — where calendar.umd.edu puts
-  the same month grid. Grid view hides it and renders full bleed; a month
-  picker beside a month grid is a duplicate control that also steals the width
-  the grid needs. Below 1020px the rail stacks above the list.
-- **The month label** is `umd-campaign-small` (Barlow Condensed italic, matching
-  the hero) forced to caps in page CSS — the campaign faces have no
-  `-uppercase` sibling. Red arrows flank it; `min-width:11ch` stops them
-  jittering as the month name changes length.
-- **A static "Upcoming Events" block** closes the page under a tailwing heading
-  (`umd-text-line-trailing-light`): the next six events from today as bordered,
-  image-less event cards, three up. Rendered at build time, independent of the
-  filters and the month cursor. `umd-element-event` has no bordered variant —
-  the border is a shadow injection (see OVERRIDES.md).
-- **Grid cells list their events** — up to three linked titles with times, then
-  a "+N more" toggle. Below 768px the Calendar toggle is hidden and the page is
-  list-only; a seven-column grid with content in the cells can't be done at
-  375px, and the live site's own grid measures 0×0 there.
-- List results group by month under the DS **eyebrow ribbon**
-  (`umd-text-decoration-eyebrow umd-eyebrow-ribbon` from `element.min.css`) —
-  the same gold ribbon `umd-feed-events-grouped` uses for its date headers on
-  calendar.umd.edu. Kept as an `<h2>` so the months stay real headings.
+- **Page order is** rail (left) → pills → count line → results → Load More.
+  Below 1020px the rail collapses behind a black "Filter events" toggle and
+  stacks above the results, exactly as the programs rail does.
+- **The rail is the programs rail**, down to the accordion glyph: two 12x2 bars
+  at the same spot, `::before` horizontal and `::after` upright, so a closed
+  group reads "+" and opening rotates `::after` flat into "-". Both bars are
+  required — hiding one leaves a bare vertical stroke that is a plus at no
+  point. Accordion groups, checkboxes with counts,
+  a "Show all N" toggle on any group over seven options (here only College or
+  School), removable "Filtered by:" pills, and an outline "Reset filters" CTA.
+  It is a copy rather than a shared partial because these two pages are its
+  only users and the build scripts have no include mechanism — if a third page
+  wants it, extract then.
+- **Facets are multi-select** (checkboxes), AND across groups, OR within one.
+  The old page used single `<select>`s; the rail's checkboxes are what make it
+  behave like the programs page.
+- **Date is the first group**, matching the live search page, and holds two
+  native `input[type=date]` fields **side by side** with a "to" between them —
+  the same row the example uses. Native rather than a scripted picker: the
+  browser's own popup is keyboard- and screen-reader-complete, localises
+  itself, and costs no JS. `min`/`max` are stamped from the data range at build
+  time so the popup can't wander into empty years.
+- **The field chrome is upstream, not page CSS.** `.umd-field-input` and
+  `.umd-field-input-date-time-wrapper` (element.min.css) are the same pair the
+  live search page uses; they carry the border, padding, Interstate face, the
+  gray-to-red calendar glyph and the rules hiding the native webkit indicator
+  behind it. Only the flex row is page CSS. A first pass hand-rolled all of it,
+  which critical.css's own header warns against.
+- **The rail is a query container** so the date type keys off the rail's width,
+  not the viewport's. Below ~308px of rail the DS base size runs the date text
+  under the calendar glyph, which is absolutely placed and can't reflow; the
+  rail only reaches that band between 1020px (where it is 277px, its narrowest
+  — below 1020 it stacks full width) and about 1130px. The example does the
+  same thing, dropping its fields to 12px where its rail is narrow.
+- **Start date is pre-filled with today** (2026-08-20) rather than left blank,
+  so the window that is actually running is visible in the control instead of
+  being implied. "Reset filters" and the pill's × return here, not to a blank
+  field. That default is also why the date pill only appears once the range
+  *differs* from it — otherwise every visit would open with a chip the reader
+  never chose.
+- **Every date is a string comparison.** `new Date('2026-09-01')` is UTC
+  midnight and prints as Aug 31 west of Greenwich, so nothing on this page is
+  parsed into a `Date`; the list is sorted at build time instead.
+- **Pagination is by count: 15 events, then a "Load More Events" button.**
+  The count line reads "Showing 15 of 51 events" while more remain and collapses
+  to a plain total once the list is complete. Any filter change returns to page
+  one — leaving the offset alone would show "45 of 3", or hold a scroll position
+  in rows that no longer exist. Load More moves focus to the first newly
+  revealed card, since the button it was on may have just disappeared.
+- **No group heading in the list.** The cards sit directly in `#cal-list` with
+  no wrapper — that adjacency is what gives them their upstream divider.
+- **Both CTAs listen on their light-DOM wrapper.** `umd-element-call-to-action`
+  clones its `<button>` into shadow DOM, so the visible click never reaches the
+  original; Reset filters and Load More both catch the retargeted composed click
+  on the wrapper instead.
 
 ## Notes
 
@@ -110,8 +129,9 @@ fit the band's `umd-layout-grid-gap-four` row exactly.
   "Thu. Aug 20 - undefined. undefined undefined". See OVERRIDES.md.
 - Consecutive `umd-element-event[data-display="list"]` siblings get their
   24px + top-rule divider from upstream `web-components.min.css`. Don't add it.
-- The hero is `umd-element-hero-minimal data-theme="dark"` with **only** a
-  headline — matching the live page, which carries a breadcrumb and an `h1` and
+- The hero is `umd-element-hero data-layout-height="small" data-layout-text="center"`
+  with an eyebrow and a headline — matching the live page, which carries a
+  breadcrumb and an `h1` and
   nothing else. An earlier revision used a standard background hero with a
   supporting paragraph and a "Plan Your Visit" CTA; that copy was invented here,
   not taken from the source, and is gone.
