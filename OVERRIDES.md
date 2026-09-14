@@ -1311,6 +1311,70 @@ they are connected, which is what makes this safe: they render once, on append.
 
 ---
 
+## Table deltas from the styles package (2026-09-14)
+
+`element.min.css` styles every `table` descended from `.umd-text-rich-advanced`.
+**This is the complete list of project changes to that treatment.** Anything not
+listed here is upstream and is deliberately left alone — check this list before
+adding a fourth rule, and add to it if you do.
+
+| # | Delta | Upstream | Ours |
+|---|---|---|---|
+| 1 | Header band | `background: #F1F1F1; color: #000` | `background: #000; color: #fff` |
+| 2 | Fill the container | table shrink-wraps to content | `display: table; width: 100%` + a scroll wrapper |
+| 3 | Space above | inherits the rich-text 24px child spacing | `32px`, on the wrapper |
+
+```css
+.umd-text-rich-advanced table thead th { background: #000000; color: #ffffff; }
+.umd-table-scroll { overflow-x: auto; margin-top: 32px; }
+.umd-text-rich-advanced table { display: table; width: 100%; min-width: 560px; margin-top: 0; }
+```
+
+```html
+<div class="umd-table-scroll"><table>…</table></div>
+```
+
+### Kept from upstream — do not re-declare
+
+`border-collapse: collapse`, `table-layout: fixed`, `max-width: 100%`, `th`/`td`
+`padding: 24px` + `vertical-align: top`, `th` 18px/700, `td` 16px fluid,
+`tbody tr` `border-top: 1px solid #E6E6E6`, `tr:nth-child(even)`
+`background: #FAFAFA`.
+
+### Three traps, all hit while making these three changes
+
+**The header rule needs the `table` step in the selector.** Upstream's is
+`:is(:is(.umd-text-rich-advanced,.umd-rich-text) table) thead th` — specificity
+**(0,1,3)**. A natural-looking `.umd-text-rich-advanced thead th` is **(0,1,2)**
+and loses silently; the band stays grey and nothing errors.
+`.umd-text-rich-advanced table thead th` matches at (0,1,3) and wins on order.
+
+**`width: 100%` alone does not fill the container.** Upstream sets
+`display: block` on the table so it can hang `overflow-x` off it. A block-level
+table stretches its *block* box to the container while its internal table box
+still shrink-wraps — measured **650px of rows inside a 1152px block**, and
+`width: 100%` sizes the block, not the table. The table needs `display: table`
+back, which means the horizontal scroll has to move to a real wrapper.
+
+**That scroll is load-bearing, not decoration.** It is the only reason a wide
+table doesn't push the whole page sideways on a phone. After the rework,
+measured at 375px: wrapper client 327px, scroll width 560px, **page overflow 0**.
+`min-width: 560px` is what keeps it scrolling rather than crushing country names
+into 100px columns.
+
+**Stacking margins.** Putting the 32px on the table as well as letting the
+wrapper take the rich-text 24px gives **56px**, not 32px. The margin belongs on
+the wrapper alone, with the table reset to `margin-top: 0`.
+
+### Scope
+
+Applied on `pages/how-to-apply/english-language-proficiency.html`, the only page
+using the plain rich-text table. Two other tables exist and are **deliberately
+out of scope** — both are bespoke deadline lists with their own class and no
+`thead`: `pages/index.html` `.deadlines-table` (which already neutralises the
+package treatment) and `pages/personas/prospective-students.html`
+`.applicant-deadlines-table`.
+
 ## Tables: the hook is `.umd-text-rich-advanced`, not a table class (2026-09-09)
 
 Found while building an interior page whose body was one large table. The

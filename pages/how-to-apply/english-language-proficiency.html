@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
-  <title>Student Support &amp; Safety — Undergraduate Admissions | University of Maryland</title>
+  <title>English Language Proficiency — Undergraduate Admissions | University of Maryland</title>
 
   <!-- ============================================================
        UMD Critical CSS — Hybrid CDN + Local
@@ -820,29 +820,10 @@
 
 
     /* ============================================================
-       A. PAGE — ZIG-ZAG COLUMNS (LAYOUT-PATTERNS.md)
-       Neither rule is in the base bundles or critical.css.
-       min-width: 0 lets the 1fr tracks shrink — otherwise an image's
-       min-content forces its grid track to the intrinsic width and
-       unbalances the columns.
+       A. PAGE — LAYOUT B HELPERS
+       No zig-zag rules here: this page has no images at all.
        ============================================================ */
-    .umd-layout-grid-gap-two > * { min-width: 0; }
-    .umd-layout-grid-gap-two figure.umd-layout-alignment-block-stacked img {
-      display: block; width: 100%; height: auto;
-    }
-    /* UNIFORM CROP on the zig-zag images. Two of the three source photos are
-       landscape (1920×1080 and 1200×630) but the Safety one is portrait
-       (600×760). Left at its intrinsic ratio it rendered 704px tall in a 556px
-       column against a 313px text column, so the block was mostly dead space.
-       16/9 is a no-op for the two landscape images and crops only the portrait
-       one, whose subject — the blue-light pillar — runs the full height and
-       survives a centre crop. Same reasoning as the pathway 6:5 cap in
-       OVERRIDES.md: one ratio across a repeated component. */
-    .umd-layout-grid-gap-two figure.umd-layout-alignment-block-stacked img {
-      aspect-ratio: 16 / 9;
-      height: auto;
-      object-fit: cover;
-    }
+
     /* PAGE LEDE — replaces the section-intro component for the opening
        paragraph. That component centres its text in a ~992px block, which is
        fine under a full-width grid but reads wrong on a text-led page where
@@ -860,16 +841,62 @@
     .interior-lede { max-width: 800px; margin-bottom: 24px; }
     .interior-lede > p { margin: 0; }
 
-    /* ALTERNATING SIDE — by `order`, not by DOM order.
-       LAYOUT-PATTERNS.md alternates the zig-zag by swapping the <figure> and
-       the text <div> in the markup. That is wrong below the 650px breakpoint
-       where the grid collapses to one column: the figure then stacks ABOVE its
-       own heading, so half the blocks lead with an unexplained photo. Keeping
-       the text first in the DOM everywhere and flipping the column with
-       `order` at 650px+ gives the same zig-zag with a reading order that
-       survives the collapse — and the same order for a screen reader. */
-    @media (min-width: 650px) {
-      .ss-media-first > figure { order: -1; }
+    /* ============================================================
+       TABLE — PROJECT DELTAS FROM THE STYLES PACKAGE
+       element.min.css styles every table descended from
+       .umd-text-rich-advanced. These three rules are the ONLY project
+       changes to that treatment; everything else below is upstream and is
+       deliberately left alone. Tracked in OVERRIDES.md § Table deltas.
+
+       KEPT FROM UPSTREAM (do not re-declare):
+         border-collapse: collapse | table-layout: fixed | max-width: 100%
+         display: block + overflow-x: auto  <- load-bearing on mobile
+         th/td padding 24px, vertical-align: top
+         th 18px/700, td 16px fluid
+         tbody tr border-top #E6E6E6, tr:nth-child(even) background #FAFAFA
+       ============================================================ */
+
+    /* 1. Header band: white on black, not upstream's black on #F1F1F1.
+       Upstream's selector is
+         :is(:is(.umd-text-rich-advanced,.umd-rich-text) table) thead th
+       which is (0,1,3). A shorter `.umd-text-rich-advanced thead th` is (0,1,2)
+       and silently loses — the `table` step has to be in the selector. */
+    .umd-text-rich-advanced table thead th {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    /* 2. Fill the container.
+       Upstream sets `display: block` on the table so it can hang overflow-x off
+       it. A block-level table stretches its BLOCK box to the container while its
+       internal table box still shrink-wraps the content — measured 650px of rows
+       inside a 1152px block, and `width: 100%` does not fix that because it sizes
+       the block, not the table.
+       The fix is to give the table back `display: table` and move the scrolling
+       to a real wrapper. min-width keeps the wrapper scrolling on narrow
+       viewports instead of crushing five-word country names into 100px columns. */
+    .umd-table-scroll { overflow-x: auto; }
+    .umd-text-rich-advanced table {
+      display: table;
+      width: 100%;
+      min-width: 560px;
+    }
+
+    /* 3. Space above the table — 32px, against the 24px every rich-text child
+       gets. It goes on the WRAPPER, not the table: the wrapper is the rich-text
+       child that carries the 24px, so putting 32px on the table too just adds
+       the two together (measured 56px). */
+    .umd-table-scroll { margin-top: 32px; }
+    .umd-text-rich-advanced table { margin-top: 0; }
+
+    /* Visually-hidden text for the country table's two continuation column
+       headers. The table is one logical list split across three columns, so
+       the 2nd and 3rd <th> are empty in the source — empty headers leave a
+       screen reader announcing nothing for two of the three columns. */
+    .elp-sr {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
     }
   </style>
 
@@ -1334,14 +1361,14 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/academics/limited-enrollment-programs"><span>Limited Enrollment Programs</span></a>
         <a href="https://ugst.umd.edu/llsop/index.html"><span>Living-Learning &amp; Special Programs</span></a>
       </div>
-      <div data-parent-ref="student-life" data-active>
+      <div data-parent-ref="student-life">
         <a href="../../pages/student-life/"><span>Overview</span></a>
         <a href="https://admissions.umd.edu/student/housing-and-dining"><span>Housing &amp; Dining</span></a>
-        <a href="../../pages/student-life/student-support.html" data-selected><span>Student Support &amp; Safety</span></a>
+        <a href="../../pages/student-life/student-support.html"><span>Student Support &amp; Safety</span></a>
         <a href="https://admissions.umd.edu/student/get-involved"><span>Get Involved on Campus</span></a>
         <a href="../../pages/student-life/find-community.html"><span>Find Your Community</span></a>
       </div>
-      <div data-parent-ref="how-to-apply">
+      <div data-parent-ref="how-to-apply" data-active>
         <a href="../../pages/how-to-apply/"><span>Overview</span></a>
         <a href="../../pages/how-to-apply/freshman-applicants.html"><span>Freshman Applicants</span></a>
         <a href="../../pages/how-to-apply/transfer-applicants.html"><span>Transfer Applicants</span></a>
@@ -1365,35 +1392,35 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <!-- SHARED:header:END -->
 
   <main id="main-content">
-    <!-- 2. HERO — the shared interior hero: minimal, dark, UMD chevron pattern
-         in the image slot, parent page in the eyebrow.
-         See CLAUDE.md § Interior page layouts. -->
+    <!-- 2. HERO — the shared interior hero. See CLAUDE.md § Interior page layouts. -->
     <section>
       <umd-element-hero-minimal data-theme="dark">
-        <p slot="eyebrow">Student Life</p>
-        <h1 slot="headline">Student Support &amp; Safety</h1>
+        <p slot="eyebrow">International Applicants</p>
+        <h1 slot="headline">English Language Proficiency</h1>
         <img slot="image" src="../../images/shared/interior-hero-pattern.png" alt="" />
       </umd-element-hero-minimal>
     </section>
 
     <!-- 3. BREADCRUMB — LAYOUT B: lock matches the content lock (-normal).
-         The source breadcrumb runs Home > Student Support & Safety with no
-         section step; Student Life is added here because this project's
-         pages/student-life/ section landing page exists. -->
+         The source runs Home > International Applicants > this page; the
+         How To Apply step is added so the section landing is reachable, as on
+         the other interior pages in this project. -->
     <div class="umd-layout-space-horizontal-normal umd-layout-space-vertical-interior">
       <umd-element-breadcrumb>
         <div slot="paths">
           <a href="../../pages/" aria-label="Return Home"><span aria-hidden="true">Home</span></a>
-          <a href="../../pages/student-life/"><span>Student Life</span></a>
-          <p aria-label="Current Page"><span>Student Support &amp; Safety</span></p>
+          <a href="../../pages/how-to-apply/"><span>How To Apply</span></a>
+          <a href="../../pages/how-to-apply/international-applicants.html"><span>International Applicants</span></a>
+          <p aria-label="Current Page"><span>English Language Proficiency</span></p>
         </div>
       </umd-element-breadcrumb>
     </div>
 
-    <!-- 4. CONTENT — LAYOUT B: the source page has no left nav, so no
-         umd-layout-space-columns-left and no sidebar. One -normal lock.
-         Rich text needs no measure wrapper: element.min.css caps
-         p / ul / ol at 960px in place. -->
+    <!-- 4. CONTENT — LAYOUT B: the source page has no left nav. One -normal
+         lock. This is the most text-heavy page built on Layout B so far, which
+         makes the measure rule load-bearing: element.min.css caps rich-text
+         p / ul / ol at 960px IN PLACE, so the prose never runs the full 1152px
+         content box while the card grid and the table still use it all. -->
     <div class="umd-layout-space-horizontal-normal">
 
       <!-- 5. LEDE — a left-aligned paragraph, NOT the section-intro
@@ -1404,103 +1431,120 @@ umd-element-scroll-top[data-layout-fixed="true"] {
            to 18px (RULES §18). -->
       <section>
         <div class="interior-lede">
-          <p class="umd-sans-larger-bold text-black">Safety is the shared responsibility of each campus community member. We know that students thrive in a community they feel safe and supported in, and we continue to work toward a safer and more secure community.</p>
+          <p class="umd-sans-larger-bold text-black">If English is not your native language, or you are an international applicant, you must verify your proficiency in English. Some students qualify for a waiver.</p>
         </div>
       </section>
 
-      <!-- 6. ACADEMICS / WELLNESS / SAFETY — zig-zag columns
-           (LAYOUT-PATTERNS.md § Light background — two-column image + text),
-           replacing the source page's floated images. The image column
-           alternates left / right / left.
-
-           The side is set with `order`, NOT by swapping the markup: below
-           650px the grid collapses to one column and figure-first markup would
-           stack the photo above its own heading (OVERRIDES.md § Zig-zag
-           alternation). Text stays first in the DOM on every block.
-
-           Each headline sits OUTSIDE .umd-text-rich-advanced — a umd-sans-*
-           size collapses to 18px inside that block (RULES §18). -->
+      <!-- 6. HOW SCORES ARE REVIEWED — plain editorial copy, no heading in the
+           source. It follows the lede directly there, so it does the same here. -->
       <section class="umd-layout-space-vertical-interior">
-        <div class="umd-layout-grid-gap-two ss-media-first">
-          <div>
-            <hr class="umd-text-divider" />
-            <h2 class="text-black umd-sans-larger-bold umd-layout-space-vertical-headline-large">Academics</h2>
-            <div class="umd-text-rich-advanced">
-              <ul>
-                <li>Tutoring services</li>
-                <li><a href="https://careers.umd.edu/" target="_blank" rel="noopener noreferrer">Career Center</a> &mdash; Whether you&rsquo;re looking to gain experience through an internship, fine tune your resume, practice your interviewing skills or evaluate a job offer, the Career Center has you covered. You&rsquo;ll receive support at every stage of your career development and will be prepared to pursue a meaningful career path through high-quality services, resources and instruction.</li>
-              </ul>
-            </div>
-          </div>
-          <figure class="umd-layout-alignment-block-stacked">
-            <img src="../../images/student-support/academics-engineering-lab.jpg"
-                 alt="Students sitting around a table in an engineering lab." />
-          </figure>
+        <div class="umd-text-rich-advanced">
+          <p>The Office of Undergraduate Admissions employs a holistic review process when considering all applicants, and will consider all materials submitted in the application package to determine the level of English language proficiency.</p>
+          <p>Please have an official report of your scores sent directly to the Office of Undergraduate Admissions by the <a href="https://admissions.umd.edu/apply/application-deadlines">appropriate deadline</a>. Submitted scores must be less than two years old.</p>
+          <p>For the University of Maryland to receive your scores, <strong>please use the reporting code 5814</strong>.</p>
         </div>
       </section>
 
-      <section class="umd-layout-space-vertical-interior">
-        <div class="umd-layout-grid-gap-two">
-          <div>
-            <hr class="umd-text-divider" />
-            <h2 class="text-black umd-sans-larger-bold umd-layout-space-vertical-headline-large">Wellness</h2>
-            <div class="umd-text-rich-advanced">
-              <ul>
-                <li><a href="https://health.umd.edu/prospective-students" target="_blank" rel="noopener noreferrer">University Health Center</a> &mdash; Provides high-quality, cost-effective health care and wellness programs in order to promote the health of the university community and support academic success.</li>
-                <li><a href="https://www.counseling.umd.edu/aboutus/" target="_blank" rel="noopener noreferrer">Counseling Center</a> &mdash; Provides comprehensive support services that promote the personal, social and academic success of UMD students.</li>
-                <li><a href="https://recwell.umd.edu/" target="_blank" rel="noopener noreferrer">Recreation &amp; Wellness</a> &mdash; Creates a culture of wellness where all members of the university community thrive. Recreation is for everyone and there is something for everyone at RecWell.</li>
-              </ul>
-            </div>
-          </div>
-          <figure class="umd-layout-alignment-block-stacked">
-            <img src="../../images/student-support/wellness-health-center.jpg"
-                 alt="The front entrance of the University Health Center." />
-          </figure>
-        </div>
-      </section>
-
-      <section class="umd-layout-space-vertical-interior">
-        <div class="umd-layout-grid-gap-two ss-media-first">
-          <div>
-            <hr class="umd-text-divider" />
-            <h2 class="text-black umd-sans-larger-bold umd-layout-space-vertical-headline-large">Safety</h2>
-            <div class="umd-text-rich-advanced">
-              <p>Call University Police at <a href="tel:911">911</a> or <a href="tel:+13014053555">(301) 405-3555</a>. If you ever see a situation involving fighting between partners or groups, threatening actions or statements, screams, suspicious persons or behavior, weapons, etc., do not hesitate to call police immediately. Then, call your Service Desk or CA.</p>
-              <ul>
-                <li>Blue Light Program</li>
-                <li>Police Escorts</li>
-                <li>Opt-in Safety Alerts</li>
-                <li>UID Only Accessibility</li>
-              </ul>
-            </div>
-          </div>
-          <figure class="umd-layout-alignment-block-stacked">
-            <img src="../../images/student-support/safety-blue-light.jpg"
-                 alt="A blue light emergency phone station on the University of Maryland campus." />
-          </figure>
-        </div>
-      </section>
-
-      <!-- 7. TRANSPORTATION & PARKING — no image on the source page, so this
-           one is not a zig-zag block. Full content width; the rich text caps
-           its own p/ul at 960px. -->
+      <!-- 7. ACCEPTED TESTS — three cards. The source gives each a title and a
+           short body with a link and two score lines, and no image, so these
+           are standard cards with no image slot. -->
       <section class="umd-layout-space-vertical-interior">
         <hr class="umd-text-divider" />
-        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Transportation &amp; Parking</h2>
+        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Accepted English Proficiency Tests</h2>
 
-        <div class="umd-text-rich-advanced">
-          <p>Whether you live on campus or off, the Department of Transportation Services makes it easy to get around. Shuttle-UM buses operate several campus-based routes and serve a six-mile radius beyond, taking students to Metro stations, shops, restaurants and more than two dozen apartment communities. All you need to ride Shuttle-UM is your student ID.</p>
-          <p>If you&rsquo;re living off campus, permits for campus parking are available for purchase from the Department of Transportation Services.</p>
-          <ul>
-            <li><a href="https://transportation.umd.edu/shuttle-um" target="_blank" rel="noopener noreferrer">Shuttle-UM</a> &mdash; DOTS provides routes that circulate around campus, commuter routes to neighboring communities and Park &amp; Ride routes that can be tracked on the Transit app. Students can also use the NITE Ride evening service to get around campus when shuttle routes are not operating.</li>
-            <li><a href="https://transportation.umd.edu/bikeumd-escooters" target="_blank" rel="noopener noreferrer">BikeUMD</a> &mdash; Students can bring their own bike to campus or rent one from the RecWell Bike Shop. Community members can also utilize the shared mobility system provided by VEO in partnership with the City of College Park and University Park.</li>
-            <li><a href="https://transportation.umd.edu/sustainable-transportation/local-regional-transit" target="_blank" rel="noopener noreferrer">Local &amp; Regional Transit</a> &mdash; College Park connects to many local and regional transit options that make many destinations easily accessible. It&rsquo;s also a snap to travel to Washington, D.C., Baltimore and local airports by using <a href="https://www.wmata.com/service/rail/" target="_blank" rel="noopener noreferrer">Metrorail</a> and <a href="https://mta.maryland.gov/marc-train" target="_blank" rel="noopener noreferrer">MARC</a> trains.</li>
-            <li><a href="https://transportation.umd.edu/parking" target="_blank" rel="noopener noreferrer">Parking</a> &mdash; Flexible parking permit options are available for each individual working, living and learning situation. If you are going to have a car on campus, you will need a parking permit. Permits can be purchased on the Department of Transportation Services website.</li>
-          </ul>
+        <div class="umd-layout-grid-gap-three umd-layout-grid-child-fill-height">
+          <umd-element-card data-visual-bordered="true">
+            <h3 slot="headline">Duolingo English Test (DET)</h3>
+            <div slot="text">
+              <p>UMD accepts official scores from the <a href="https://englishtest.duolingo.com/applicants" target="_blank" rel="noopener noreferrer">Duolingo English Test</a>, which can be taken online and on demand.</p>
+              <p><strong>UMD passing score:</strong> 120<br />
+                 <strong>Maryland English Institute score:</strong> 115 or lower</p>
+            </div>
+          </umd-element-card>
+
+          <umd-element-card data-visual-bordered="true">
+            <h3 slot="headline">International English Language Testing System (IELTS)</h3>
+            <div slot="text">
+              <p>UMD accepts official <a href="https://www.ielts.org/" target="_blank" rel="noopener noreferrer">IELTS</a> and <a href="https://www.ielts.org/about-ielts/ielts-indicator" target="_blank" rel="noopener noreferrer">IELTS Indicator</a> scores.</p>
+              <p><strong>UMD passing score:</strong> 7<br />
+                 <strong>Maryland English Institute score:</strong> 6.5 or lower</p>
+            </div>
+          </umd-element-card>
+
+          <umd-element-card data-visual-bordered="true">
+            <h3 slot="headline">Test of English as a Foreign Language (TOEFL)</h3>
+            <div slot="text">
+              <p>UMD accepts official <a href="https://www.ets.org/toefl" target="_blank" rel="noopener noreferrer">TOEFL</a> and <a href="https://www.ets.org/s/cv/toefl/at-home/" target="_blank" rel="noopener noreferrer">TOEFL iBT</a> (Home Edition) scores. At this time we are not accepting TOEFL superscores, known as MyBest Scores.</p>
+              <p><strong>UMD passing score:</strong> 5 (1&ndash;6 scale), 95 (0&ndash;120 scale)<br />
+                 <strong>Maryland English Institute score:</strong> 4.5 or lower (1&ndash;6 scale), 94 or lower (0&ndash;120 scale)</p>
+            </div>
+          </umd-element-card>
         </div>
       </section>
 
-      <!-- 8. STAY CONNECTED — the sitewide page closer. -->
+      <!-- 8. WAIVERS — prose, a list, then the country table. The table lives
+           INSIDE .umd-text-rich-advanced: that wrapper is the styling hook for
+           tables, not any table class (OVERRIDES.md § Tables). It also gives
+           the table its own overflow-x, so a narrow viewport scrolls the table
+           rather than the page. -->
+      <section class="umd-layout-space-vertical-interior">
+        <hr class="umd-text-divider" />
+        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Potential Waivers for the English Proficiency Requirement</h2>
+
+        <div class="umd-text-rich-advanced">
+          <p>A passing English proficiency test score is the only absolute way to meet the English language proficiency requirement. We may consider waiving the test requirement if you have completed every element of one of the following by the application deadline:</p>
+          <ul>
+            <li>Four years at a U.S. high school or U.S. accredited high school without enrolling in any English as a Second Language coursework (ESL, ESOL, ELL, ELD or other English language support coursework).</li>
+            <li>A posted associate&rsquo;s, bachelor&rsquo;s or master&rsquo;s degree earned from a regionally accredited U.S. institution.</li>
+            <li>55 or more semester credits, or 82.5 quarter credits, from a regionally accredited U.S. institution, with coursework equivalent to English Composition 1 and 2.</li>
+            <li>English is your first language, you hold citizenship, and/or you have a completed high school or university degree earned in one of the countries or territories below.</li>
+          </ul>
+
+          <div class="umd-table-scroll">
+            <table>
+              <caption>Countries and territories recognized for the English-language waiver</caption>
+            <thead>
+              <tr>
+                <th scope="col">English-speaking countries</th>
+                <th scope="col"><span class="elp-sr">continued</span></th>
+                <th scope="col"><span class="elp-sr">continued</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Antigua<br />Australia<br />Bahamas<br />Barbados<br />Belize<br />Bermuda<br />British Virgin Islands<br />Canada<sup>1</sup><br />Cayman Islands<br />Dominica<br />The Gambia</td>
+                <td>Ghana<br />Grenada<br />Guyana<br />Ireland<br />Jamaica<br />Kenya<br />Montserrat<br />Namibia<br />New Zealand<br />Nigeria<br />Singapore</td>
+                <td>South Africa<br />St. Lucia<br />St. Vincent<br />Swaziland<br />Tanzania<br />Trinidad and Tobago<br />Turks and Caicos Islands<br />Uganda<br />United Kingdom<br />Zambia<br />Zimbabwe</td>
+              </tr>
+            </tbody>
+            </table>
+          </div>
+
+          <p class="umd-sans-small"><sup>1</sup> An English proficiency test is required for the French system only.</p>
+        </div>
+      </section>
+
+      <!-- 9. RESOURCES — icon card, light theme (red chevron), kept on the 2-up
+           grid so the single card sits in a column rather than stretching the
+           full content box. -->
+      <section class="umd-layout-space-vertical-interior">
+        <hr class="umd-text-divider" />
+        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Resources</h2>
+
+        <div class="umd-layout-grid-gap-two">
+          <umd-element-card-icon>
+            <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
+            <h3 slot="headline">
+              <a href="https://marylandenglishinstitute.com/" target="_blank" rel="noopener noreferrer">Maryland English Institute</a>
+            </h3>
+            <div slot="text">
+              <p>MEI provides English language instruction and assessment at the postsecondary level for speakers of other languages, alongside a supportive learning community. Some UMD applicants must complete coursework through MEI before beginning their degree program &mdash; you are told in your admission decision letter if this applies to you.</p>
+            </div>
+          </umd-element-card-icon>
+        </div>
+      </section>
+
+      <!-- 10. STAY CONNECTED — the sitewide page closer. -->
       <section class="umd-layout-space-vertical-interior">
         <umd-element-banner-promo>
           <h2 slot="headline">There is a lot more to learn about UMD</h2>
@@ -1515,7 +1559,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </main>
 
-  <!-- 9. FOOTER — visual -->
+  <!-- 11. FOOTER — visual -->
   <!-- SHARED:footer:START — generated from shared/footer.html; do not edit here -->
   <umd-element-footer data-display="visual">
     <a slot="logo" href="../../pages/">

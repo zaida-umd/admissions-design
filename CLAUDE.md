@@ -400,12 +400,67 @@ over:
 |---|---|---|---|
 | `headline-three-san-serif` | 32px | **level 1** `umd-sans-extralarge-bold` | exact match |
 | `headline-four-san-serif` | 24px | **level 2** `umd-sans-larger-bold` (22px) | nearest step; the most common case |
-| `headline-five-san-serif` | 20px | **level 3** `umd-sans-large` (18px) | rare in content |
+| `headline-five-san-serif` | 20px | **level 2 or 3 — break the tie by role** | see below |
 | bare `<strong>` used as a label | 18px | **level 3** `umd-sans-large` (18px) | exact match — see below |
+| `.rich-text.intro` (the page lede) | 24px / **400** | **level 2** `umd-sans-larger-bold` on a bare `<p>` in `.interior-lede` | **not** `umd-element-section-intro` — see below |
 
 Chrome and section components need no class: `headline-one` becomes the hero's
 `slot="headline"`, `headline-two` is the Resources component's own heading, and
 `headline-five` inside that component is component-styled.
+
+**The lede is a paragraph, not `umd-element-section-intro`.** The component
+centres its text in a ~992px block. That reads fine on a page where a
+full-width grid sits directly under it, and wrong on a text-led page where
+everything below the lede is left-aligned — the lede ends up the only centred
+thing on the page. All interior pages now use a left-aligned `<p>` in
+`.interior-lede` instead, capped at 800px — the width the source lede runs at.
+
+**No accent line — it belongs to the component.** The red rule is
+`include-separator`, an *attribute of* `umd-element-section-intro`, not a
+free-standing decoration. Drop the component and the line goes with it.
+
+The first pass got this wrong: it reproduced the line as a hand-rolled
+`::before` on `.interior-lede` with the component's 2px × 64px geometry. That
+invents a design-system element in page CSS — it looks like the DS, isn't, and
+drifts the moment upstream changes `include-separator`. It also dragged along
+the 80px of top padding the component needs to clear the line, pushing the lede
+away from the copy it introduces.
+
+**General rule: don't reimplement a component's features in page CSS.** If a
+component's treatment is what you want, use the component. If the component
+doesn't fit — as here, where centred text is wrong on a text-led page — you give
+up its features too. That trade is the decision; papering over half of it with
+hand-rolled CSS is not.
+
+**The lede owns its own bottom spacing — 24px**, which is the gap the source
+runs between its intro and the block below. Its `<section>` therefore carries
+**no** `umd-layout-space-vertical-interior`: that class's 80px strands the lede
+from the copy it belongs to. This is the one interior `<section>` with no
+vertical-spacing class, and that is deliberate.
+
+Two things to get right:
+
+- **The `<p>` must sit outside `.umd-text-rich-advanced`.** `umd-sans-larger-bold`
+  is 22px and would collapse to 18px inside that wrapper (RULES §18), silently
+  undoing the treatment. `.interior-lede` is a bare `<div>` for this reason.
+- **The source lede is weight 400, not 700.** Measured 24px / 400 / left, in an
+  800px column, identically on all three source pages. We ship it bold at
+  `umd-sans-larger-bold` as a deliberate project choice. `umd-sans-larger`
+  (22px / 400) is the exact-weight match if that ever needs revisiting.
+
+**`headline-five` is the one ambiguous row.** At 20px it sits exactly 2px from
+level 2 (22px) and 2px from level 3 (18px), so size cannot break the tie. Break
+it by role instead:
+
+- **Section heading** — follows an `<hr>`, introduces a block → **level 2**.
+- **Label inside a block** → **level 3**.
+
+`how-to-apply/english-language-proficiency.html` is the first page where
+`headline-five` appeared in content, and it settled this: mapped to level 3 its
+three section headings rendered 18px against 18px body copy and read as bold
+sentences rather than headings, even with a divider above them. At level 2 they
+read correctly. A script can apply the role test mechanically — `headline-five`
+immediately preceded by an `hr` is level 2.
 
 **`<strong>` as a pseudo-heading.** Authors bold a line instead of using a
 heading. Promote it to a real heading *tag* for outline and screen-reader
