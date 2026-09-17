@@ -13,7 +13,8 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "pages/how-to-apply/application-faqs.html"
 data = json.loads((ROOT / "briefs/application-faqs-data.json").read_text())
 template = (ROOT / "page-builder/TEMPLATE.html").read_text()
-head = template[:template.index("</style>") + len("</style>")]
+style_close = template.index("</style>")
+head = template[:template.rindex("\n", 0, style_close) + 1]
 head = _chrome.with_robots(head)
 head = re.sub(
     r"<title>.*?</title>",
@@ -22,6 +23,30 @@ head = re.sub(
     count=1,
 )
 pin = re.search(r"web-components-library@([\d.]+)/dist/cdn\.js", template).group(1)
+
+
+# Byte-identical to the block on every other page that has a lede — do not
+# rename these rules per page.
+LEDE_CSS = """\
+    /* LEDE. umd-sans-larger-bold is FLUID — 18px at 375, ~21.8 at 768, 22.5
+       around 900, 22 at 1024+ — and it renders that scale ONLY outside
+       .umd-text-rich-advanced, which pins every direct child to
+       `font-size: 18px`. That pin is why the lede used to be umd-sans-large
+       (already 18px, so the pin took nothing from it) and why ANY larger size
+       class inside the block is a silent no-op — swapping the class in place
+       changes nothing. The lede is therefore a bare <p> in the section, not a
+       child of a rich-text block.
+
+       The 960px cap replaces the measure the wrapper was supplying
+       (element.min.css caps p/ul/ol at 960px in place). It is NOT the old
+       .interior-lede 800px cap and must not drift back to it.
+
+       The adjacency rule supplies the gap where body copy follows the lede
+       directly — as it does here — since the block's own
+       `> *:first-child { margin-top: 0 }` would otherwise zero it. */
+    .page-lede { max-width: 960px; }
+    .page-lede + .umd-text-rich-advanced { margin-top: 24px; }
+"""
 
 
 def card(item):
@@ -41,8 +66,9 @@ def card(item):
 
 
 cards = "\n".join(card(item) for item in data["items"])
-lede = data["lede_html"].replace('<p>', '<p class="umd-sans-large text-black">', 1)
-body = f'''
+lede = data["lede_html"].replace(
+    '<p>', '<p class="umd-sans-larger-bold text-black page-lede">', 1)
+body = f'''{LEDE_CSS}  </style>
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@{pin}/dist/cdn.js"></script>
 @@CHROME:chrome-css@@
 @@CHROME:gate@@
@@ -72,8 +98,8 @@ body = f'''
     <div class="umd-layout-space-horizontal-normal">
       <div id="umd-shell-content">
         <section class="umd-layout-space-vertical-interior">
+          {lede}
           <div class="umd-text-rich-advanced">
-            {lede}
             {data['body_html']}
           </div>
         </section>
@@ -108,5 +134,15 @@ for key in _chrome.keys():
     body = body.replace(token, _chrome.block(key, str(OUT)))
 output = head + body
 assert "@@" not in output
+
+# --- The lede is a PARAGRAPH, and it sits OUTSIDE the rich-text block --------
+# Inside .umd-text-rich-advanced a size class is INERT, not wrong: the block
+# pins every direct child to 18px, so the page looks fine and measures wrong.
+# Only an assertion catches it.
+assert '<p class="umd-sans-larger-bold text-black page-lede">' in output
+assert output.count("text-black page-lede") == 1
+assert "umd-sans-large text-black" not in output
+assert '<h2 class="umd-sans-large' not in output
+assert ".page-lede { max-width: 960px; }" in output
 OUT.write_text(output)
 print(OUT.relative_to(ROOT))

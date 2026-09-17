@@ -817,6 +817,24 @@
       color: #000000;
       text-decoration: none;
     }
+    /* LEDE. umd-sans-larger-bold is FLUID — 18px at 375, ~21.8 at 768, 22.5
+       around 900, 22 at 1024+ — and it renders that scale ONLY outside
+       .umd-text-rich-advanced, which pins every direct child to
+       `font-size: 18px`. That pin is why the lede used to be umd-sans-large
+       (already 18px, so the pin took nothing from it) and why ANY larger size
+       class inside the block is a silent no-op — swapping the class in place
+       changes nothing. The lede is therefore a bare <p> in the section, not a
+       child of a rich-text block.
+
+       The 960px cap replaces the measure the wrapper was supplying
+       (element.min.css caps p/ul/ol at 960px in place). It is NOT the old
+       .interior-lede 800px cap and must not drift back to it.
+
+       The adjacency rule supplies the gap where body copy follows the lede
+       directly — as it does here — since the block's own
+       `> *:first-child { margin-top: 0 }` would otherwise zero it. */
+    .page-lede { max-width: 960px; }
+    .page-lede + .umd-text-rich-advanced { margin-top: 24px; }
   </style>
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
@@ -1326,8 +1344,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <div class="umd-layout-space-horizontal-normal">
       <div id="umd-shell-content">
         <section class="umd-layout-space-vertical-interior">
+          <p class="umd-sans-larger-bold text-black page-lede">Have questions about applying to the University of Maryland? You've come to the right place.</p>
           <div class="umd-text-rich-advanced">
-            <p class="umd-sans-large text-black">Have questions about applying to the University of Maryland? You've come to the right place.</p>
             <p>We know applying to college is a lot of work, so we'll do everything we can to make it as stress-free as possible. Use the links below for the quickest answers to many of the common questions we receive.</p>
           </div>
         </section>
