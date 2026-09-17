@@ -28,11 +28,10 @@ TITLE = (
 )
 
 # The source breadcrumb is Home / Application FAQs / Freshman Application FAQs.
-# We have no Application FAQs page of our own, so that crumb points at the live
-# URL — the same target the nav dropdown, the drawer and the search index
-# already use. The eyebrow repeats the last breadcrumb link, per CLAUDE.md.
+# The parent now resolves to the local Application FAQs listing page.
+# The eyebrow repeats the last breadcrumb link, per CLAUDE.md.
 PARENT_LABEL = "Application FAQs"
-PARENT_HREF = "https://admissions.umd.edu/apply/application-faqs"
+PARENT_HREF = "application-faqs.html"
 
 
 data = json.load(open(DATA, encoding="utf-8"))

@@ -1,0 +1,57 @@
+{
+  "title": "Application FAQs",
+  "source": "https://admissions.umd.edu/apply/application-faqs",
+  "retrieved": "2026-09-17",
+  "lede_html": "<p>Have questions about applying to the University of Maryland? You've come to the right place.</p>",
+  "body_html": "<p>We know applying to college is a lot of work, so we'll do everything we can to make it as stress-free as possible. Use the links below for the quickest answers to many of the common questions we receive.</p>",
+  "items": [
+    {
+      "title": "Freshman Application FAQs",
+      "description_html": "<p>Applying as a freshman? Save time by reviewing these frequently asked questions about completing your freshman application before contacting the Office of Undergraduate Admissions.</p>",
+      "href": "freshman-application-faqs.html",
+      "cta": "Read the Freshman FAQs",
+      "cta_label": "Read the Freshman Application FAQs",
+      "image": {
+        "src": "../../images/application-faqs/freshman-faqs.jpg",
+        "source_url": "https://umd-admissions.transforms.svdcdn.com/production/rich-text/student-view-above.jpg?w=1920&h=1080&auto=compress%2Cformat&fit=crop&dm=1686592047&s=c3b585a0d7dd949336f7c1fd5d93eb51",
+        "alt": "View from above of student studying"
+      }
+    },
+    {
+      "title": "Transfer Application FAQs",
+      "description_html": "<p>Applying as a transfer student? Review these frequently asked questions about completing your transfer application before contacting the Office of Undergraduate Admissions.</p>",
+      "href": "https://admissions.umd.edu/apply/transfer-application-faqs",
+      "cta": "Read the Transfer FAQs",
+      "cta_label": "Read the Transfer Application FAQs",
+      "image": {
+        "src": "../../images/application-faqs/transfer-faqs.jpg",
+        "source_url": "https://umd-admissions.transforms.svdcdn.com/production/rich-text/female-student-laptop-50-50.jpg?w=688&h=456&auto=compress%2Cformat&fit=crop&dm=1686592130&s=9bbca6270df99c45803e9553921f3565",
+        "alt": "female student on laptop"
+      }
+    },
+    {
+      "title": "Submitting Documents",
+      "description_html": "<p>Applications are considered complete when the online application and all required documents have been submitted. Determine the best way to submit all of your required application documents.<br /></p>",
+      "href": "https://admissions.umd.edu/apply/submitting-documents",
+      "cta": "Learn about Submitting Documents",
+      "cta_label": "Learn how to submit application materials",
+      "image": {
+        "src": "../../images/application-faqs/submitting-documents.jpg",
+        "source_url": "https://umd-admissions.transforms.svdcdn.com/production/rich-text/Image.jpg?w=688&h=456&auto=compress%2Cformat&fit=crop&dm=1682957072&s=f67444ea1238996588dfe8206c72f356",
+        "alt": "M Circle in front of Symons Hall at UMD"
+      }
+    },
+    {
+      "title": "Essay Questions",
+      "description_html": "<p>The essay provides you with the opportunity to showcase aspects of your personality and experiences that fit well with UMD's community.</p>",
+      "href": "https://admissions.umd.edu/apply/essay-questions",
+      "cta": "Read UMD's Essay Questions",
+      "cta_label": "Read UMD's essay questions",
+      "image": {
+        "src": "../../images/application-faqs/essay-questions.jpg",
+        "source_url": "https://umd-admissions.transforms.svdcdn.com/production/rich-text/students-outdoors-working-50-50.jpg?w=688&h=456&auto=compress%2Cformat&fit=crop&dm=1686592235&s=84534c97765a1d95c161b1d6896abebb",
+        "alt": "Students outdoors working on laptops"
+      }
+    }
+  ]
+}

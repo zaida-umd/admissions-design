@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
-  <title>Ebony Freeman — Undergraduate Admissions | University of Maryland</title>
+  <title>Application FAQs — Undergraduate Admissions | University of Maryland</title>
 
   <!-- ============================================================
        UMD Critical CSS — Hybrid CDN + Local
@@ -817,173 +817,26 @@
       color: #000000;
       text-decoration: none;
     }
-  </style>
+    /* LEDE. umd-sans-larger-bold is FLUID — 18px at 375, ~21.8 at 768, 22.5
+       around 900, 22 at 1024+ — and it renders that scale ONLY outside
+       .umd-text-rich-advanced, which pins every direct child to
+       `font-size: 18px`. That pin is why the lede used to be umd-sans-large
+       (already 18px, so the pin took nothing from it) and why ANY larger size
+       class inside the block is a silent no-op — swapping the class in place
+       changes nothing. The lede is therefore a bare <p> in the section, not a
+       child of a rich-text block.
 
+       The 960px cap replaces the measure the wrapper was supplying
+       (element.min.css caps p/ul/ol at 960px in place). It is NOT the old
+       .interior-lede 800px cap and must not drift back to it.
+
+       The adjacency rule supplies the gap where body copy follows the lede
+       directly — as it does here — since the block's own
+       `> *:first-child { margin-top: 0 }` would otherwise zero it. */
+    .page-lede { max-width: 960px; }
+    .page-lede + .umd-text-rich-advanced { margin-top: 24px; }
+  </style>
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
-
-  <!-- Page CSS gets its OWN style block, after cdn.js -- it is deliberately
-       NOT appended to the inlined critical.css above. tools/inline-critical.py
-       rewrites the FIRST style block in a file and leaves later ones alone, so
-       page CSS sitting inside that block is (a) invisible to --check, which
-       then reports the page as permanently stale, and (b) DELETED the moment
-       the tool is run over pages/. Cascade order is unchanged: critical <
-       page CSS < chrome CSS, exactly as when this sat at the tail of the
-       critical block. (No literal style tag in this comment on purpose -- the
-       repo's tooling finds these blocks by regex.) -->
-  <style>
-    /* ============================================================
-       26. ADMISSION REPRESENTATIVES — intro lockup + rep pages
-       ============================================================ */
-
-    /* --- intro lockup with brand chevron (landing page) --------
-       Same treatment as how-to-apply/index.html and tuition/index.html:
-       rule, uppercase eyebrow, rich text, with the brand animation
-       riding behind it and overlapping ~180px up into the hero.
-       The animation hardcodes its inner container to width:100vw /
-       height:50vw and anchors chevrons to right:0, so the host must
-       span full width -- sizing or clipping it does not work. */
-    .reps-intro-section {
-      position: relative;
-      overflow: visible;
-      z-index: 100;
-    }
-
-    .reps-intro-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .reps-chevron {
-      position: absolute;
-      top: -180px;
-      left: 0;
-      right: 0;
-      bottom: -80px;
-      pointer-events: none;
-      z-index: 1;
-      overflow: visible;
-    }
-
-    .reps-chevron > umd-element-brand-logo-animation {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: block;
-    }
-
-    @media (max-width: 1023px) {
-      .reps-chevron { display: none; }
-    }
-
-    /* --- rep grid ----------------------------------------------
-       No grid CSS of its own. The cards are the documented border-grid
-       pattern exactly as LAYOUT-PATTERNS.md describes it:
-       umd-layout-grid-border-four + class="umd-shell-person-grid-helper"
-       on every umd-element-person host (that class is the container-query
-       target -- without it the 24/32/48px cell padding never applies).
-       Partial rows are handled by critical.css §19's :not(:has(...)) rules,
-       so 24 reps in a 4-up grid needs no filler markup.
-
-       The one thing added: the grid's own left/right border is drawn by
-       layout.min.css against the cell edge, and a headshot sitting flush
-       in a 24px cell reads as unaligned next to a name that wraps to two
-       lines. umd-layout-grid-child-fill-height equalises the cells so the
-       job-title baselines line up across a row. */
-
-    /* --- search page: filter form ------------------------------
-       The CMS person-index template (omc.umd.edu/people) is built almost
-       entirely from design-system classes that ARE in our bundles:
-       umd-layout-background-highlight-light (grey panel + red left rule),
-       umd-layout-grid-gap-stacked / -two, umd-layout-grid-inline-stretch,
-       umd-text-line-trailing-light, umd-field-select-wrapper, umd-field-input,
-       umd-action-outline, umd-skip-content, sr-only.
-
-       What is NOT in our bundles, and is therefore reproduced below:
-         - the `umd-shell-*` classes (shellcraft site CSS, not the DS)
-         - the Tailwind utilities the template leans on for the search row
-           (flex, gap-min, items-center, aspect-square, bg-red, h-[44px])
-       Measured against the loaded bundles, not assumed. The rules below are
-       the "minimal lift" from briefs/experts-filter.md, which documents this
-       same search bar on the experts page. */
-    .reps-search-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .reps-search-row input { flex: 1; }
-    /* 44x44 red submit, matching the template's Tailwind box exactly. */
-    .reps-search-submit {
-      flex: none;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--umd-color-red, #e21833);
-      border: 0;
-      cursor: pointer;
-      transition: background-color .5s;
-    }
-    .reps-search-submit:hover,
-    .reps-search-submit:focus-visible { background: #a90007; }
-    .reps-search-submit svg { width: 20px; height: 20px; fill: #fff; }
-
-    /* Gap between the results grid and whatever follows it.
-
-       The DS vertical rhythm classes are margin-BOTTOM only -- measured,
-       umd-layout-vertical-landing is `margin-bottom: 120px; margin-top: 0`
-       (the same thing CLAUDE.md notes about -child, and it holds for the
-       parent class too). The grid's own wrapper is a bare
-       umd-layout-space-horizontal-larger with no vertical class, so nothing
-       separated it from the next block and both the Load More button and the
-       trailing copy sat flush against the last row of cards.
-
-       Putting the space on the WRAPPER rather than on either follower is what
-       makes it hold in both states: Load More is display:none when every match
-       is already shown, so a margin on that section would vanish with it and
-       the copy would jump back up against the grid the moment a filter
-       narrowed the results. Followers have margin-top: 0, so there is no
-       collapsing to reason about -- the gap is exactly this value. */
-    .reps-results-wrap { margin-bottom: 80px; }
-
-    /* Results count + empty state. The template's .umd-shell-pagination-results
-       is site CSS, not DS, so the type is set here. */
-    .reps-results-status {
-      font-size: 14px;
-      color: var(--umd-color-gray-dark, #757575);
-      margin-top: 24px;
-    }
-    .reps-empty { padding: 48px 0; text-align: center; }
-    .reps-load-more { display: flex; justify-content: center; }
-    /* JS hides this when every match is already on screen; without JS the
-       whole set is rendered, so the button has nothing to do and stays gone. */
-    .reps-load-more[hidden] { display: none; }
-
-    /* --- territory list (bio pages) ----------------------------
-       The territories are a plain list, but a rep can cover nine of them
-       (Abigail Trice) or none at all, so a single column runs long and a
-       fixed multi-column grid leaves a ragged hole. Columns that fill on
-       width keep both ends honest. */
-    .rep-regions-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px 32px;
-    }
-    @media (min-width: 650px) {
-      .rep-regions-list { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (min-width: 1024px) {
-      .rep-regions-list { grid-template-columns: repeat(3, 1fr); }
-    }
-    .rep-regions-list li {
-      border-top: 1px solid var(--umd-color-gray-light, #e6e6e6);
-      padding-top: 12px;
-    }
-  </style>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
 /* ============================================================
@@ -1306,7 +1159,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <!-- SHARED:gate:END -->
 </head>
 <body>
-
   <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
   <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
 
@@ -1448,7 +1300,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/student/get-involved"><span>Get Involved on Campus</span></a>
         <a href="../../pages/student-life/find-community.html"><span>Find Your Community</span></a>
       </div>
-      <div data-parent-ref="how-to-apply">
+      <div data-parent-ref="how-to-apply" data-active>
         <a href="../../pages/how-to-apply/"><span>Overview</span></a>
         <a href="../../pages/how-to-apply/freshman-applicants.html"><span>Freshman Applicants</span></a>
         <a href="../../pages/how-to-apply/transfer-applicants.html"><span>Transfer Applicants</span></a>
@@ -1456,7 +1308,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/apply/shady-grove-applicants"><span>Shady Grove Applicants</span></a>
         <a href="https://admissions.umd.edu/apply/application-deadlines"><span>Application Deadlines</span></a>
         <a href="https://admissions.umd.edu/apply/admission-review-process-factors"><span>Admission Review Process &amp; Factors</span></a>
-        <a href="../../pages/how-to-apply/application-faqs.html"><span>Application FAQs</span></a>
+        <a href="../../pages/how-to-apply/application-faqs.html" data-selected><span>Application FAQs</span></a>
       </div>
       <div data-parent-ref="tuition">
         <a href="../../pages/tuition/"><span>Overview</span></a>
@@ -1470,88 +1322,91 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </umd-element-navigation-header>
   <!-- SHARED:header:END -->
 
-  <!-- 3. PERSON HERO — the DS's own profile-page hero. It owns the breadcrumb
-       (registry-person.json: "do not also render a standalone
-       umd-element-breadcrumb"), so this page has none of its own. -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-person-hero>
-      <!-- The slot takes a umd-element-breadcrumb, NOT a bare <nav>: the
-           component validates its slots and logs 'Slot "breadcrumb" contains
-           invalid elements. Allowed: umd-element-breadcrumb' for anything
-           else. registry-person.json's "do not also render a standalone
-           umd-element-breadcrumb" means put it HERE rather than separately on
-           the page -- not that the slot takes hand-rolled markup.
+  <main id="main-content">
+    <section>
+      <umd-element-hero-minimal data-theme="dark">
+        <p slot="eyebrow">How To Apply</p>
+        <h1 slot="headline">Application FAQs</h1>
+        <img slot="image" src="../../images/shared/interior-hero-pattern.png" alt="" />
+      </umd-element-hero-minimal>
+    </section>
 
-           The paths markup is RULES.md §"Breadcrumb", not the <ol>/<li>
-           shown in registry-navigation.json. The registry example is wrong:
-           the DS draws its separators with `.breadcrumb-path + *::before`, so
-           the paths have to be ADJACENT SIBLINGS. Wrapping each in its own
-           <li> gives every anchor a container to itself, the selector never
-           matches, and the trail renders as one run-on string
-           ("HomeAdmission RepresentativesAbigail Trice"). Flat <a> siblings
-           plus a <p> for the current page -- each with its own <span>, which
-           is what the hover underline animates. -->
-      <umd-element-breadcrumb slot="breadcrumb">
+    <div class="umd-layout-space-horizontal-normal umd-layout-space-vertical-interior">
+      <umd-element-breadcrumb>
         <div slot="paths">
           <a href="../../pages/" aria-label="Return Home"><span aria-hidden="true">Home</span></a>
-          <a href="index.html"><span>Admission Representatives</span></a>
-          <p aria-label="Current Page"><span>Ebony Freeman</span></p>
+          <a href="../../pages/how-to-apply/"><span>How To Apply</span></a>
+          <p aria-label="Current Page"><span>Application FAQs</span></p>
         </div>
       </umd-element-breadcrumb>
-      <img slot="image" src="../../images/admission-representatives/ebony-freeman.jpg" alt="Portrait of Ebony Freeman, West Coast Regional Coordinator" />
-      <h1 slot="name">Ebony Freeman</h1>
-      <p slot="job-title">West Coast Regional Coordinator</p>
-      <!-- NO slot="association". registry-person.json lists it, but
-           umd-element-person-hero silently drops it: the component rebuilds
-           its text lockup from the light DOM and only reads name + job-title
-           (verified against the rendered shadow tree in cdn.js@1.18.12). The
-           unit name would have been dead markup, so it is not emitted. -->
-      <!-- The email slot IS the contact action -- no slot="actions" CTA.
-           Both pointed at the same mailto, so the button restated the link
-           directly above it. The visible text is "Email <first name>" rather
-           than the address; the aria-label still names the actual inbox, so
-           the destination is not lost for a screen reader. -->
-      <a slot="email" href="mailto:ApplyMaryland@umd.edu?subject=Student%20Inquiry%20for%20Ebony%20Freeman" aria-label="Email Ebony at ApplyMaryland@umd.edu"><span>Email Ebony</span></a>
-    </umd-element-person-hero>
-  </section>
+    </div>
 
-  <!-- 4. BIO — the source modal's "Favorite Maryland Moment". Narrow -small
-       lock and the same rule + uppercase eyebrow lockup the interior pages use. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-small">
-      <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
-      <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">Favorite Maryland Moment</p>
-      <div class="umd-text-rich-advanced">
-        <p>Taking a campus tour to see all that University of Maryland has to offer, plus getting to eat ice cream from the Maryland Dairy!</p>
+    <div class="umd-layout-space-horizontal-normal">
+      <div id="umd-shell-content">
+        <section class="umd-layout-space-vertical-interior">
+          <p class="umd-sans-larger-bold text-black page-lede">Have questions about applying to the University of Maryland? You've come to the right place.</p>
+          <div class="umd-text-rich-advanced">
+            <p>We know applying to college is a lot of work, so we'll do everything we can to make it as stress-free as possible. Use the links below for the quickest answers to many of the common questions we receive.</p>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior" aria-label="Application resources">
+          <umd-element-card data-display="list" data-theme="light" data-visual-image-aligned="true">
+            <img slot="image" src="../../images/application-faqs/freshman-faqs.jpg" alt="View from above of student studying" loading="lazy" />
+            <h2 slot="headline"><a href="freshman-application-faqs.html">Freshman Application FAQs</a></h2>
+            <div slot="text"><p>Applying as a freshman? Save time by reviewing these frequently asked questions about completing your freshman application before contacting the Office of Undergraduate Admissions.</p></div>
+            <div slot="actions">
+              <umd-element-call-to-action data-display="secondary">
+                <a href="freshman-application-faqs.html" aria-label="Read the Freshman Application FAQs">Read the Freshman FAQs</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-card>
+          <umd-element-card data-display="list" data-theme="light" data-visual-image-aligned="true">
+            <img slot="image" src="../../images/application-faqs/transfer-faqs.jpg" alt="female student on laptop" loading="lazy" />
+            <h2 slot="headline"><a href="https://admissions.umd.edu/apply/transfer-application-faqs">Transfer Application FAQs</a></h2>
+            <div slot="text"><p>Applying as a transfer student? Review these frequently asked questions about completing your transfer application before contacting the Office of Undergraduate Admissions.</p></div>
+            <div slot="actions">
+              <umd-element-call-to-action data-display="secondary">
+                <a href="https://admissions.umd.edu/apply/transfer-application-faqs" aria-label="Read the Transfer Application FAQs">Read the Transfer FAQs</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-card>
+          <umd-element-card data-display="list" data-theme="light" data-visual-image-aligned="true">
+            <img slot="image" src="../../images/application-faqs/submitting-documents.jpg" alt="M Circle in front of Symons Hall at UMD" loading="lazy" />
+            <h2 slot="headline"><a href="https://admissions.umd.edu/apply/submitting-documents">Submitting Documents</a></h2>
+            <div slot="text"><p>Applications are considered complete when the online application and all required documents have been submitted. Determine the best way to submit all of your required application documents.<br /></p></div>
+            <div slot="actions">
+              <umd-element-call-to-action data-display="secondary">
+                <a href="https://admissions.umd.edu/apply/submitting-documents" aria-label="Learn how to submit application materials">Learn about Submitting Documents</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-card>
+          <umd-element-card data-display="list" data-theme="light" data-visual-image-aligned="true">
+            <img slot="image" src="../../images/application-faqs/essay-questions.jpg" alt="Students outdoors working on laptops" loading="lazy" />
+            <h2 slot="headline"><a href="https://admissions.umd.edu/apply/essay-questions">Essay Questions</a></h2>
+            <div slot="text"><p>The essay provides you with the opportunity to showcase aspects of your personality and experiences that fit well with UMD's community.</p></div>
+            <div slot="actions">
+              <umd-element-call-to-action data-display="secondary">
+                <a href="https://admissions.umd.edu/apply/essay-questions" aria-label="Read UMD&#x27;s essay questions">Read UMD&#x27;s Essay Questions</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-card>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <umd-element-banner-promo>
+            <h2 slot="headline">There is a lot more to learn about UMD</h2>
+            <p slot="text">Let's stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener">Join the Mailing List</a> or <a href="https://admissions.umd.edu/connect">Connect</a>!</p>
+            <div slot="actions" class="banner-promo-actions">
+              <umd-element-call-to-action data-display="primary">
+                <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener">Join the List</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-banner-promo>
+        </section>
       </div>
     </div>
-  </section>
-
-  <!-- 5. TERRITORIES — the modal's region list. Columns fill on width
-       (page CSS §26); a rep can cover one territory or nine. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-small">
-      <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
-      <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">Territories</p>
-      <ul class="rep-regions-list">
-          <li>California</li>
-          <li>Washington</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- 6. BACK TO THE DIRECTORY — the only navigation off this page, and the
-       thing the modal used to give for free by closing. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-small">
-      <umd-element-call-to-action data-display="secondary">
-        <a href="index.html">All Admission Representatives</a>
-      </umd-element-call-to-action>
-    </div>
-  </section>
-
-  <!-- SCROLL TO TOP — fixed 24px from viewport bottom-right (pin lives in shared/chrome.css) -->
-  <umd-element-scroll-top data-layout-fixed="true"></umd-element-scroll-top>
+  </main>
 
   <!-- SHARED:footer:START — generated from shared/footer.html; do not edit here -->
   <umd-element-footer data-display="visual">
@@ -1617,7 +1472,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </umd-element-footer>
   <!-- SHARED:footer:END -->
-
   <!-- SHARED:chrome-scripts:START — generated from shared/chrome-scripts.html; do not edit here -->
   <!-- ============================================================
        SHARED CHROME — shadow injections
@@ -1657,6 +1511,5 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     })();
   </script>
   <!-- SHARED:chrome-scripts:END -->
-
 </body>
 </html>

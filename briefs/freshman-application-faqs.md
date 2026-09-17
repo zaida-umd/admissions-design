@@ -22,11 +22,10 @@ Shared interior hero: `umd-element-hero-minimal data-theme="dark"` with
 
 The breadcrumb's last link is the page's parent, and the eyebrow repeats it —
 here **Application FAQs**, which is what the source breadcrumb shows
-(Home / Application FAQs / Freshman Application FAQs). We have no Application
-FAQs page of our own, so that crumb points at the live URL, exactly as the
-nav dropdown, the drawer and `pages/search/index.html` already do. The How To
-Apply section landing is inserted ahead of it, matching English Language
-Proficiency.
+(Home / Application FAQs / Freshman Application FAQs). The parent now points
+to the local `application-faqs.html` listing page, matching the nav dropdown,
+drawer and search index. The How To Apply section landing is inserted ahead
+of it, matching English Language Proficiency.
 
 ## No nav entry
 
