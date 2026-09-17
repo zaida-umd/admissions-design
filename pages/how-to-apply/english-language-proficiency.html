@@ -817,6 +817,25 @@
       color: #000000;
       text-decoration: none;
     }
+    /* LEDE. umd-sans-larger-bold is FLUID — 18px at 375, ~21.8 at 768, 22.5
+       around 900, 22 at 1024+ — and it renders that scale ONLY outside
+       .umd-text-rich-advanced, which pins every direct child to
+       `font-size: 18px`. That pin is why the lede used to be umd-sans-large
+       (already 18px, so the pin took nothing from it) and why ANY larger size
+       class inside the block is a silent no-op — swapping the class in place
+       changes nothing. The lede is therefore a bare <p> in the section, not a
+       child of a rich-text block.
+
+       The 960px cap replaces the measure the wrapper was supplying
+       (element.min.css caps p/ul/ol at 960px in place). It is NOT the old
+       .interior-lede 800px cap and must not drift back to it.
+
+       The adjacency rule supplies the gap when body copy follows the lede
+       directly; it is inert where the lede sits alone in its section. Both
+       rules are byte-identical on every page that has a lede — do not rename
+       them per page. */
+    .page-lede { max-width: 960px; }
+    .page-lede + .umd-text-rich-advanced { margin-top: 24px; }
   </style>
 
   <!-- Admissions reusable rich-text table pattern. -->
@@ -1331,8 +1350,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <div class="umd-layout-space-horizontal-normal">
       <div id="umd-shell-content">
         <section class="umd-layout-space-vertical-interior">
+          <p class="umd-sans-larger-bold text-black page-lede">If you are a Domestic student and English is not your native language or you are an International student, you must provide the university with verification of your proficiency in English. We may consider waiving the English proficiency test requirement if a student has met certain requirements. Please read below to learn more about approved English proficiency exams and potential waivers.</p>
           <div class="umd-text-rich-advanced">
-            <p class="umd-sans-large text-black">If you are a Domestic student and English is not your native language or you are an International student, you must provide the university with verification of your proficiency in English. We may consider waiving the English proficiency test requirement if a student has met certain requirements. Please read below to learn more about approved English proficiency exams and potential waivers.</p>
             <p>The Office of Undergraduate Admissions employs a holistic review process when considering all applicants and will consider all materials submitted in the application package to determine the level of English language proficiency.</p>
             <p>Please have an official report of your scores sent directly to the Office of Undergraduate Admissions by the <a href="https://admissions.umd.edu/apply/application-deadlines">appropriate deadline</a>. Submitted scores must be less than two years old.</p>
             <p>For the University of Maryland (UMD) to receive your scores, <strong>please use the reporting code 5814</strong>.</p>

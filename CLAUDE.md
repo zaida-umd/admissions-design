@@ -270,6 +270,168 @@ breadcrumb and body copy stop lining up with the rest of the page stack.
 - The closing `umd-element-banner-promo` "stay connected" block, per the
   sitewide page-closer convention.
 
+## The zig-zag pattern — one shape, settled 2026-09-17
+
+Every two-column image + text block on the site uses **one** structure. Five
+pages carry it: `student-life/find-community.html` (5 blocks),
+`how-to-apply/international-applicants.html` (4),
+`student-life/student-support.html` (3, generated),
+`student-life/index.html` (3, landing), and `know-before-you-go.html` (1).
+Before this they diverged on seven axes; the two that are now fixed sitewide
+are the **text-side order** and the **alternation mechanism**.
+
+**The heading-then-rule order is not limited to zig-zag blocks.** On
+`know-before-you-go.html` it applies to all five section heads, card grids
+included — a page should not put the rule above the heading in one section and
+below it in the next.
+
+```html
+<div class="umd-layout-grid-gap-two">
+  <!-- alternating blocks author the <figure> FIRST, here -->
+  <div>
+    <h2 class="text-black umd-sans-... umd-layout-space-vertical-headline-large">Heading</h2>
+    <div class="umd-text-rich-advanced">
+      <hr>                      <!-- FIRST CHILD, below the heading -->
+      <p>Body copy.</p>
+    </div>
+  </div>
+  <figure class="umd-layout-alignment-block-stacked">
+    <img src="…" alt="…" />
+  </figure>
+</div>
+```
+
+This is LAYOUT-PATTERNS.md's canonical example, unchanged.
+
+### Alternation is by DOM order — never by `order: -1`
+
+`find-community.html` and `international-applicants.html` both used to flip the
+column with a page-level rule (`.fc-media-first > figure { order: -1 }`,
+`.intl-zigzag-reverse > figure { order: -1 }`) at the 650px breakpoint, which
+keeps the heading first in the single-column mobile stack. **It reads better and
+it is not available to us.** Migrated CMS content cannot carry a page-level CSS
+rule, so the prototypes must show what the CMS can actually emit: the `<figure>`
+authored first on alternating blocks, and therefore stacked above the heading at
+375px. Both rules were removed on 2026-09-17.
+
+Do not reintroduce an `order`-based flip on one page. A prototype that reads
+better than the thing being prototyped is a false signal.
+
+### The rule goes BELOW the heading — this follows from the above
+
+Because the figure stacks first at 375px, the divider's position stops being
+cosmetic:
+
+| Rule position | 375px reading order | Result |
+|---|---|---|
+| `hr.umd-text-divider` **above** the heading | photo → caption → **rule** → heading → text | The rule lands between the photo and its own heading. The photo reads as the *previous* section's tail. **Wrong.** |
+| `<hr>` as **first child of the body rich text** | photo → caption → heading → rule → text | Photo stays grouped with its own section. **Correct.** |
+
+Measured at 375px: 16px heading→rule, 32px rule→body, in both. The asymmetry is
+the design system's own rich-text `hr` margin, not something the pattern adds.
+
+`<hr>` inside a rich-text block needs one page-level rule — `critical.css` gives
+`<hr>` no border:
+
+```css
+.umd-layout-grid-gap-two .umd-text-rich-advanced hr {
+  border: 0; border-top: 1px solid #000; height: 0;
+}
+```
+
+Do **not** use a separate wrapper div plus a margin rule for the divider.
+`student-support.html` did (`.student-support-title-rule` around its own
+rich-text div, plus `.student-support-copy > h2 { margin-bottom: 16px }`); it
+renders identically to the canonical form, so both the wrapper and the two CSS
+rules were deleted. The figure also must be a **direct child of the grid** — not
+wrapped in a `.umd-text-rich-advanced` div, as `student-support.html` and
+`student-life/index.html` both did.
+
+### There is no exception — `know-before-you-go.html` matches too
+
+It was briefly left as one, on the reasoning that its single "What to Do" block
+never alternates so the mis-grouping cannot occur, and that flipping one of
+three section heads would make the page internally inconsistent. Both halves
+were resolved the same day by flipping **all five** of its rules instead, so the
+page is internally consistent *and* matches the site.
+
+That page is hand-authored rather than migrated, so it could have kept a
+page-level `order` rule. It does not: a reader moving between pages should not
+meet two different treatments of the same block, and the pattern is easier to
+hold if it has no exceptions.
+
+**Two mechanics, one result.** Where a rich-text block follows the heading, the
+rule is a bare `<hr>` as that block's first child (the canonical form above).
+The two card sections — Where to Stay, Resources — have no rich-text block to
+host one, so they keep `hr.umd-text-divider` and simply place it *after* the
+heading, and their `<h2>` swaps `umd-layout-space-vertical-interior-child`
+(32px) for `umd-layout-space-vertical-headline-large` to match the
+heading→rule gap. Below the rule they differ on purpose: 24px into a card grid
+(the divider's own margin), 32px into body copy (the rich-text wrapper's).
+
+`umd-layout-space-vertical-headline-large` is **responsive** — 16px at 375px,
+24px at 1280px. Quote a measurement with its viewport.
+
+### The other axes
+
+- **Heading level — PROVISIONALLY unified at level 1** (2026-09-17). This was
+  previously listed here as deliberately *not* unified, on the reasoning that
+  level follows the source page. That reasoning is still live and unresolved —
+  see "⚠️ PROVISIONAL (2026-09-17): section heads are at level 1 sitewide".
+  Treat the current uniformity as a state to evaluate, not a rule to enforce,
+  and do not write a migration script against it yet.
+- **Image crop — not unified.** find-community native, student-support `4 / 3`,
+  international-applicants `1 / 1` on 3 of 4 rows. A per-page art decision, and
+  the axis most likely to be worth unifying next if the pattern gets another
+  pass.
+- **The lock — not unified.** international-applicants sits in `-small` (992px)
+  with its own 56/80px row rhythm; the others use the page lock with
+  `umd-layout-space-vertical-interior` per section. This is the largest
+  remaining structural difference between the zig-zag pages.
+
+### Content fidelity is part of the pattern
+
+Two invented-content bugs were found on `find-community.html` while unifying it,
+both in the same two cards, and both worth generalising from:
+
+1. **An invented section heading.** "Multicultural & Faith Programs" was built
+   as an `<h2>` + `hr.umd-text-divider`. The source has no such heading — the
+   phrase is an **eyebrow on each card**. Removed; the eyebrows are now
+   `<p slot="eyebrow">` on both cards.
+2. **An inline link promoted to a CTA.** The source puts each office's link
+   *inline on its name* inside the paragraph and gives neither card a CTA. Ours
+   had lifted the link into a "Visit OMSE" / "Visit MICA" button, which then
+   required trimming the words the link had been attached to ("OMSE works to
+   serve…" for the source's "The Office of Multi-Ethnic Student Education (OMSE)
+   works to serve…"). Both cards were resynced to the source copy.
+
+A third, smaller one on the same page: the **`<hr>` under the Resources
+heading was ours too**. On the source, Resources is
+`<h2 class="headline-two-san-serif">` inside a `<umd-admissions-resources>`
+component with no `<hr>` anywhere in its lock. Removed 2026-09-17, and the
+heading moved to `umd-layout-space-vertical-interior-child` (32px
+margin-bottom, the class for a heading introducing a block) since there is no
+longer a rule to space it away from. `find-community.html` now carries **no
+`hr.umd-text-divider` at all** — its only rules are the bare `<hr>`s inside the
+zig-zag rich-text blocks.
+
+**Promoting an inline link to a CTA rewrites the copy around it.** That is the
+transferable lesson: a composition choice about affordance quietly became an
+edit to the text. When recreating a page, transcribe the links where they sit.
+
+**And a divider is content, not decoration.** Two of the three fixes above were
+rules we added that the source never had. Before carrying `hr.umd-text-divider`
+into a section, check the source has a rule there — `!lock.querySelector('hr')`
+is enough to settle it.
+
+**Verifying links inside `umd-element-card`:** the design system draws its
+rich-text link underline as a `background-image` gradient (black, red on hover),
+**not** `text-decoration`. Checking `text-decoration-line` reports `none` on a
+perfectly styled link. Card slot content is also *cloned into the shadow root*,
+so the light-DOM node measures zero height while the rendered copy lives at
+`.umd-element-eyebrow` / `.umd-text-rich-simple-scaling` inside `shadowRoot` —
+measure there, or a working card looks broken.
+
 ## Shared chrome and reference pages
 
 Every page within a single design project must use the **same site header, navigation, logo, and footer**. Pages in this project should look like a coherent site — they should not invent their own chrome, nav items, or logo treatment.
@@ -423,19 +585,74 @@ migration has a deterministic target.
 
 Body copy is 18 / 400 for contrast.
 
-### ⚠️ The level comes from the SOURCE, not from the tag
+**Those columns are samples of a fluid curve, not three steps.** Levels 1 and 2
+interpolate continuously between 375px and ~1024px, and level 2 **overshoots its
+own ≥1024 value in the middle of the range** — measured 18px at 375, 21.84 at
+768, **22.5 at 900**, 22 at 1024 and flat thereafter. Consequences:
 
-**A page's section headings are not automatically level 1.** This was got wrong
-once, in the worst way: an audit on 2026-09-14 "conformed" every interior `h2`
-to level 1, which silently inflated three pages — including
-`frederick-douglass-scholarship.html`, which had been **correct** at level 2 and
-was pushed to level 1 for no reason. All three were reverted the same day.
+- **Quote a measurement with its viewport.** "22px" and "18px" are both correct
+  for level 2 depending on where you measured.
+- **Never reproduce one of these classes with a hard-coded `font-size`.** No
+  ladder of breakpoint values reproduces the 768–1024 curve, so a page rule that
+  restates a size will diverge from the real class mid-range. Apply the class
+  somewhere it can actually take effect instead — see the lede rules below.
+- **Level 3 is the only flat one.** `umd-sans-large` is 18px at every width.
+
+### ⚠️ PROVISIONAL (2026-09-17): section heads are at level 1 sitewide
+
+**This is an open decision, not a settled rule. Do not build new automation on
+it and do not "conform" anything else to it.**
+
+**Tracked in a ticket** (2026-09-17). The question on it is exactly the two
+options below — map every interior heading to one level, or let the source's
+text sizing pass through on migration. **Current leaning is toward uniform
+mapping** as the easier of the two, but it is explicitly TBD. Until that ticket
+closes, leave the current state alone rather than extending or reverting it.
+
+Every *section-level* heading on the four zig-zag pages currently carries
+`umd-sans-extralarge-bold` (level 1) — `find-community.html` ×6,
+`student-support.html` ×4, `international-applicants.html` ×4,
+`know-before-you-go.html` ×3. Applied 2026-09-17 to see it in context. Two
+things were deliberately left alone:
+
+- **`frederick-douglass-scholarship.html`** — untouched. It is the Layout A
+  reference and it was the page wrongly inflated in the 2026-09-14 incident
+  below; it keeps its own levels until the decision lands.
+- **`know-before-you-go.html`'s two nested sub-topics** (Self-Guided Tour,
+  Transportation & Parking) — level 2. They sit *inside* the "What to Do"
+  section, so promoting them would make them equal to their own parent and
+  flatten a real nesting level. Unifying a scale must not eat a hierarchy.
+
+**Revert:** `scripts/`-adjacent throwaway; regenerate from git history. The
+builders assert the current classes, so a revert must touch
+`build-student-support.py` too.
+
+#### The history this has to respect
+
+An audit on 2026-09-14 "conformed" every interior `h2` to level 1, silently
+inflating three pages — including `frederick-douglass-scholarship.html`, which
+had been **correct** at level 2. All three were reverted the same day. The
+current state is the same *shape* of change, entered deliberately and with the
+FDS page excluded.
+
+#### Why pass-through is the crux
 
 The live site distinguishes `headline-three` (32px) from `headline-four` (24px),
-and most interior pages use **four**, not three. Read the source element and map
-its size. `h2` says where a heading sits in the document outline; the class says
-how big it is. They are independent, and a page can legitimately have `h2`s at
-level 2 or 3.
+and most interior pages use **four**. If the CMS carries that class through on
+migration, heading size is a per-source-page fact and a sitewide level-1 rule
+misrepresents it. That splits by page, and it is why the current state is
+provisional rather than settled:
+
+| Page | Source markup | Passes through as | Unifying is |
+|---|---|---|---|
+| `find-community.html` | bare `<strong>` ×5 — **no heading class** | nothing to inherit | **free** — picking a level is our call either way |
+| `student-support.html` | `headline-four` ×4 | ~24px ≈ level 2 | **lossy** — level 1 overshoots by 8px |
+| `know-before-you-go.html` | `headline-three` ×2 + `headline-four` ×2 | 32px and 24px | mixed — its section heads were already level 1 |
+| `international-applicants.html` | not in the mapping sample | unknown | unverified |
+
+`h2` says where a heading sits in the document outline; the class says how big
+it is. They stay independent, and a page can legitimately have `h2`s at level 2
+or 3 whatever this decision settles on.
 
 ### Migration mapping
 
@@ -449,18 +666,61 @@ over:
 | `headline-four-san-serif` | 24px | **level 2** `umd-sans-larger-bold` (22px) | nearest step; the most common case |
 | `headline-five-san-serif` | 20px | **level 2 or 3 — break the tie by role** | see below |
 | bare `<strong>` used as a label | 18px | **level 3** `umd-sans-large` (18px) | exact match — see below |
-| `.rich-text.intro` (the page lede) | 24px / **400** | `<p class="umd-sans-large text-black">` inside `.umd-text-rich-advanced` | a paragraph, **not** a heading — see below |
+| `.rich-text.intro` (the page lede) | 24px / **400** | `<p class="umd-sans-larger-bold text-black page-lede">` **outside** `.umd-text-rich-advanced` | a paragraph, **not** a heading, and **not** inside the rich-text block — see below |
 
 Chrome and section components need no class: `headline-one` becomes the hero's
 `slot="headline"`, `headline-two` is the Resources component's own heading, and
 `headline-five` inside that component is component-styled.
 
-**Migrate the source lede as a PARAGRAPH inside rich text.** Source
-`.rich-text.intro` copy becomes a `<p class="umd-sans-large text-black">` inside
-`.umd-text-rich-advanced`, preserving the full introduction before the body
-paragraphs. The 18px / 700 treatment is the project's migration choice: the
-source lede is 24px / 400, and we compensate for the size with the bolding
-rather than carry a fourth type step or a custom class just for the lede.
+### The lede — settled 2026-09-17
+
+**Migrate the source lede as a PARAGRAPH, and put it OUTSIDE the rich-text
+block.** Source `.rich-text.intro` copy becomes:
+
+```html
+<section class="umd-layout-space-vertical-interior">
+  <p class="umd-sans-larger-bold text-black page-lede">Full introduction.</p>
+  <div class="umd-text-rich-advanced">
+    <p>Body copy follows here, if the section has any.</p>
+  </div>
+</section>
+```
+
+with this CSS, **byte-identical on every page that has a lede — do not rename
+it per page**:
+
+```css
+.page-lede { max-width: 960px; }
+.page-lede + .umd-text-rich-advanced { margin-top: 24px; }
+```
+
+#### ⚠️ Why it cannot live inside the rich-text block
+
+`.umd-text-rich-advanced > *` sets `font-size: 18px` on every direct child. So a
+size class inside that block is **not wrong, it is inert** — swapping
+`umd-sans-large` for `umd-sans-larger-bold` or even `umd-sans-extralarge-bold`
+in place measures **18px / 700 before and after**. Nothing breaks, nothing
+changes, and nothing tells you. That is the whole reason the lede used to be
+`umd-sans-large`: it is already 18px, so the pin took nothing from it.
+
+Moving the `<p>` out of the block is the only way the class renders its real
+fluid scale (18px at 375 → 22.5 at 900 → 22 at 1024+). A page rule that restates
+a `font-size` cannot substitute — see the fluidity note under the scale table.
+
+#### What the two rules are for
+
+- **`max-width: 960px`** replaces the measure the wrapper was supplying
+  (`element.min.css` caps rich-text `p`/`ul`/`ol` at 960px *in place*). Without
+  it a 22px lede runs the full 1152px Layout B content box. **This is not the
+  old `.interior-lede` 800px cap** — it is the design system's own rich-text
+  measure, re-applied to a paragraph that can no longer inherit it. Do not let
+  it drift back to 800px, and do not add an accent line or any other lede
+  chrome.
+- **The adjacency rule** supplies the gap where body copy follows the lede
+  directly; the block's own `> *:first-child { margin-top: 0 }` would otherwise
+  zero it. It is **inert on the three pages whose lede sits alone in its
+  section** — shipped there anyway so the block stays identical everywhere. That
+  is a deliberate trade of three dead rules for one copy-pasteable block.
 
 **It is not a heading.** An earlier pass shipped the lede as an `<h2>` on
 `student-life/student-support.html` and
@@ -472,18 +732,49 @@ screen-reader heading navigation announce the whole thing. On
 heading with nothing beneath it. Both were converted back to `<p>` on
 2026-09-15, and their builders now assert it.
 
-`tuition/frederick-douglass-scholarship.html` is the reference — it has used
-`<p class="umd-sans-large text-black">` since it shipped. `umd-sans-large`
-renders 18px / 700 / #000 on a `<p>` exactly as it would on a heading, so
-nothing about the visual treatment depends on the tag.
+#### Where each lede stands
+
+| Page | Lede | How |
+|---|---|---|
+| `know-before-you-go.html` | `page-lede`, 22px | wrapper dropped (lede was its section's only child) |
+| `student-life/student-support.html` | `page-lede`, 22px | wrapper dropped, via `build-student-support.py` |
+| `how-to-apply/freshman-application-faqs.html` | `page-lede`, 22px | wrapper dropped, via its builder |
+| `how-to-apply/english-language-proficiency.html` | `page-lede`, 22px | lede **lifted above** the block — it has sibling paragraphs |
+| `tuition/frederick-douglass-scholarship.html` | `umd-sans-large`, 18px, **inside** rich text | **a different pattern, deliberately — float-wrapped prose, see below** |
+
+**`frederick-douglass-scholarship.html` keeps its 18px lede inside the
+rich-text block. This is correct and settled — it is a different pattern, not a
+page waiting to be brought into line.**
+
+Its lede sits in `slot="text"` of `umd-element-media-inline`, which is what
+makes the copy **wrap around the floated statue photo**. That is the genuine
+media-inline use case, and FDS is the only page in this project using it that
+way — everywhere else the "image beside text" need is a short blurb paired with
+a picture, i.e. the zig-zag grid, which is a different thing wearing a similar
+shape. Keep the lede in the text with the floated image.
+
+Two things follow:
+
+- **Do not "fix" it to match the four `page-lede` pages.** The `slot` attribute
+  is on the rich-text div itself, so the lede cannot leave that block and stay
+  in the slot — and it should not. Restructuring the component to hoist the lede
+  out would break the float wrap, which is the whole point of the page.
+- **On migration it maps to a headline in rich text**, and that is fine. It does
+  not need the `page-lede` treatment.
+
+It is no longer the reference page for the *lede size* (the four `page-lede`
+pages are), but it remains the reference for **float-wrapped prose**.
+
+Each of the three generated pages asserts `'umd-sans-large text-black' not in
+output`, so the inert in-place class cannot come back silently. Keep that
+assertion when touching those builders: it is guarding against a change that is
+invisible rather than broken.
 
 A real heading still uses a heading tag and the three-step scale; that is a
 separate element from the lede.
 
-Do not recreate the old `.interior-lede` wrapper or its 800px width cap, and do
-not transfer that cap to the rest of the body copy. Layout B uses the design
-system's built-in rich-text measure; Layout A keeps the `max-w-[800px]` utility
-on its content column. Do not add a separate accent line or page-scoped lede CSS.
+Layout A keeps the `max-w-[800px]` utility on its content column — that is a
+*column* width, unrelated to the lede's 960px measure.
 
 **`headline-five` is the one ambiguous row.** At 20px it sits exactly 2px from
 level 2 (22px) and 2px from level 3 (18px), so size cannot break the tie. Break
@@ -501,23 +792,45 @@ immediately preceded by an `hr` is level 2.
 
 **`<strong>` as a pseudo-heading.** Authors bold a line instead of using a
 heading. Promote it to a real heading *tag* for outline and screen-reader
-structure, but keep its size: level 3, 18px, exactly what it rendered as. Do not
-promote the size too — that is what went wrong on `find-community.html`, where
-five 18px `<strong>` labels were shipped at 32px.
+structure. Its **size** is the open question:
+
+- The rule used to be "keep 18px, level 3", citing `find-community.html`
+  shipping five 18px `<strong>` labels at 32px as the thing that went wrong.
+- **Those same five are deliberately at level 1 again as of 2026-09-17**, under
+  the provisional decision above. The reasoning that overturned it: the source
+  has no heading class to be faithful *to* — an author bolded a line — so there
+  is no size passing through and no fidelity to lose. At level 3 those headings
+  measured 18px against 18px body copy and were distinguished only by position,
+  which is the documented weakness of level 3.
+
+So this row is **unresolved and tracks the provisional decision**, not a
+standing rule. What survives either way: promote the tag, and never assume a
+`<strong>` label's size without checking what the source actually had.
 
 ### What each built page maps to
 
-| Page | Source | Level |
-|---|---|---|
-| `tuition/frederick-douglass-scholarship.html` | `headline-four` ×2 | 2 |
-| `know-before-you-go.html` | `headline-three` ×2, `headline-four` ×2 | 1, 2 |
-| `student-life/find-community.html` | `<strong>` ×5 | 3 (plus 2 of our own groupings at level 2) |
-| `student-life/student-support.html` | `headline-four` ×4 | 2 |
-| `how-to-apply/freshman-application-faqs.html` | `headline-four` ×6 | 2 |
+Source column is what the live page has; "level" is what we ship **today**
+under the provisional decision. Where the two disagree, that disagreement *is*
+the open question.
 
-`know-before-you-go.html` is the reference: it is the only source page carrying
-both `headline-three` and `headline-four`, so it is the one page that
-demonstrates the level-1/level-2 distinction.
+| Page | Source | Level shipped | Matches source? |
+|---|---|---|---|
+| `tuition/frederick-douglass-scholarship.html` | `headline-four` ×2 | 2 | yes — excluded from the level-1 pass |
+| `know-before-you-go.html` | `headline-three` ×2, `headline-four` ×2 | 1 (section heads), 2 (nested sub-topics) | partly |
+| `student-life/find-community.html` | `<strong>` ×5 | 1 ×6 | n/a — source has no heading class |
+| `student-life/student-support.html` | `headline-four` ×4 | 1 ×4 | **no** — overshoots 24px by 8px |
+| `how-to-apply/international-applicants.html` | not sampled | 1 ×4 | unverified |
+| `how-to-apply/freshman-application-faqs.html` | `headline-four` ×6 | 2 | yes — not a zig-zag page, untouched |
+
+`find-community.html` shows 6 heads, not 7: its "Multicultural & Faith
+Programs" heading was **removed** on 2026-09-17 because the source has no such
+heading — the phrase is an *eyebrow on each card*
+(`<span class="eyebrow">` inside each `umd-card`). See that page's own comment;
+do not restore it.
+
+`know-before-you-go.html` remains the one source page carrying both
+`headline-three` and `headline-four`, so it is still the only page that
+demonstrates the source-side level-1/level-2 distinction.
 
 ### Rules that fall out of this
 
@@ -525,11 +838,13 @@ demonstrates the level-1/level-2 distinction.
   `slot="headline"` is styled by the component's shadow CSS and the class is
   inert. Audited: 0 occurrences — keep it that way.
 - **Never put a `umd-sans-*` size inside `.umd-text-rich-advanced`** — it
-  collapses to 18px (RULES §18). Headings go *before* the rich-text block.
-  **The one exception is `umd-sans-large`**, which *is* 18px, so the collapse
-  takes nothing from it and the 700 weight still lands. That makes it the right
-  tool for a lede paragraph the source set in `<strong>`: on
-  `frederick-douglass-scholarship.html` the opening paragraph carries
+  collapses to 18px (RULES §18). Headings go *before* the rich-text block, and
+  so does the lede. The collapse is a **silent no-op, not a visible break**:
+  the class applies, the weight lands, the size is simply ignored, so the only
+  way to catch it is to measure. `umd-sans-large` is the one size class that is
+  unaffected, because it is already 18px — which is exactly why it reads as
+  "working" inside the block and why it was the lede class until 2026-09-17.
+  `frederick-douglass-scholarship.html` still relies on this: its lede carries
   `umd-sans-large text-black` and renders 18px / 700 / #000 inside the
   rich-text block, against 18px / 400 / #454545 for the paragraphs after it.
   Note the source's own bold is the *same* colour as its body copy — the

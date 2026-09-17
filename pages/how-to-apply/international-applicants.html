@@ -935,14 +935,17 @@
       height: 0;
     }
 
-    /* The zig-zag inverts ONLY at the two-column breakpoint. Every row is
-       TEXT-then-FIGURE in the source so that the single-column mobile stack
-       always leads with the heading — authoring the alternate rows
-       figure-first instead put an unlabelled photo above the service name on
-       half the rows at 375px. */
-    @media (min-width: 650px) {
-      .intl-zigzag-reverse > figure { order: -1; }
-    }
+    /* ALTERNATION IS BY DOM ORDER — the <figure> is authored first on
+       alternating rows. This page used `order: -1` at the two-column
+       breakpoint instead, which keeps the heading first in the 375px stack and
+       reads better, but it needs a page-level CSS rule that migrated CMS
+       content cannot carry. The prototype now matches what the CMS can emit,
+       consistently with the other zig-zag pages.
+
+       This is survivable here only because the rule already sits BELOW the
+       heading as the first child of the rich-text block. With the figure
+       stacking first at 375px, a rule ABOVE the heading would land between the
+       photo and its own headline. Do not move it. */
 
     /* The dark banner-promo divider (§9 headline) to the first zig-zag row.
        120px matches critical.css §22's dark→light section transition gap:
@@ -1839,7 +1842,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       </figure>
     </div>
 
-    <div class="umd-layout-grid-gap-two intl-zigzag intl-zigzag-reverse">
+    <div class="umd-layout-grid-gap-two intl-zigzag">
+      <figure class="umd-layout-alignment-block-stacked">
+        <img src="../../images/international-applicants/mei-logo.jpg" alt="Maryland English Institute" />
+      </figure>
       <div>
         <h3 class="umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">Maryland English Institute</h3>
         <div class="umd-text-rich-advanced">
@@ -1853,9 +1859,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           </div>
         </div>
       </div>
-      <figure class="umd-layout-alignment-block-stacked">
-        <img src="../../images/international-applicants/mei-logo.jpg" alt="Maryland English Institute" />
-      </figure>
     </div>
 
     <div class="umd-layout-grid-gap-two intl-zigzag">
@@ -1877,7 +1880,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       </figure>
     </div>
 
-    <div class="umd-layout-grid-gap-two intl-zigzag intl-zigzag-reverse">
+    <div class="umd-layout-grid-gap-two intl-zigzag">
+      <figure class="umd-layout-alignment-block-stacked intl-figure-square">
+        <img src="../../images/transfer-applicants/annearundel-hall.jpg" alt="Anne Arundel Hall on the University of Maryland campus" />
+      </figure>
       <div>
         <h3 class="umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">Transfer Credit Services</h3>
         <div class="umd-text-rich-advanced">
@@ -1891,9 +1897,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           </div>
         </div>
       </div>
-      <figure class="umd-layout-alignment-block-stacked intl-figure-square">
-        <img src="../../images/transfer-applicants/annearundel-hall.jpg" alt="Anne Arundel Hall on the University of Maryland campus" />
-      </figure>
     </div>
     </div>
   </section>

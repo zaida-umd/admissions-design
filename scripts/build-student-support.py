@@ -36,7 +36,26 @@ head = re.sub(r"<title>.*?</title>", f"<title>{TITLE}</title>", head, count=1)
 pin = re.search(r"web-components-library@([\d.]+)/dist/cdn\.js", template)
 assert pin, "TEMPLATE.html has no web-components-library cdn.js pin"
 
-body = r'''  </style>
+body = r'''    /* LEDE. umd-sans-larger-bold is FLUID — 18px at 375, ~21.8 at 768, 22.5
+       around 900, 22 at 1024+ — and it renders that scale ONLY outside
+       .umd-text-rich-advanced, which pins every direct child to
+       `font-size: 18px`. That pin is why the lede used to be umd-sans-large
+       (already 18px, so the pin took nothing from it) and why ANY larger size
+       class inside the block is a silent no-op — swapping the class in place
+       changes nothing. The lede is therefore a bare <p> in the section, not a
+       child of a rich-text block.
+
+       The 960px cap replaces the measure the wrapper was supplying
+       (element.min.css caps p/ul/ol at 960px in place). It is NOT the old
+       .interior-lede 800px cap and must not drift back to it.
+
+       The adjacency rule supplies the gap when body copy follows the lede
+       directly; it is inert where the lede sits alone in its section. Both
+       rules are byte-identical on every page that has a lede — do not rename
+       them per page. */
+    .page-lede { max-width: 960px; }
+    .page-lede + .umd-text-rich-advanced { margin-top: 24px; }
+  </style>
   <style>
     @media (min-width: 768px) {
       .student-support-media .student-support-safety-image {
@@ -56,12 +75,18 @@ body = r'''  </style>
       object-fit: cover;
     }
 
-    .student-support-copy > h2 {
-      margin-bottom: 16px;
-    }
+    /* The zig-zag pattern's third rule (LAYOUT-PATTERNS.md): the inlined
+       critical CSS gives <hr> no border, so a bare <hr> inside a rich-text
+       block needs one. Its 32px above/below spacing comes from the wrapper.
 
-    .student-support-title-rule {
-      margin-bottom: 24px;
+       The rule sits BELOW the heading, as the first child of the body
+       rich-text block, and not above it as hr.umd-text-divider. The image
+       column alternates by DOM order, so at 375px the <figure> stacks first
+       on alternating blocks; a rule above the heading then lands between the
+       photo and its own headline and the photo reads as the previous
+       section's tail. Heading-then-rule keeps them grouped. */
+    .umd-layout-grid-gap-two .umd-text-rich-advanced hr {
+      border: 0; border-top: 1px solid #000; height: 0;
     }
 
   </style>
@@ -94,22 +119,18 @@ body = r'''  </style>
     <div class="umd-layout-space-horizontal-normal">
       <div id="umd-shell-content">
         <section class="umd-layout-space-vertical-interior">
-          <div class="umd-text-rich-advanced">
-            <p class="umd-sans-large text-black">Safety is the shared responsibility of each campus community member. We know that students thrive in a community they feel safe and supported in and continue to work toward a safer and more secure community.</p>
-          </div>
+          <p class="umd-sans-larger-bold text-black page-lede">Safety is the shared responsibility of each campus community member. We know that students thrive in a community they feel safe and supported in and continue to work toward a safer and more secure community.</p>
         </section>
 
         <section class="umd-layout-space-vertical-interior">
           <div class="umd-layout-grid-gap-two">
-            <div class="umd-text-rich-advanced">
-              <figure class="umd-layout-alignment-block-stacked student-support-media">
-                <img src="../../images/student-life/student-support-academics.jpg" alt="Students sitting around a table in an engineering lab." />
-              </figure>
-            </div>
-            <div class="student-support-copy">
-              <h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-larger-bold">Academics</h2>
-              <div class="umd-text-rich-advanced student-support-title-rule"><hr></div>
+            <figure class="umd-layout-alignment-block-stacked student-support-media">
+              <img src="../../images/student-life/student-support-academics.jpg" alt="Students sitting around a table in an engineering lab." />
+            </figure>
+            <div>
+              <h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-extralarge-bold">Academics</h2>
               <div class="umd-text-rich-advanced">
+                <hr>
                 <ul>
                   <li>Tutoring services</li>
                   <li><a href="https://careers.umd.edu/" target="_blank" rel="noopener noreferrer">Career Center</a> - Whether you’re looking to gain experience through an internship, fine tune your resume, practice your interviewing skills or evaluate a job offer, the Career Center has you covered. You’ll receive support at every stage of your career development and will be prepared to pursue a meaningful career path through high-quality services, resources and instruction.</li>
@@ -121,10 +142,10 @@ body = r'''  </style>
 
         <section class="umd-layout-space-vertical-interior">
           <div class="umd-layout-grid-gap-two">
-            <div class="student-support-copy">
-              <h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-larger-bold">Wellness</h2>
-              <div class="umd-text-rich-advanced student-support-title-rule"><hr></div>
+            <div>
+              <h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-extralarge-bold">Wellness</h2>
               <div class="umd-text-rich-advanced">
+                <hr>
                 <ul>
                   <li><a href="https://health.umd.edu/prospective-students" target="_blank" rel="noopener noreferrer">University Health Center</a> - Provides high-quality, cost-effective health care and wellness programs in order to promote the health of the university community and support academic success.</li>
                   <li><a href="https://www.counseling.umd.edu/aboutus/" target="_blank" rel="noopener noreferrer">Counseling Center</a> - Provides comprehensive support services that promote the personal, social and academic success of UMD students.</li>
@@ -132,25 +153,21 @@ body = r'''  </style>
                 </ul>
               </div>
             </div>
-            <div class="umd-text-rich-advanced">
-              <figure class="umd-layout-alignment-block-stacked student-support-media">
-                <img src="../../images/student-life/student-support-wellness.jpg" alt="Front door to the health center." />
-              </figure>
-            </div>
+            <figure class="umd-layout-alignment-block-stacked student-support-media">
+              <img src="../../images/student-life/student-support-wellness.jpg" alt="Front door to the health center." />
+            </figure>
           </div>
         </section>
 
         <section class="umd-layout-space-vertical-interior">
           <div class="umd-layout-grid-gap-two">
-            <div class="umd-text-rich-advanced">
-              <figure class="umd-layout-alignment-block-stacked student-support-media">
-                <img class="student-support-safety-image" src="../../images/student-life/safety@2x.jpg" alt="Safety" />
-              </figure>
-            </div>
-            <div class="student-support-copy">
-              <h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-larger-bold">Safety</h2>
-              <div class="umd-text-rich-advanced student-support-title-rule"><hr></div>
+            <figure class="umd-layout-alignment-block-stacked student-support-media">
+              <img class="student-support-safety-image" src="../../images/student-life/safety@2x.jpg" alt="Safety" />
+            </figure>
+            <div>
+              <h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-extralarge-bold">Safety</h2>
               <div class="umd-text-rich-advanced">
+                <hr>
                 <p>Call University Police at 911 or (301) 405-3555. If you ever see a situation involving fighting between partners or groups, threatening actions or statements, screams, suspicious persons or behavior, weapons, etc., do not hesitate to call police immediately. Then, call your Service Desk or CA.</p>
                 <ul>
                   <li>Blue Light Program</li>
@@ -164,7 +181,7 @@ body = r'''  </style>
         </section>
 
         <section class="umd-layout-space-vertical-interior">
-          <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Transportation &amp; Parking</h2>
+          <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-extralarge-bold">Transportation &amp; Parking</h2>
           <div class="umd-text-rich-advanced">
             <p>Whether you live on campus or off, the Department of Transportation Services makes it easy to get around. Shuttle-UM buses operate several campus-based routes and serve a six-mile radius beyond, taking students to Metro station, shops, restaurants and more than two dozen apartment communities. All you need to ride Shuttle-UM is your student ID. It’s also a snap to travel to Washington, D.C., Baltimore and local airports by using Metrorail and MARC trains.</p>
             <p>If you’re living off campus, permits for campus parking are available for purchase from the Department of Transportation Services.</p>
@@ -220,10 +237,17 @@ assert 'src="../../images/shared/interior-hero-pattern.png" alt=""' in output
 assert "<umd-element-nav-slider" not in output
 assert output.count('<div class="umd-layout-grid-gap-two">') == 3
 assert output.count('<figure class="umd-layout-alignment-block-stacked student-support-media">') == 3
+# The figure is a DIRECT grid child — never wrapped in a rich-text div.
+assert '<div class="umd-text-rich-advanced">\n              <figure' not in output
 assert "aspect-ratio: 4 / 3" in output
-assert output.count('<div class="student-support-copy">') == 3
-assert output.count('<h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-larger-bold">') == 3
-assert output.count('</h2>\n              <div class="umd-text-rich-advanced student-support-title-rule"><hr></div>') == 3
+assert output.count('<div>') == 3
+assert output.count('<h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-extralarge-bold">') == 3
+# The rule is the FIRST CHILD of the body rich-text block, below the heading —
+# the shared zig-zag treatment (LAYOUT-PATTERNS.md canonical). A rule above the
+# heading breaks the figure-first mobile stack; see the CSS comment.
+assert output.count('</h2>\n              <div class="umd-text-rich-advanced">\n                <hr>') == 3
+assert 'student-support-title-rule' not in output
+assert 'student-support-copy' not in output
 assert output.count("umd-element-banner-promo") >= 1
 assert "Let's stay in touch! <a href=\"https://apply.umd.edu/register/request-info\"" in output
 assert output.count('href="https://apply.umd.edu/register/request-info"') == 2
@@ -248,8 +272,12 @@ assert "https://admissions.umd.edu/student/student-support" not in output
 # in place; wrapping a multi-sentence lede in <h2> puts a paragraph in the
 # document outline and makes screen-reader heading navigation announce the whole
 # thing. Matches tuition/frederick-douglass-scholarship.html.
-assert '<p class="umd-sans-large text-black">' in output
+assert '<p class="umd-sans-larger-bold text-black page-lede">' in output
+# The lede must sit OUTSIDE .umd-text-rich-advanced or its size class is inert.
+assert 'umd-sans-large text-black' not in output
+assert '<div class="umd-text-rich-advanced">\n          ' + '<p class="umd-sans-larger-bold text-black page-lede">' not in output
 assert '<h2 class="umd-sans-large' not in output
+assert '<h2 class="umd-sans-larger-bold text-black page-lede"' not in output
 assert '<html lang="en">' in output
 assert (
     f"web-components-library@{pin.group(1)}/dist/cdn.js" in output

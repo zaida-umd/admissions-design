@@ -84,7 +84,26 @@ def render_sections(sections):
 faq_markup = render_sections(data["sections"])
 image = data["image"]
 
-body = r'''  </style>
+body = r'''    /* LEDE. umd-sans-larger-bold is FLUID — 18px at 375, ~21.8 at 768, 22.5
+       around 900, 22 at 1024+ — and it renders that scale ONLY outside
+       .umd-text-rich-advanced, which pins every direct child to
+       `font-size: 18px`. That pin is why the lede used to be umd-sans-large
+       (already 18px, so the pin took nothing from it) and why ANY larger size
+       class inside the block is a silent no-op — swapping the class in place
+       changes nothing. The lede is therefore a bare <p> in the section, not a
+       child of a rich-text block.
+
+       The 960px cap replaces the measure the wrapper was supplying
+       (element.min.css caps p/ul/ol at 960px in place). It is NOT the old
+       .interior-lede 800px cap and must not drift back to it.
+
+       The adjacency rule supplies the gap when body copy follows the lede
+       directly; it is inert where the lede sits alone in its section. Both
+       rules are byte-identical on every page that has a lede — do not rename
+       them per page. */
+    .page-lede { max-width: 960px; }
+    .page-lede + .umd-text-rich-advanced { margin-top: 24px; }
+  </style>
 
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@@@PIN@@/dist/cdn.js"></script>
 @@CHROME:chrome-css@@
@@ -116,9 +135,7 @@ body = r'''  </style>
     <div class="umd-layout-space-horizontal-normal">
       <div id="umd-shell-content">
         <section class="umd-layout-space-vertical-interior">
-          <div class="umd-text-rich-advanced">
-            @@LEDE@@
-          </div>
+          @@LEDE@@
         </section>
 
         <!-- The source's umd-image-caption data-size="full" carries no caption
@@ -170,7 +187,7 @@ body = body.replace("@@PAGE_TITLE@@", data["title"])
 body = body.replace("@@PARENT_LABEL@@", PARENT_LABEL)
 body = body.replace("@@PARENT_HREF@@", PARENT_HREF)
 body = body.replace("@@LEDE@@", data["lede_html"].replace(
-    "<p>", '<p class="umd-sans-large text-black">', 1))
+    "<p>", '<p class="umd-sans-larger-bold text-black page-lede">', 1))
 body = body.replace("@@IMAGE_SRC@@", image["src"])
 body = body.replace("@@IMAGE_ALT@@", image["alt"])
 body = body.replace("@@FAQ_SECTIONS@@", faq_markup)
@@ -219,8 +236,10 @@ assert not re.search(r'slot="headline"[^>]*class="umd-sans', main_markup)
 assert not re.search(r'class="umd-sans[^"]*"[^>]*slot="headline"', main_markup)
 
 # --- The lede is a PARAGRAPH, not a heading ---------------------------------
-assert '<p class="umd-sans-large text-black">' in main_markup
-assert main_markup.count('umd-sans-large text-black') == 1
+assert '<p class="umd-sans-larger-bold text-black page-lede">' in main_markup
+assert main_markup.count('text-black page-lede') == 1
+# The lede must sit OUTSIDE .umd-text-rich-advanced or its size class is inert.
+assert 'umd-sans-large text-black' not in main_markup
 assert '<h2 class="umd-sans-large' not in main_markup
 
 # --- Accordion --------------------------------------------------------------

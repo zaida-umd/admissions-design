@@ -840,16 +840,29 @@
       color: #757575;
     }
 
-    /* ALTERNATING SIDE — by `order`, not by DOM order.
-       LAYOUT-PATTERNS.md alternates the zig-zag by swapping the <figure> and
-       the text <div> in the markup. That is wrong below the 650px breakpoint
-       where the grid collapses to one column: the figure then stacks ABOVE its
-       own heading, so half the blocks lead with an unexplained photo. Keeping
-       the text first in the DOM everywhere and flipping the column with
-       `order` at 650px+ gives the same zig-zag with a reading order that
-       survives the collapse — and the same order for a screen reader. */
-    @media (min-width: 650px) {
-      .fc-media-first > figure { order: -1; }
+    /* The zig-zag pattern's third rule (LAYOUT-PATTERNS.md): the inlined
+       critical CSS gives <hr> no border, so a bare <hr> inside a rich-text
+       block needs one. Its 32px above/below spacing comes from the wrapper.
+
+       The two card sections (Multicultural & Faith Programs, Resources) have no
+       rich-text block to host a bare <hr>, so they keep hr.umd-text-divider and
+       place it AFTER the heading, with the heading on
+       umd-layout-space-vertical-headline-large to match the heading→rule gap.
+       Different mechanic, same shape — a page must not put the rule above the
+       heading in one section and below it in the next.
+
+       NOTE ON ALTERNATION. The image column alternates by DOM order — the
+       <figure> is authored first on alternating blocks — NOT by `order: -1`
+       at the two-column breakpoint. The `order` approach keeps the heading
+       first at 375px and reads better, but it needs a page-level CSS rule
+       that migrated CMS content cannot carry, so the prototype matches what
+       the CMS can actually emit. That is why the rule sits BELOW the heading
+       here rather than above it as hr.umd-text-divider: when the figure
+       stacks first at 375px, a rule above the heading lands between the photo
+       and its own headline and the photo reads as the previous section's
+       tail. Heading-then-rule keeps the photo grouped with its own section. */
+    .umd-layout-grid-gap-two .umd-text-rich-advanced hr {
+      border: 0; border-top: 1px solid #000; height: 0;
     }
   </style>
 
@@ -1383,9 +1396,9 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       <section class="umd-layout-space-vertical-interior">
         <div class="umd-layout-grid-gap-two">
           <div>
-            <hr class="umd-text-divider" />
-            <h2 class="text-black umd-sans-large umd-layout-space-vertical-headline-large">Do Good Campus Community</h2>
+            <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">Do Good Campus Community</h2>
             <div class="umd-text-rich-advanced">
+              <hr>
               <p>Bring your valuable experiences, backgrounds, identities, and fields of study or interests to ignite meaningful change in the world. The Do Good Institute is committed to being a safe and welcoming place for all people, condemning and confronting acts of injustice, discrimination, harassment, or bigotry.</p>
             </div>
           </div>
@@ -1398,29 +1411,29 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 
       <!-- Image LEFT: the figure comes first. -->
       <section class="umd-layout-space-vertical-interior">
-        <div class="umd-layout-grid-gap-two fc-media-first">
-          <div>
-            <hr class="umd-text-divider" />
-            <h2 class="text-black umd-sans-large umd-layout-space-vertical-headline-large">Belonging and Community</h2>
-            <div class="umd-text-rich-advanced">
-              <p>The University of Maryland is committed to &ldquo;inclusive excellence&rdquo;&mdash;the notion that in order to educate our students with excellence, in order to foster outstanding research and scholarship, and in order to be national and global leaders, we must be diverse and inclusive. Through programs and resources, <a href="https://belonging.umd.edu/" target="_blank" rel="noopener noreferrer">Belonging &amp; Community at UMD</a> works to cultivate well-being, belonging, and a vibrant learning community for all.</p>
-              <p><a href="https://admissions.umd.edu/student/land-acknowledgement">Land Acknowledgement</a>.</p>
-            </div>
-          </div>
+        <div class="umd-layout-grid-gap-two">
           <figure class="umd-layout-alignment-block-stacked">
             <img src="../../images/shared/frederick-douglass-statue.jpg"
                  alt="The Frederick Douglass statue on the University of Maryland campus, his right arm raised mid-speech and a copy of his autobiography held in his left." />
             <figcaption>Frederick Douglass statue located in Hornbake Plaza.</figcaption>
           </figure>
+          <div>
+            <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">Belonging and Community</h2>
+            <div class="umd-text-rich-advanced">
+              <hr>
+              <p>The University of Maryland is committed to &ldquo;inclusive excellence&rdquo;&mdash;the notion that in order to educate our students with excellence, in order to foster outstanding research and scholarship, and in order to be national and global leaders, we must be diverse and inclusive. Through programs and resources, <a href="https://belonging.umd.edu/" target="_blank" rel="noopener noreferrer">Belonging &amp; Community at UMD</a> works to cultivate well-being, belonging, and a vibrant learning community for all.</p>
+              <p><a href="https://admissions.umd.edu/student/land-acknowledgement">Land Acknowledgement</a>.</p>
+            </div>
+          </div>
         </div>
       </section>
 
       <section class="umd-layout-space-vertical-interior">
         <div class="umd-layout-grid-gap-two">
           <div>
-            <hr class="umd-text-divider" />
-            <h2 class="text-black umd-sans-large umd-layout-space-vertical-headline-large">International Services</h2>
+            <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">International Services</h2>
             <div class="umd-text-rich-advanced">
+              <hr>
               <p>While our students hail from over 150 countries, they quickly come to call Maryland home. The <a href="https://globalmaryland.umd.edu/offices/international-students-scholar-services" target="_blank" rel="noopener noreferrer">International Student &amp; Scholar Services</a> office assists international students with the process of applying to Maryland, advises on immigration requirements and provides resources to assist with transitioning to campus.</p>
             </div>
           </div>
@@ -1432,53 +1445,57 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       </section>
 
       <section class="umd-layout-space-vertical-interior">
-        <div class="umd-layout-grid-gap-two fc-media-first">
-          <div>
-            <hr class="umd-text-divider" />
-            <h2 class="text-black umd-sans-large umd-layout-space-vertical-headline-large">Veteran Services</h2>
-            <div class="umd-text-rich-advanced">
-              <p>The University of Maryland recognizes the extraordinary contributions of members of our armed services, and we understand the unique challenges of transitioning into a university environment. With a community of students, staff, faculty, and alumni who have served in the US military, <a href="https://thestamp.umd.edu/veteran_student_life" target="_blank" rel="noopener noreferrer">Veteran Student Life</a> supports a seamless transition from military life to civilian college life and provides support for continued growth in mind, body and spirit.</p>
-            </div>
-          </div>
+        <div class="umd-layout-grid-gap-two">
           <figure class="umd-layout-alignment-block-stacked">
             <img src="../../images/find-community/veteran-services-dining.jpg"
                  alt="Students laughing over a meal in a University of Maryland dining hall." />
           </figure>
+          <div>
+            <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">Veteran Services</h2>
+            <div class="umd-text-rich-advanced">
+              <hr>
+              <p>The University of Maryland recognizes the extraordinary contributions of members of our armed services, and we understand the unique challenges of transitioning into a university environment. With a community of students, staff, faculty, and alumni who have served in the US military, <a href="https://thestamp.umd.edu/veteran_student_life" target="_blank" rel="noopener noreferrer">Veteran Student Life</a> supports a seamless transition from military life to civilian college life and provides support for continued growth in mind, body and spirit.</p>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- 6. MULTICULTURAL & FAITH PROGRAMS — the live page's two cards.
            They carry supporting copy, so standard cards rather than text-only
            overlay link cards (LAYOUT-PATTERNS.md § Link Cards Grid). No source
-           image for either, so no image slot. -->
-      <section class="umd-layout-space-vertical-interior">
-        <hr class="umd-text-divider" />
-        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Multicultural &amp; Faith Programs</h2>
+           image for either, so no image slot.
 
+           COPY IS TRANSCRIBED FROM SOURCE, LINKS INCLUDED. The source puts
+           the link INLINE on the office name inside the paragraph, and gives
+           neither card a CTA. This was first built with the link lifted out
+           into a "Visit OMSE" / "Visit MICA" secondary CTA and the opening
+           words trimmed to suit ("OMSE works to serve..." in place of the
+           source's "The Office of Multi-Ethnic Student Education (OMSE) works
+           to serve..."). Both cards resynced to source 2026-09-17. Do not
+           re-promote an inline link to a CTA - that rewrites the copy.
+
+           NO SECTION HEADING HERE. "Multicultural & Faith Programs" is an
+           EYEBROW on each card on the source page
+           (https://admissions.umd.edu/student/find-community renders it as
+           <span class="eyebrow"> inside each umd-card, and the section has no
+           heading of its own). It was built as an <h2> + hr.umd-text-divider,
+           which invented a heading the source does not have; removed
+           2026-09-17. Do not "restore" it. -->
+      <section class="umd-layout-space-vertical-interior">
         <div class="umd-layout-grid-gap-two umd-layout-grid-child-fill-height">
           <umd-element-card data-visual-bordered="true">
+            <p slot="eyebrow">Multicultural &amp; Faith Programs</p>
             <h3 slot="headline">Office of Multi-Ethnic Student Education (OMSE)</h3>
             <div slot="text">
-              <p>OMSE works to serve the more than 10,000 undergraduate multi-ethnic students. By serving these students in all academic, personal and programmatic endeavors, Maryland strives to increase rates of matriculation, retention, graduation and overall GPA.</p>
-            </div>
-            <div slot="actions">
-              <umd-element-call-to-action data-display="secondary">
-                <a href="https://omse.umd.edu/" target="_blank" rel="noopener noreferrer"
-                   aria-label="Visit the Office of Multi-Ethnic Student Education">Visit OMSE</a>
-              </umd-element-call-to-action>
+              <p>The <a href="https://omse.umd.edu/" target="_blank" rel="noopener noreferrer">Office of Multi-Ethnic Student Education</a> (OMSE) works to serve the more than 10,000 undergraduate multi-ethnic students. By serving these students in all academic, personal and programmatic endeavors, Maryland strives to increase rates of matriculation, retention, graduation and overall GPA.</p>
             </div>
           </umd-element-card>
 
           <umd-element-card data-visual-bordered="true">
+            <p slot="eyebrow">Multicultural &amp; Faith Programs</p>
             <h3 slot="headline">Multicultural Involvement and Community Advocacy (MICA)</h3>
             <div slot="text">
-              <p>MICA provides opportunities and spaces that affirm students and their identities, builds inclusive communities among diverse members and creates social change locally, nationally and globally.</p>
-            </div>
-            <div slot="actions">
-              <umd-element-call-to-action data-display="secondary">
-                <a href="https://thestamp.umd.edu/Multicultural_Involvement_Community_Advocacy/About_MICA" target="_blank" rel="noopener noreferrer"
-                   aria-label="Visit Multicultural Involvement and Community Advocacy">Visit MICA</a>
-              </umd-element-call-to-action>
+              <p>UMD&rsquo;s <a href="https://thestamp.umd.edu/Multicultural_Involvement_Community_Advocacy/About_MICA" target="_blank" rel="noopener noreferrer">Multicultural Involvement and Community Advocacy</a> (MICA) office provides opportunities and spaces that affirm students and their identities, builds inclusive communities among diverse members and creates social change locally, nationally and globally.</p>
             </div>
           </umd-element-card>
         </div>
@@ -1487,26 +1504,36 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       <!-- 7. ALUMNI ASSOCIATION — the fifth zig-zag block, after the cards,
            matching the live page's order. Image left. -->
       <section class="umd-layout-space-vertical-interior">
-        <div class="umd-layout-grid-gap-two fc-media-first">
-          <div>
-            <hr class="umd-text-divider" />
-            <h2 class="text-black umd-sans-large umd-layout-space-vertical-headline-large">Alumni Association</h2>
-            <div class="umd-text-rich-advanced">
-              <p>Stay involved after crossing that commencement stage by joining the <a href="https://alumni.umd.edu/" target="_blank" rel="noopener noreferrer">Alumni Association</a>. Participate in all sorts of events, programs and initiatives as a UMD graduate and serve as a beacon for students moving through their own college experiences.</p>
-            </div>
-          </div>
+        <div class="umd-layout-grid-gap-two">
           <figure class="umd-layout-alignment-block-stacked">
             <img src="../../images/find-community/alumni-cup.jpg"
                  alt="Students celebrating with the Alumni Cup trophy." />
           </figure>
+          <div>
+            <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">Alumni Association</h2>
+            <div class="umd-text-rich-advanced">
+              <hr>
+              <p>Stay involved after crossing that commencement stage by joining the <a href="https://alumni.umd.edu/" target="_blank" rel="noopener noreferrer">Alumni Association</a>. Participate in all sorts of events, programs and initiatives as a UMD graduate and serve as a beacon for students moving through their own college experiences.</p>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- 8. RESOURCES — icon cards, light theme (red chevron), matching the
-           treatment on pages/academics/index.html and know-before-you-go.html. -->
+           treatment on pages/academics/index.html and know-before-you-go.html.
+
+           NO RULE ABOVE OR BELOW THIS HEADING. On the source page Resources is
+           <h2 class="headline-two-san-serif"> inside a <umd-admissions-resources>
+           component and there is no <hr> anywhere in its lock — verified
+           2026-09-17. The divider here was ours; removed to match. The heading
+           therefore carries umd-layout-space-vertical-interior-child (32px
+           margin-bottom, the class for a heading introducing a block) rather
+           than -headline-large, which is sized for a heading/rule pair.
+
+           This leaves find-community with NO hr.umd-text-divider at all: its
+           only rules are the bare <hr>s inside the zig-zag rich-text blocks. -->
       <section class="umd-layout-space-vertical-interior">
-        <hr class="umd-text-divider" />
-        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Resources</h2>
+        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-extralarge-bold">Resources</h2>
 
         <!-- One resource, but kept on the 2-up grid so it sits in a column
              rather than stretching the full 1152px content box — it matches

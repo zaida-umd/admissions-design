@@ -841,6 +841,28 @@
        mt-xl all compute to 0. Hence this. */
     .kbyg-top-space { margin-top: 48px; }
 
+    /* LEDE. umd-sans-larger-bold is 18px at 375, ~21.8 at 768, 22.5 around
+       900 and 22 at 1024+ — a fluid scale, not three steps. It only renders
+       that scale OUTSIDE .umd-text-rich-advanced: that block pins every
+       direct child to `font-size: 18px`, so umd-sans-large (already 18px) is
+       the only size class that survives inside it and anything larger is a
+       silent no-op. Hence the lede is a bare <p> in the section, not a child
+       of a rich-text block.
+
+       The 960px cap replaces the measure the rich-text wrapper was supplying
+       (element.min.css caps p/ul/ol at 960px in place). It is NOT the old
+       .interior-lede 800px cap and must not drift back to it — 960px is the
+       design system's own rich-text measure, applied to a paragraph that can
+       no longer inherit it. Without it a 22px lede runs the full 1152px
+       content box.
+
+       The adjacency rule supplies the gap when body copy follows the lede
+       directly; it is inert here, where the lede sits alone in its section.
+       Both rules are byte-identical on every page that has a lede — do not
+       rename them per page. */
+    .page-lede { max-width: 960px; }
+    .page-lede + .umd-text-rich-advanced { margin-top: 24px; }
+
     /* ZIG-ZAG COLUMNS (LAYOUT-PATTERNS.md). Neither rule is in the base
        bundles or critical.css.
        min-width: 0 lets the 1fr tracks shrink — otherwise the image's
@@ -850,11 +872,27 @@
     .umd-layout-grid-gap-two figure.umd-layout-alignment-block-stacked img {
       display: block; width: 100%; height: auto;
     }
-    /* NOTE: the zig-zag pattern's third rule — a 1px black <hr> inside
-       .umd-text-rich-advanced — is deliberately absent. Every rule on this
-       page now sits ABOVE its heading as hr.umd-text-divider, which the DS
-       already styles (1px solid #000, 24px below), so there is no bare <hr>
-       left inside a rich-text block for it to fix. */
+    /* The zig-zag pattern's third rule: critical.css gives <hr> no border, so
+       a bare <hr> inside a rich-text block needs one. Its 32px above/below
+       spacing comes from the rich-text wrapper.
+
+       EVERY rule on this page sits BELOW its heading (2026-09-17), matching
+       the sitewide zig-zag treatment. Where a rich-text block follows the
+       heading the rule is a bare <hr> inside it; the two card sections
+       (Where to Stay, Resources) have no rich-text block to host one, so they
+       keep hr.umd-text-divider and simply place it after the heading. Both
+       give the same heading→rule gap (umd-layout-space-vertical-headline-large
+       is responsive: 16px at 375px, 24px at 1280px — identical to
+       find-community). Below the rule they differ by design: the divider's own
+       margin gives 24px to a card grid, where the rich-text wrapper gives 32px
+       to body copy.
+
+       This page is hand-authored, not migrated, so it is not constrained by
+       what the CMS can emit — but it follows the same shape so the site reads
+       as one system. */
+    .umd-layout-grid-gap-two .umd-text-rich-advanced hr {
+      border: 0; border-top: 1px solid #000; height: 0;
+    }
   </style>
 
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
@@ -1384,9 +1422,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
            (18px/700), which survives the RULES §18 collapse inside
            .umd-text-rich-advanced because it is already 18px. -->
       <section class="umd-layout-space-vertical-interior">
-        <div class="umd-text-rich-advanced">
-          <p class="umd-sans-large text-black">We&rsquo;re excited to welcome you to our campus. To ensure you have a smooth and enjoyable trip, here&rsquo;s some essential information you should know before you go.</p>
-        </div>
+        <p class="umd-sans-larger-bold text-black page-lede">We&rsquo;re excited to welcome you to our campus. To ensure you have a smooth and enjoyable trip, here&rsquo;s some essential information you should know before you go.</p>
       </section>
 
       <!-- 6. WHERE TO STAY — three accommodation cards.
@@ -1395,8 +1431,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
            Both MUST be the literal string "true" — a bare attribute is inert
            (registry-cards.json). -->
       <section class="umd-layout-space-vertical-interior">
+        <h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-extralarge-bold">Where to Stay</h2>
         <hr class="umd-text-divider" />
-        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-extralarge-bold">Where to Stay</h2>
 
         <div class="umd-layout-grid-gap-three umd-layout-grid-child-fill-height">
           <umd-element-card data-visual-image-aligned="true" data-visual-bordered="true">
@@ -1457,14 +1493,14 @@ umd-element-scroll-top[data-layout-fixed="true"] {
            (LAYOUT-PATTERNS.md § Light background — two-column image + text).
            The headline sits OUTSIDE .umd-text-rich-advanced: a umd-sans-*
            size collapses to 18px inside that block (RULES §18). The rule sits
-           ABOVE the title as hr.umd-text-divider — the same DS class the other
-           sections open with, so all three section heads now match. -->
+           BELOW the title, as the first child of the rich-text block — the
+           sitewide zig-zag treatment. See the CSS note. -->
       <section class="umd-layout-space-vertical-interior">
         <div class="umd-layout-grid-gap-two">
           <div>
-            <hr class="umd-text-divider" />
             <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">What to Do</h2>
             <div class="umd-text-rich-advanced">
+              <hr>
               <p>At the center of the <a href="https://www.collegeparkmd.gov/" target="_blank" rel="noopener noreferrer">City of College Park</a> and a short 20-minute drive from Washington, D.C., the nation&rsquo;s capital, there are a multitude of <a href="https://www.visitmaryland.org/list/things-do-college-park-and-hyattsville" target="_blank" rel="noopener noreferrer">interesting activities and experiences</a> a visitor to the University of Maryland can enjoy. View the resources at the bottom of this page to learn more.</p>
             </div>
           </div>
@@ -1480,16 +1516,16 @@ umd-element-scroll-top[data-layout-fixed="true"] {
              18px inside one (RULES §18). -->
         <div class="kbyg-top-space umd-layout-space-vertical-interior umd-layout-grid-gap-two">
           <div>
-            <hr class="umd-text-divider" />
             <h3 class="text-black umd-sans-larger-bold umd-layout-space-vertical-headline-large">Self-Guided Tour</h3>
             <div class="umd-text-rich-advanced">
+              <hr>
               <p>Grab your phone, lace up your walking shoes and prepare to see the iconic sights of the University of Maryland&hellip;at your own pace! Our <a href="https://admissions.umd.edu/page/self-guided-tour">self-guided walking tour</a> is great if you are in town and want to explore campus.</p>
             </div>
           </div>
           <div>
-            <hr class="umd-text-divider" />
             <h3 class="text-black umd-sans-larger-bold umd-layout-space-vertical-headline-large">Transportation &amp; Parking</h3>
             <div class="umd-text-rich-advanced">
+              <hr>
               <p><strong>Registrants of Office of Undergraduate Admissions planned events and visits will receive an email prior to arrival with details about parking, check-in and what to expect during their visit.</strong> Other visitors to campus can find designated <a href="https://transportation.umd.edu/parking/visitors" target="_blank" rel="noopener noreferrer">visitor parking</a> on the Department of Transportation Services website, along with <a href="https://transportation.umd.edu/sustainable-transportation/local-regional-transit" target="_blank" rel="noopener noreferrer">local and regional transit</a> options.</p>
             </div>
           </div>
@@ -1539,8 +1575,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
            standard cards, not text-only overlay link cards
            (LAYOUT-PATTERNS.md § Link Cards Grid). -->
       <section class="umd-layout-space-vertical-interior">
+        <h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-extralarge-bold">Resources</h2>
         <hr class="umd-text-divider" />
-        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-extralarge-bold">Resources</h2>
 
         <!-- Icon cards, light theme — the same Resources treatment as
              pages/academics/index.html, which uses the dark variant. Light

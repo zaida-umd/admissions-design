@@ -817,6 +817,25 @@
       color: #000000;
       text-decoration: none;
     }
+    /* LEDE. umd-sans-larger-bold is FLUID — 18px at 375, ~21.8 at 768, 22.5
+       around 900, 22 at 1024+ — and it renders that scale ONLY outside
+       .umd-text-rich-advanced, which pins every direct child to
+       `font-size: 18px`. That pin is why the lede used to be umd-sans-large
+       (already 18px, so the pin took nothing from it) and why ANY larger size
+       class inside the block is a silent no-op — swapping the class in place
+       changes nothing. The lede is therefore a bare <p> in the section, not a
+       child of a rich-text block.
+
+       The 960px cap replaces the measure the wrapper was supplying
+       (element.min.css caps p/ul/ol at 960px in place). It is NOT the old
+       .interior-lede 800px cap and must not drift back to it.
+
+       The adjacency rule supplies the gap when body copy follows the lede
+       directly; it is inert where the lede sits alone in its section. Both
+       rules are byte-identical on every page that has a lede — do not rename
+       them per page. */
+    .page-lede { max-width: 960px; }
+    .page-lede + .umd-text-rich-advanced { margin-top: 24px; }
   </style>
 
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
@@ -1328,9 +1347,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <div class="umd-layout-space-horizontal-normal">
       <div id="umd-shell-content">
         <section class="umd-layout-space-vertical-interior">
-          <div class="umd-text-rich-advanced">
-            <p class="umd-sans-large text-black">Have questions about the University of Maryland (UMD) application process? We have answers. Save time by reviewing these frequently asked questions about the freshman application before contacting the Office of Undergraduate Admissions.</p>
-          </div>
+          <p class="umd-sans-larger-bold text-black page-lede">Have questions about the University of Maryland (UMD) application process? We have answers. Save time by reviewing these frequently asked questions about the freshman application before contacting the Office of Undergraduate Admissions.</p>
         </section>
 
         <!-- The source's umd-image-caption data-size="full" carries no caption
