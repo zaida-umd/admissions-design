@@ -474,8 +474,10 @@ Pages using this: `pages/how-to-apply/freshman-applicants.html`.
 section on `pages/index.html`. Admissions-specific, and **not** the house table
 style: it is a borderless date list on a landing page, with no header row to put
 the black band on. `.applicant-deadlines-table` on
-`pages/personas/prospective-students.html` is the same pattern. A table with a
-header row uses `styles/rich-text-table.css` — see *Tables: one house style*.
+`pages/personas/prospective-students.html` is the same pattern. **These two are
+now the only tables in the project.** The house style for a table with a header
+row (`styles/rich-text-table.css`) went with the interior pages on 2026-09-18 —
+see `RICH-TEXT-PATTERNS.md` and the `archive/interior-pages` branch.
 
 ## Applicant spotlight — stats and deadlines in the pathway `stats` slot
 
@@ -1317,6 +1319,11 @@ they are connected, which is what makes this safe: they render once, on append.
 ---
 
 ## Table deltas from the styles package (2026-09-14)
+
+> **Archived 2026-09-18.** `.umd-table-scroll` and the header-band rule below
+> are no longer applied on any page — the two pages that used them were removed
+> (see `RICH-TEXT-PATTERNS.md`). Kept as the record of *why* the treatment took
+> this shape; the upstream analysis is still accurate.
 
 `element.min.css` styles every `table` descended from `.umd-text-rich-advanced`.
 **This is the complete list of project changes to that treatment.** Anything not
