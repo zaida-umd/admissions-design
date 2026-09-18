@@ -1,5 +1,18 @@
 # Admissions Rich Text Patterns
 
+> ## ⚠️ ARCHIVED — 2026-09-18
+>
+> **The restyled table described here is no longer on `main`.** Dev feedback
+> was that the interior-page work could not be implemented as built, so both
+> pages using it (`tuition/cost-of-attendance.html` and
+> `how-to-apply/english-language-proficiency.html`) were removed, along with
+> `scripts/rich_text.py` and `styles/rich-text-table.css`.
+>
+> This file is kept as the **design record** — it is the reasoning behind the
+> treatment, not a description of the current tree. Nothing here is importable
+> today. Recover the implementation with
+> `git checkout archive/interior-pages -- scripts/rich_text.py styles/rich-text-table.css`.
+
 Project-owned reusable content functions that extend the shared Page Builder
 without changing its `page-builder/` submodule.
 

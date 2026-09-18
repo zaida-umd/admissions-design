@@ -90,16 +90,46 @@ When `images-index.json` is needed, read `page-builder/images/images-index.json`
 
 When shrinking oversized images (the `/optimize-images` skill or ad-hoc), only touch **static** JPG/PNG/WebP. **GIFs, animated WebPs, and video files are out of scope** — don't resave or report on them (resampling breaks animation, and they need dedicated tooling). Exclude `.gif` and video extensions from scans, and check `n_frames > 1` on any WebP before touching it. This rule is also baked into `~/.claude/commands/optimize-images.md`.
 
+## ⚠️ Interior pages pulled (2026-09-18)
+
+Dev feedback: the interior-page work below **cannot be implemented as built**.
+Six pages were removed from `main` and every link to them now points at the
+**live site** instead:
+
+| Removed page | Links now point to |
+|---|---|
+| `student-life/student-support.html` | `https://admissions.umd.edu/student/student-support` |
+| `student-life/find-community.html` | `https://admissions.umd.edu/student/find-community` |
+| `tuition/cost-of-attendance.html` | `https://admissions.umd.edu/tuition/cost-of-attendance` |
+| `how-to-apply/freshman-application-faqs.html` | `https://admissions.umd.edu/apply/freshman-application-faqs` |
+| `how-to-apply/english-language-proficiency.html` | `https://admissions.umd.edu/apply/english-language-proficiency` |
+| `know-before-you-go.html` | `https://admissions.umd.edu/page/know-before-you-go` |
+
+**Everything is preserved on the `archive/interior-pages` branch** — the pages,
+their builders (`build-student-support.py`,
+`build-freshman-application-faqs.py`, `build-english-language-proficiency.py`),
+`scripts/rich_text.py`, `styles/rich-text-table.css` and
+`briefs/freshman-application-faqs-data.json`, all of which were deleted from
+`main` as orphans. Recover with
+`git checkout archive/interior-pages -- <path>`.
+
+**What this means for the sections below.** The layout, zig-zag, lede and
+heading-scale rules are kept as the **design record** — they were reasoned
+through carefully and still apply to interior pages built in future. But their
+worked examples now name pages that no longer exist on `main`, and
+`tuition/frederick-douglass-scholarship.html` is the only interior page left.
+**Do not rebuild a removed page from these notes**, and re-verify any claim
+against the tree before relying on it.
+
 ## Interior page layouts
 
-The four interior pages are present:
-`tuition/frederick-douglass-scholarship.html`,
-`student-life/student-support.html`,
-`how-to-apply/english-language-proficiency.html`, and
-`tuition/cost-of-attendance.html`. Frederick Douglass Scholarship retains the
-version restored to `main` on 2026-09-15. Student Support and English Language
-Proficiency return from the `interior-pages-handoff` workflow, and Cost of
-Attendance is added alongside them. Shared navigation links to all four pages.
+Only one interior page remains on `main`:
+`tuition/frederick-douglass-scholarship.html`, which retains the version
+restored on 2026-09-15. The other three described here
+(`student-life/student-support.html`,
+`how-to-apply/english-language-proficiency.html`,
+`tuition/cost-of-attendance.html`) were pulled on 2026-09-18 — see the banner
+above. Shared navigation links out to the live site for each.
 
 
 Every interior page (anything that is not a section landing page) uses **one of
@@ -272,11 +302,14 @@ breadcrumb and body copy stop lining up with the rest of the page stack.
 
 ## The zig-zag pattern — one shape, settled 2026-09-17
 
-Every two-column image + text block on the site uses **one** structure. Five
-pages carry it: `student-life/find-community.html` (5 blocks),
-`how-to-apply/international-applicants.html` (4),
-`student-life/student-support.html` (3, generated),
-`student-life/index.html` (3, landing), and `know-before-you-go.html` (1).
+Every two-column image + text block on the site uses **one** structure. It
+originally ran across five pages; after the 2026-09-18 removal **two carry it on
+`main`** — `how-to-apply/international-applicants.html` (4 blocks) and
+`student-life/index.html` (3, landing). The three that are gone —
+`student-life/find-community.html` (5), `student-life/student-support.html`
+(3, generated) and `know-before-you-go.html` (1) — are on
+`archive/interior-pages`, and are still the fullest worked examples of the
+pattern, which is why they are described below.
 Before this they diverged on seven axes; the two that are now fixed sitewide
 are the **text-side order** and the **alternation mechanism**.
 
