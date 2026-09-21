@@ -56,6 +56,49 @@
         "Urban Planning"
       ]
     },
-    "colleges": ["engr", "cmns", "bmgt"]
+    "colleges": ["engr", "cmns", "bmgt"],
+
+    "_alumni_comment": [
+      "Optional. Omit the block and the page simply has no alumni carousel --",
+      "build-interest.py renders section 8 only when `alumni` is present.",
+      "",
+      "Renders as umd-element-carousel-thumbnail, the same bordered 3-up person",
+      "strip as the sitewide Notable Alumni block on pages/academics/index.html.",
+      "The portrait is the card's own slot=\"image\"; `thumbnail` mirrors it onto",
+      "the host for parity with that page (the v2 composite ignores the",
+      "attribute, but RULES §27 documents it and academics/index.html sets it).",
+      "",
+      "`image` / `thumbnail` are optional per person: without them the card is",
+      "text-only in its bordered cell. Adding a portrait later is a data edit."
+    ],
+    "alumni": {
+      "headline": "Notable Alumni in Engineering &amp; Technology",
+      "items": [
+        {
+          "name": "Sergey Brin '93",
+          "text": "Google Co-founder",
+          "image": "{{ROOT}}images/academics/brin.jpg",
+          "thumbnail": "{{ROOT}}images/academics/brin.jpg"
+        },
+        {
+          "name": "Anthony Casalena '05",
+          "text": "Founder & CEO, Squarespace",
+          "image": "{{ROOT}}images/academics/casalena.jpg",
+          "thumbnail": "{{ROOT}}images/academics/casalena.jpg"
+        },
+        {
+          "name": "Brendan Iribe",
+          "text": "Co-founder, Oculus VR",
+          "image": "{{ROOT}}images/academics/BrendanIribe-0aa7950a.jpg",
+          "thumbnail": "{{ROOT}}images/academics/BrendanIribe-0aa7950a.jpg"
+        },
+        {
+          "name": "Jasmine Snead '15",
+          "text": "Engineer and STEM advocate",
+          "image": "{{ROOT}}images/academics/JasmineSnead-b3dddfde.jpg",
+          "thumbnail": "{{ROOT}}images/academics/JasmineSnead-b3dddfde.jpg"
+        }
+      ]
+    }
   }
 }

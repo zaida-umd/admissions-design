@@ -155,6 +155,67 @@ def render(slug, data, programs, colleges_by_slug):
     careers_items = '\n'.join(
         f'            <li>{e(i)}</li>' for i in careers['items'])
 
+    # -------------------------------------------------------- notable alumni
+    # Optional: a slug with no `alumni` block gets no section 8 at all.
+    #
+    # umd-element-carousel-thumbnail -- the same component, card attributes and
+    # section-intro lockup as the sitewide "Notable Alumni" strip on
+    # pages/academics/index.html, so the two read as one pattern.
+    #
+    # Despite the name, this component renders NO thumbnail nav strip in v2: the
+    # composite wraps each block in a bordered .carousel-person-slide cell
+    # (blockGap 0, 3 visible at desktop, 4 max) and never reads data-thumbnail.
+    # The portrait is the card's own slot="image". data-thumbnail is emitted
+    # anyway for parity with academics/index.html and RULES §27 -- inert, not
+    # load-bearing.
+    #
+    # data-visual-transparent="true" is required: the cell paints the carousel's
+    # own surface, so a card that draws its own background breaks the strip
+    # (RULES §27). <p slot="headline">, not <h3> -- these names are card labels,
+    # and it matches academics/index.html.
+    #
+    # The component has no headline slot, so the section headline is a sibling
+    # umd-element-section-intro above it, again as on academics/index.html.
+    alumni = data.get('alumni')
+    alumni_html = ''
+    if alumni:
+        slides = []
+        for person in alumni['items']:
+            thumb = (f' data-thumbnail="{e(person["thumbnail"])}"'
+                     if person.get('thumbnail') else '')
+            img = (f'\n          <img slot="image" src="{e(person["image"])}" '
+                   f'alt="{e(person["name"])}" loading="lazy" />'
+                   if person.get('image') else '')
+            slides.append(
+                f'        <umd-element-card data-visual-transparent="true" '
+                f'data-visual-image-aligned="true"{thumb}>{img}\n'
+                f'          <p slot="headline">{e(person["name"])}</p>\n'
+                f'          <div slot="text"><p>{e(person["text"])}</p></div>\n'
+                f'        </umd-element-card>')
+        alumni_html = f'''  <!-- 8. NOTABLE ALUMNI — bordered person strip, identical in component,
+       card attributes and lockup to the sitewide block on academics/index.html.
+       Both locks are umd-layout-space-horizontal-larger; the intro carries
+       -landing-child (48px) to the strip below it. -->
+  <section class="umd-layout-vertical-landing">
+    <div class="umd-layout-space-horizontal-larger">
+      <umd-element-section-intro class="umd-layout-vertical-landing-child">
+        <h2 slot="headline">{alumni['headline']}</h2>
+      </umd-element-section-intro>
+    </div>
+
+    <div class="umd-layout-space-horizontal-larger">
+      <umd-element-carousel-thumbnail>
+        <div slot="blocks">
+
+{chr(10).join(slides)}
+
+        </div>
+      </umd-element-carousel-thumbnail>
+    </div>
+  </section>
+
+'''
+
     title = (f'{_html.unescape(data["title"])} — Undergraduate Admissions '
              f'| University of Maryland')
     head_top = HEAD_TOP.replace(
@@ -290,7 +351,7 @@ def render(slug, data, programs, colleges_by_slug):
     </div>
   </section>
 
-  <!-- SCROLL TO TOP — fixed 24px from viewport bottom-right (pin lives in shared/chrome.css) -->
+{alumni_html}  <!-- SCROLL TO TOP — fixed 24px from viewport bottom-right (pin lives in shared/chrome.css) -->
   <umd-element-scroll-top data-layout-fixed="true"></umd-element-scroll-top>
 
 {_chrome.block('footer', out)}

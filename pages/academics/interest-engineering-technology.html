@@ -1646,6 +1646,47 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </section>
 
+  <!-- 8. NOTABLE ALUMNI — bordered person strip, identical in component,
+       card attributes and lockup to the sitewide block on academics/index.html.
+       Both locks are umd-layout-space-horizontal-larger; the intro carries
+       -landing-child (48px) to the strip below it. -->
+  <section class="umd-layout-vertical-landing">
+    <div class="umd-layout-space-horizontal-larger">
+      <umd-element-section-intro class="umd-layout-vertical-landing-child">
+        <h2 slot="headline">Notable Alumni in Engineering &amp; Technology</h2>
+      </umd-element-section-intro>
+    </div>
+
+    <div class="umd-layout-space-horizontal-larger">
+      <umd-element-carousel-thumbnail>
+        <div slot="blocks">
+
+        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/brin.jpg">
+          <img slot="image" src="../../images/academics/brin.jpg" alt="Sergey Brin &#x27;93" loading="lazy" />
+          <p slot="headline">Sergey Brin &#x27;93</p>
+          <div slot="text"><p>Google Co-founder</p></div>
+        </umd-element-card>
+        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/casalena.jpg">
+          <img slot="image" src="../../images/academics/casalena.jpg" alt="Anthony Casalena &#x27;05" loading="lazy" />
+          <p slot="headline">Anthony Casalena &#x27;05</p>
+          <div slot="text"><p>Founder &amp; CEO, Squarespace</p></div>
+        </umd-element-card>
+        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/BrendanIribe-0aa7950a.jpg">
+          <img slot="image" src="../../images/academics/BrendanIribe-0aa7950a.jpg" alt="Brendan Iribe" loading="lazy" />
+          <p slot="headline">Brendan Iribe</p>
+          <div slot="text"><p>Co-founder, Oculus VR</p></div>
+        </umd-element-card>
+        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/JasmineSnead-b3dddfde.jpg">
+          <img slot="image" src="../../images/academics/JasmineSnead-b3dddfde.jpg" alt="Jasmine Snead &#x27;15" loading="lazy" />
+          <p slot="headline">Jasmine Snead &#x27;15</p>
+          <div slot="text"><p>Engineer and STEM advocate</p></div>
+        </umd-element-card>
+
+        </div>
+      </umd-element-carousel-thumbnail>
+    </div>
+  </section>
+
   <!-- SCROLL TO TOP — fixed 24px from viewport bottom-right (pin lives in shared/chrome.css) -->
   <umd-element-scroll-top data-layout-fixed="true"></umd-element-scroll-top>
 
