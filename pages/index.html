@@ -874,12 +874,6 @@
     .umd-action-outline-block.dark:hover,
     .umd-action-outline-block.dark:focus { background-color: var(--umd-color-white); color: var(--umd-color-black); }
 
-    /* HERO-GRID HEIGHT GUARD — keep the 100vh hero behaving correctly
-       in environments where unset min-heights collapse. */
-    umd-element-hero-grid { min-height: 100vh; background-color: var(--umd-color-black); }
-
-    umd-element-hero-grid [slot="column-center"] video { display: block; width: 100%; height: 100%; object-fit: cover; }
-
     /* QUOTE + BRAND CHEVRON OVERLAP — Massey quote sits in the white
        band between the dark About UMD section and the overlay cards.
        The brand chevron is absolutely positioned, layered behind the
@@ -1023,25 +1017,6 @@
 
     .umd-text-rich-advanced .deadlines-table td:last-child { padding-right: 0; }
 
-    /* HERO-GRID OVERHANG — trap the hero's z-index so the band below stays
-       clickable.
-
-       umd-element-hero-grid's shadow gives .hero-expand-text-container
-       `position: relative; z-index: 9999` and the full host height (3468px)
-       while offsetting it upward, so the box ends ~1150px BELOW the host. The
-       host creates no stacking context of its own, so that 9999 competes at the
-       root, and the invisible overhang sits on top of the "Information For"
-       band and swallows every click in it — all four CTAs, not just one.
-
-       `isolation: isolate` gives the host a stacking context, which keeps the
-       9999 inside the hero. The section below is later in DOM order at
-       `z-index: auto`, so it now hit-tests above the overhang.
-
-       Do NOT use `overflow: hidden` here — it also stops the escape, but it
-       clips the hero's own scroll-driven collage and breaks the component.
-       `isolation` changes no geometry and no painting: verified host height,
-       every image height and total page height identical before and after. */
-    umd-element-hero-grid { isolation: isolate; }
   </style>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
@@ -1580,47 +1555,28 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   ============================================================ -->
 
   <!-- ========================================
-       1. HERO GRID — 3 / 3 (image, video, image) / 3 layout
-       Dark theme on a black-background section so the area around
-       the grid stays black if the component renders any padding.
-       "Be A Terp" headline + body + Discover UMD CTA.
+       1. HERO — standard/background hero (umd-element-hero, no data-display),
+       dark theme, large/full landing size (no data-layout-height="small").
+       Background is the same admissions montage video the old hero-grid used
+       in its center column. Dark theme on a black-background section so the
+       area around the hero stays black if the component renders any padding.
+
+       Was umd-element-hero-grid (3/3/3 image collage) until 2026-09-23, when
+       it was swapped for this simpler standard hero. The hero-grid-specific
+       workarounds (center-video row-height fix, click-through isolation fix)
+       were removed as dead code along with it — see OVERRIDES.md "Hero-grid
+       centre video overflows its grid row" and "Hero-grid overhang swallows
+       clicks on the section below" for that history if the grid ever comes
+       back.
+       "Be A Terp" headline + body + Explore Academics CTA.
   ======================================== -->
   <section style="background-color:var(--umd-color-black);">
-    <umd-element-hero-grid data-theme="dark">
-
-      <!-- HERO LEFT COLUMN — 3 images -->
-      <div slot="column-left">
-        <!-- HERO LEFT 1 -->
-        <img src="../page-builder/images/small/people/2-students-desk-StartUpUMD_02092023_JC_9121.webp" alt="Two students working at a desk at StartUp UMD" />
-        <!-- HERO LEFT 2 -->
-        <img src="../page-builder/images/small/events/sports-stands.jpg" alt="Fans filling the stands at a Maryland football game" />
-        <!-- HERO LEFT 3 -->
-        <img src="../page-builder/images/large/people/students-walking-around.webp" alt="Students walking around campus" />
-      </div>
-
-      <!-- HERO CENTER COLUMN — image (top), admissions hero video, image (bottom) -->
-      <div slot="column-center">
-        <!-- HERO CENTER 1 (image above video) -->
-        <img src="../page-builder/images/small/events/Square-Commencement_SC_05202018_4727.webp" alt="University of Maryland commencement ceremony" />
-        <!-- HERO CENTER 2 (admissions hero video) -->
-        <video src="https://servd-umd-admissions.b-cdn.net/production/videos/admissions-hero-compressed_6.mp4"
-               autoplay muted loop playsinline
-               poster="../images/admissions/hero-video-poster.jpg"
-               aria-label="University of Maryland admissions montage"></video>
-        <!-- HERO CENTER 3 (image below video) -->
-        <img src="../page-builder/images/large/campus/Testudo_Students_03042022_SC_9823.webp" alt="Students gathered around the Testudo statue" />
-      </div>
-
-      <!-- HERO RIGHT COLUMN — 3 images -->
-      <div slot="column-right">
-        <!-- HERO RIGHT 1 -->
-        <img src="../page-builder/images/small/people/Online-Learning.webp" alt="Student engaged in online learning" />
-        <!-- HERO RIGHT 2 -->
-        <img src="../page-builder/images/large/people/dance.webp" alt="Students dancing" />
-        <!-- HERO RIGHT 3 -->
-        <img src="../page-builder/images/large/campus/FirstDayofClasses_01242024_DS_3248_BYNDER.webp" alt="First day of classes at the University of Maryland" />
-      </div>
-
+    <umd-element-hero data-theme="dark">
+      <video slot="video"
+             src="https://servd-umd-admissions.b-cdn.net/production/videos/admissions-hero-compressed_6.mp4"
+             autoplay muted loop playsinline
+             poster="../images/admissions/hero-video-poster.jpg"
+             aria-label="University of Maryland admissions montage"></video>
       <h1 slot="headline">Be A Terp</h1>
       <div slot="text">
         <p>Terps love a challenge. A problem that needs a solution. A barrier that needs breaking down. You are smart, scrappy and determined. You value diversity, innovation, entrepreneurship and imagination. Ready to start your fearless journey?</p>
@@ -1630,7 +1586,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="academics/">Explore Academics at UMD</a>
         </umd-element-call-to-action>
       </div>
-    </umd-element-hero-grid>
+    </umd-element-hero>
   </section>
 
   <!-- ========================================
@@ -2082,36 +2038,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       customElements.whenDefined('umd-element-pathway').then(() => {
         applyAll();
         // Re-run after hydration completes
-        setTimeout(applyAll, 0);
-        setTimeout(applyAll, 250);
-      });
-    })();
-
-    // HERO-GRID CENTER VIDEO HEIGHT — web-components-library@2.0.0 regression.
-    // hero/custom/grid.ts sets the video wrapper to width:100% + aspect-ratio:1/1.
-    // Those styles existed at 1.19.5 too, but were nested one level too deep
-    // (additionalElementStyles.additionalElementStyles) and never applied; 2.0.0
-    // renamed the key to customStyles, so the dead rule went live. The center
-    // column is 640px wide but its middle grid row is only 296px, so a 1:1 video
-    // renders 640px tall — swallowing the 32px row gap AND the entire bottom
-    // image, and bleeding 132px over the Information For band below.
-    // Restore the 1.19.5 geometry: let the video fill its grid row instead.
-    // Remove when upstream constrains the video to its row.
-    (function () {
-      const HERO_GRID_VIDEO_CSS =
-        '.hero-grid-center .umd-element-video{aspect-ratio:auto!important;height:100%!important}';
-      function inject(el) {
-        if (!el.shadowRoot || el.__heroGridVideoInjected) return;
-        const style = document.createElement('style');
-        style.textContent = HERO_GRID_VIDEO_CSS;
-        el.shadowRoot.appendChild(style);
-        el.__heroGridVideoInjected = true;
-      }
-      function applyAll() {
-        document.querySelectorAll('umd-element-hero-grid').forEach(inject);
-      }
-      customElements.whenDefined('umd-element-hero-grid').then(() => {
-        applyAll();
         setTimeout(applyAll, 0);
         setTimeout(applyAll, 250);
       });

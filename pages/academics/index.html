@@ -1410,28 +1410,37 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </section>
 
   <!-- 7. TWO-COLUMN NAV CARDS — Browse Programs / Colleges & Schools
-       Icon cards with default link icon (matches promise.html footer-link pattern). -->
+       Bordered standard cards with CTAs (light theme, matches this section's
+       white background). -->
   <section class="umd-layout-vertical-landing">
     <div class="umd-layout-space-horizontal-larger">
       <div class="umd-layout-grid-gap-two">
-        <umd-element-card-icon>
-          <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
+        <umd-element-card data-visual-bordered="true">
           <h3 slot="headline">
             <a href="programs.html">Browse All Programs</a>
           </h3>
           <div slot="text">
             <p>The full undergraduate catalog — every major, minor, and certificate offered across UMD's 12 colleges and schools, with course requirements and degree paths.</p>
           </div>
-        </umd-element-card-icon>
-        <umd-element-card-icon>
-          <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
+          <div slot="actions">
+            <umd-element-call-to-action data-display="secondary">
+              <a href="programs.html">Browse Programs</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-card>
+        <umd-element-card data-visual-bordered="true">
           <h3 slot="headline">
             <a href="https://www.umd.edu/colleges-schools">Get to Know UMD's Colleges &amp; Schools</a>
           </h3>
           <div slot="text">
             <p>Twelve schools, one university — explore the colleges that make up UMD, from Engineering and Business to Public Policy, Public Health, and the Arts &amp; Humanities.</p>
           </div>
-        </umd-element-card-icon>
+          <div slot="actions">
+            <umd-element-call-to-action data-display="secondary">
+              <a href="https://www.umd.edu/colleges-schools">Explore Colleges &amp; Schools</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-card>
       </div>
     </div>
   </section>
@@ -1577,10 +1586,9 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </section>
 
-  <!-- 11. RESOURCES — dark section intro + dark icon-link cards. Same band as
-       how-to-apply/{freshman,transfer,international}-applicants.html so every
-       "Resources" block on the site reads identically: full-dark section,
-       dark section-intro, dark icon cards whose headline IS the link.
+  <!-- 11. RESOURCES — dark section intro + overlay cards, dark-chevron.png background
+       (trial — see OVERRIDES.md before propagating to the how-to-apply Resources
+       band, which still uses the dark icon-link pattern this replaces here).
 
        Two cards here, so the grid is umd-layout-grid-gap-two (gap-three would
        leave a hole in the third column). -->
@@ -1590,16 +1598,26 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <h2 slot="headline">Resources</h2>
       </umd-element-section-intro>
       <div class="umd-layout-grid-gap-two">
-        <umd-element-card-icon data-theme="dark">
-          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
-          <h3 slot="headline"><a href="https://academiccatalog.umd.edu/">Undergraduate Catalog</a></h3>
+        <umd-element-card-overlay type="image" data-theme="dark">
+          <img slot="image" src="../../images/shared/dark-chevron.png" alt="" />
+          <h3 slot="headline">Undergraduate Catalog</h3>
           <p slot="text">The complete listing of UMD's undergraduate programs, requirements, and policies — your reference for everything academic.</p>
-        </umd-element-card-icon>
-        <umd-element-card-icon data-theme="dark">
-          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
-          <h3 slot="headline"><a href="https://careers.umd.edu/students">Career Center</a></h3>
+          <div slot="actions">
+            <umd-element-call-to-action data-display="secondary" data-theme="dark">
+              <a href="https://academiccatalog.umd.edu/">Explore the Undergraduate Catalog</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-card-overlay>
+        <umd-element-card-overlay type="image" data-theme="dark">
+          <img slot="image" src="../../images/shared/dark-chevron.png" alt="" />
+          <h3 slot="headline">Career Center</h3>
           <p slot="text">Career counseling, internship placement, employer connections, and the tools to turn your degree into a meaningful first job.</p>
-        </umd-element-card-icon>
+          <div slot="actions">
+            <umd-element-call-to-action data-display="secondary" data-theme="dark">
+              <a href="https://careers.umd.edu/students">Explore the Career Center</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-card-overlay>
       </div>
     </div>
   </section>

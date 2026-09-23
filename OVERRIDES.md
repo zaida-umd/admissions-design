@@ -140,7 +140,15 @@ keeps the tighter padding on its own.
 
 ## Hero-grid centre video overflows its grid row (2.0.0 regression)
 
-**Page:** `pages/index.html` (the only page with `umd-element-hero-grid`).
+**⚠️ RETIRED 2026-09-23.** `pages/index.html` swapped `umd-element-hero-grid`
+for a standard `umd-element-hero` (video-background, dark theme, no
+`data-display`) and this shadow injection was removed with it — **no page in
+this project uses `umd-element-hero-grid` any more.** Kept as a design record
+in case the grid pattern comes back; do not copy this injection onto a live
+page without re-verifying it's still needed.
+
+**Page (historical):** `pages/index.html` (was the only page with
+`umd-element-hero-grid`).
 
 `hero/custom/grid.ts` styles the centre video wrapper `width: 100%` + `aspect-ratio: 1 / 1`.
 Those two declarations existed at 1.19.5 as well, but were nested one level too deep —
@@ -606,6 +614,11 @@ its `padding-top` alone. The gold left rules on the stats already read as the
 divider; a border on top of them doubled it.
 
 ## Hero-grid overhang swallows clicks on the section below
+
+**⚠️ RETIRED 2026-09-23.** Same swap as "Hero-grid centre video overflows its
+grid row" above — `pages/index.html` no longer uses `umd-element-hero-grid`,
+so the `isolation: isolate` fix below was removed as dead code. Kept as a
+design record only.
 
 `umd-element-hero-grid` renders `.hero-expand-text-container` in its shadow at
 `position: relative; z-index: 9999` with the full host height, while offsetting

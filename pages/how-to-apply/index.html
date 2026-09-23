@@ -1444,29 +1444,29 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </umd-element-pathway>
   </section>
 
-  <!-- 9. WHEN TO APPLY — custom deadline-finder widget (no DS equivalent); Maryland-gold band, width matched to the pathway lock -->
+  <!-- 9. WHEN TO APPLY — custom deadline-finder widget (no DS equivalent); light-gray band, width matched to the pathway lock -->
   <section class="umd-layout-vertical-landing wta-section">
     <div class="wta-chevron" aria-hidden="true">
       <umd-element-brand-logo-animation></umd-element-brand-logo-animation>
     </div>
     <div class="umd-layout-space-horizontal-larger">
-      <div class="wta-gold">
+      <div class="wta-band">
         <umd-element-section-intro>
           <h2 slot="headline">When to Apply</h2>
           <div slot="text"><p>Answer the questions below to check your application deadlines.</p></div>
         </umd-element-section-intro>
 
       <style>
-        /* When-to-Apply widget — page-local; Maryland-gold band, all-black text,
+        /* When-to-Apply widget — page-local; light-gray band, all-black text,
            DS typography classes on content; band width = pathway lock content. */
-        .wta-gold { background-color: var(--umd-color-gold); padding: 80px 48px; }
-        @media (max-width: 649px) { .wta-gold { padding: 48px 24px; } }
+        .wta-band { background-color: var(--umd-color-gray-lighter); padding: 80px 48px; }
+        @media (max-width: 649px) { .wta-band { padding: 48px 24px; } }
         /* Brand chevron animation — same element as the study-here section, mirrored
            to the LEFT edge of the SCREEN; enters from the viewport edge and tucks
-           BEHIND the inset gold band (z-index below the content lock). */
+           BEHIND the inset gray band (z-index below the content lock). */
         .wta-section { position: relative; }
         .wta-section > .umd-layout-space-horizontal-larger { position: relative; z-index: 1; }
-        /* Chevron sits UNDER the gold band (z-index 0); JS adds .is-in when the section
+        /* Chevron sits UNDER the gray band (z-index 0); JS adds .is-in when the section
            scrolls into view, sliding it from off-screen left to rest (a reliable
            transition, not view-timeline). No overflow clip — the stack only extends
            off-screen left (no h-scroll) and would otherwise crop the lower chevrons. */
@@ -1648,7 +1648,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 
           // The brand chevron's cluster is anchored to the RIGHT of a 100vw internal
           // box, so pure-CSS viewport math drifts it off-screen on wide monitors.
-          // Anchor it to the gold band's LEFT edge in JS instead (tuck ~70px under),
+          // Anchor it to the gray band's LEFT edge in JS instead (tuck ~70px under),
           // and recompute on resize so it stays with the content at any width.
           var chevronEl = document.querySelector('.wta-chevron');
           var sectionEl = document.querySelector('.wta-section');
@@ -1657,7 +1657,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
             if (!chevronEl || !chevronAnim || !chevronAnim.shadowRoot) return;
             if (getComputedStyle(chevronEl).display === 'none') return;
             var svg = chevronAnim.shadowRoot.querySelector('svg');
-            var band = document.querySelector('.wta-gold');
+            var band = document.querySelector('.wta-band');
             if (!svg || !band) return;
             var wrapTx = new DOMMatrixReadOnly(getComputedStyle(chevronEl).transform).m41;
             chevronAnim.style.transform = 'translateY(-151px)';
@@ -1702,25 +1702,37 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </umd-element-pathway>
   </section>
 
-  <!-- 11. APPLICATION RESOURCES — dark icon-link cards -->
+  <!-- 11. APPLICATION RESOURCES — dark bordered standard cards with CTAs -->
   <section class="umd-layout-background-full-dark umd-layout-vertical-landing">
     <div class="umd-layout-space-horizontal-larger">
       <div class="umd-layout-grid-gap-three">
-        <umd-element-card-icon data-theme="dark">
-          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
+        <umd-element-card data-theme="dark" data-visual-bordered="true" data-visual-transparent="true">
           <h3 slot="headline"><a href="https://admissions.umd.edu/apply/admission-review-process-factors">Admission Review Process &amp; Factors</a></h3>
           <p slot="text">Our admission review process is thorough, individualized and holistic. We review all application components and consider more than 23 factors.</p>
-        </umd-element-card-icon>
-        <umd-element-card-icon data-theme="dark">
-          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
+          <div slot="actions">
+            <umd-element-call-to-action data-display="secondary" data-theme="dark">
+              <a href="https://admissions.umd.edu/apply/admission-review-process-factors">Explore the Process</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-card>
+        <umd-element-card data-theme="dark" data-visual-bordered="true" data-visual-transparent="true">
           <h3 slot="headline"><a href="application-faqs.html">Application FAQs</a></h3>
           <p slot="text">We know applying to college is a lot of work, so we'll do everything we can to make it as stress-free as possible. Use our FAQs for the quickest answers to many of the common questions we receive.</p>
-        </umd-element-card-icon>
-        <umd-element-card-icon data-theme="dark">
-          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
+          <div slot="actions">
+            <umd-element-call-to-action data-display="secondary" data-theme="dark">
+              <a href="application-faqs.html">Read FAQs</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-card>
+        <umd-element-card data-theme="dark" data-visual-bordered="true" data-visual-transparent="true">
           <h3 slot="headline"><a href="https://admissions.umd.edu/apply/submitting-documents">Submitting Documents</a></h3>
           <p slot="text">Some application materials you can submit yourself, while others need to come directly from testing agencies and counselors or teachers. Review this page to know the best way to submit your documents.</p>
-        </umd-element-card-icon>
+          <div slot="actions">
+            <umd-element-call-to-action data-display="secondary" data-theme="dark">
+              <a href="https://admissions.umd.edu/apply/submitting-documents">Learn about Submitting Documents</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-card>
       </div>
     </div>
   </section>

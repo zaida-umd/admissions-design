@@ -1414,21 +1414,25 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </umd-element-pathway>
   </section>
 
-  <!-- 5. WHEN TO APPLY — dark band, section intro + thumbnail carousel. Same
+  <!-- 5. WHEN TO APPLY — light band, section intro + thumbnail carousel. Same
        treatment as transfer-applicants.html §6 so "Application Deadlines" reads
        the same wherever it appears in this project: text-only cards on a
        transparent surface (RULES §27), eyebrow / deadline name / date.
        The source groups five dates under three applicant-type headings; the
-       eyebrow carries that grouping so each slide stands alone. -->
-  <section class="umd-layout-background-full-dark">
+       eyebrow carries that grouping so each slide stands alone.
+
+       Was a dark full-bleed band until 2026-09-23; switched to light so it
+       reads as its own section rather than matching the dark Resources band
+       above it. -->
+  <section class="umd-layout-vertical-landing">
     <div class="umd-layout-space-horizontal-larger">
-      <umd-element-section-intro data-theme="dark" class="umd-layout-vertical-landing-child">
+      <umd-element-section-intro class="umd-layout-vertical-landing-child">
         <h2 slot="headline">When to Apply</h2>
         <div slot="text">
           <p>Mark your calendar with UMD's application deadlines! We strongly encourage you to apply by the appropriate early action deadline, as this will give you <strong>priority consideration for admission and merit scholarships</strong>.</p>
         </div>
         <div slot="actions">
-          <umd-element-call-to-action data-display="secondary" data-theme="dark">
+          <umd-element-call-to-action data-display="secondary">
             <a href="https://admissions.umd.edu/apply/application-deadlines">View All Application Deadlines</a>
           </umd-element-call-to-action>
         </div>
@@ -1436,29 +1440,29 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
 
     <div class="umd-layout-space-horizontal-larger">
-      <umd-element-carousel-thumbnail data-theme="dark" class="relative">
+      <umd-element-carousel-thumbnail class="relative">
         <div slot="blocks">
-          <umd-element-card data-theme="dark" data-visual-transparent="true" data-visual-image-aligned="true">
+          <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true">
             <p slot="eyebrow">Freshman</p>
             <p slot="headline">Fall Early Action</p>
             <div slot="text"><p>November 1</p></div>
           </umd-element-card>
-          <umd-element-card data-theme="dark" data-visual-transparent="true" data-visual-image-aligned="true">
+          <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true">
             <p slot="eyebrow">Transfer</p>
             <p slot="headline">Fall Early Action</p>
             <div slot="text"><p>March 1</p></div>
           </umd-element-card>
-          <umd-element-card data-theme="dark" data-visual-transparent="true" data-visual-image-aligned="true">
+          <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true">
             <p slot="eyebrow">Transfer</p>
             <p slot="headline">Spring Early Action</p>
             <div slot="text"><p>August 1</p></div>
           </umd-element-card>
-          <umd-element-card data-theme="dark" data-visual-transparent="true" data-visual-image-aligned="true">
+          <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true">
             <p slot="eyebrow">Shady Grove</p>
             <p slot="headline">Fall Early Action</p>
             <div slot="text"><p>June 1</p></div>
           </umd-element-card>
-          <umd-element-card data-theme="dark" data-visual-transparent="true" data-visual-image-aligned="true">
+          <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true">
             <p slot="eyebrow">Shady Grove</p>
             <p slot="headline">Spring Early Action</p>
             <div slot="text"><p>November 15</p></div>
@@ -1497,37 +1501,48 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </umd-element-pathway>
   </section>
 
-  <!-- 7. RESOURCES — LIGHT band. Section intro + icon-link cards in ONE section
-       and ONE lock, with the gap coming from umd-layout-vertical-landing-child
-       on the intro (32/40/48px). That class is the only thing that should set
-       this gap: splitting the intro and the grid into two sections stacks each
-       one's own vertical padding instead and the heading floats far above its
-       cards. See LAYOUT-PATTERNS.md § "Section-Intro to Content Spacing".
+  <!-- 7. RESOURCES — dark overlay cards, dark-chevron.png background + CTAs
+       (matches the pattern settled on academics/index.html's Resources
+       section; same bank as freshman-applicants.html §9,
+       transfer-applicants.html §11 and international-applicants.html §10).
 
-       Light two-up icon cards, same lockup as academics/index.html §7. The
-       light-theme spelling of the asset is icon-link.svg; it is byte-identical
-       to the dark one (both md5 7877acfc…) and draws the same red glyph, so
-       this is the same icon under the name the light cards use.
+       Was a LIGHT band until 2026-09-23 — the one Resources section on the
+       site that didn't match the sitewide dark pattern. Converted to bring
+       it in line: full-dark section, dark section-intro, dark overlay cards.
 
-       The source's decorative arrow graphic is dropped; the icon-link card
-       carries that affordance already. -->
-  <section class="umd-layout-vertical-landing">
+       Section intro + cards stay in ONE section and ONE lock, with the gap
+       coming from umd-layout-vertical-landing-child on the intro
+       (32/40/48px). That class is the only thing that should set this gap:
+       splitting the intro and the grid into two sections stacks each one's
+       own vertical padding instead and the heading floats far above its
+       cards. See LAYOUT-PATTERNS.md § "Section-Intro to Content Spacing". -->
+  <section class="umd-layout-background-full-dark umd-layout-vertical-landing">
     <div class="umd-layout-space-horizontal-larger">
-      <umd-element-section-intro class="umd-layout-vertical-landing-child">
+      <umd-element-section-intro data-theme="dark" class="umd-layout-vertical-landing-child">
         <h2 slot="headline">Resources</h2>
       </umd-element-section-intro>
 
       <div class="umd-layout-grid-gap-two">
-        <umd-element-card-icon>
-          <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
-          <h3 slot="headline"><a href="../how-to-apply/application-faqs.html">Application FAQs</a></h3>
+        <umd-element-card-overlay type="image" data-theme="dark">
+          <img slot="image" src="../../images/shared/dark-chevron.png" alt="" />
+          <h3 slot="headline">Application FAQs</h3>
           <p slot="text">If questions come up as you're filling out the UMD application, be sure to reference our frequently asked questions. We've gathered answers about the application platforms, required materials, what to do after you've applied, and more.</p>
-        </umd-element-card-icon>
-        <umd-element-card-icon>
-          <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
-          <h3 slot="headline"><a href="https://admissions.umd.edu/apply/submitting-documents">Submitting Documents</a></h3>
+          <div slot="actions">
+            <umd-element-call-to-action data-display="secondary" data-theme="dark">
+              <a href="../how-to-apply/application-faqs.html">Read FAQs</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-card-overlay>
+        <umd-element-card-overlay type="image" data-theme="dark">
+          <img slot="image" src="../../images/shared/dark-chevron.png" alt="" />
+          <h3 slot="headline">Submitting Documents</h3>
           <p slot="text">Find details on the best way to submit all of your required application materials.</p>
-        </umd-element-card-icon>
+          <div slot="actions">
+            <umd-element-call-to-action data-display="secondary" data-theme="dark">
+              <a href="https://admissions.umd.edu/apply/submitting-documents">Learn about Submitting Documents</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-card-overlay>
       </div>
     </div>
   </section>
