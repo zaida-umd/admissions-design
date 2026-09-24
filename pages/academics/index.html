@@ -1600,7 +1600,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       <div class="umd-layout-grid-gap-two">
         <umd-element-card-overlay type="image" data-theme="dark">
           <img slot="image" src="../../images/shared/dark-chevron.png" alt="" />
-          <h3 slot="headline">Undergraduate Catalog</h3>
+          <h3 slot="headline"><a href="https://academiccatalog.umd.edu/">Undergraduate Catalog</a></h3>
           <p slot="text">The complete listing of UMD's undergraduate programs, requirements, and policies — your reference for everything academic.</p>
           <div slot="actions">
             <umd-element-call-to-action data-display="secondary" data-theme="dark">
@@ -1610,7 +1610,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         </umd-element-card-overlay>
         <umd-element-card-overlay type="image" data-theme="dark">
           <img slot="image" src="../../images/shared/dark-chevron.png" alt="" />
-          <h3 slot="headline">Career Center</h3>
+          <h3 slot="headline"><a href="https://careers.umd.edu/students">Career Center</a></h3>
           <p slot="text">Career counseling, internship placement, employer connections, and the tools to turn your degree into a meaningful first job.</p>
           <div slot="actions">
             <umd-element-call-to-action data-display="secondary" data-theme="dark">
@@ -1719,6 +1719,38 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         style.textContent = '.pathway-image-container,.image-container,.umd-asset-image-wrapper-scaled{aspect-ratio:6/5!important;height:auto!important}.pathway-image-container img,.image-container img,.umd-asset-image-wrapper-scaled img{width:100%!important;height:100%!important;object-fit:cover!important}';
         el.shadowRoot && el.shadowRoot.appendChild(style);
       });
+    });
+
+    // NOTABLE ALUMNI — image crop bias. umd-element-carousel-thumbnail
+    // extracts and re-appends its slotted umd-element-card blocks into its
+    // OWN shadow root (extract-and-append, same as umd-element-slider-events
+    // — standard slot projection does not apply), and each card is itself a
+    // custom element with its own nested shadow root, so the actual <img>
+    // sits two shadow boundaries down from the carousel. The card's image
+    // wrapper (.umd-asset-image-aspect-standard, a 4:3 box) defaults to
+    // object-position:center, which on a source photo shorter/squarer than
+    // 4:3 crops evenly from top and bottom — on some of these alumni photos
+    // that leaves little enough chin margin to read as cut off. A small
+    // uniform nudge toward preserving the bottom of the frame (center 25%,
+    // rather than 50%) reads better across the set (verified against
+    // pages/academics/interest-engineering-technology.html, which shares
+    // this exact carousel/card treatment). Re-runnable and staggered: the
+    // carousel's extract-and-append timing is not guaranteed to be done the
+    // moment the custom element upgrades.
+    customElements.whenDefined('umd-element-carousel-thumbnail').then(() => {
+      const injectCard = (card) => {
+        if (!card.shadowRoot || card.dataset.alumniCropDone) return;
+        const style = document.createElement('style');
+        style.textContent = '.umd-asset-image-aspect-standard img{object-position:center 25%}';
+        card.shadowRoot.appendChild(style);
+        card.dataset.alumniCropDone = '1';
+      };
+      const run = () => {
+        const carousel = document.querySelector('umd-element-carousel-thumbnail');
+        if (!carousel || !carousel.shadowRoot) return;
+        carousel.shadowRoot.querySelectorAll('umd-element-card').forEach(injectCard);
+      };
+      [0, 250, 750, 1500].forEach((ms) => setTimeout(run, ms));
     });
 
 

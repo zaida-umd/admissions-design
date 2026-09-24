@@ -1832,6 +1832,47 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   })();
   </script>
 
+  <!-- NOTABLE ALUMNI — image crop bias. umd-element-carousel-thumbnail
+       extracts and re-appends its slotted umd-element-card blocks into its
+       OWN shadow root (same "extract-and-append" pattern as
+       umd-element-slider-events — standard slot projection does not apply),
+       and each card is itself a custom element with its own nested shadow
+       root, so the actual <img> sits two shadow boundaries down from the
+       carousel. The card's image wrapper (.umd-asset-image-aspect-standard,
+       a 4:3 box) defaults to object-position:center, which on a source photo
+       shorter/squarer than 4:3 crops evenly from both top and bottom. A
+       centered crop is fine for a couple of these alumni photos but leaves
+       little enough chin margin on others that a small uniform nudge toward
+       preserving the bottom of the frame (center 25%, rather than 50%) reads
+       better across the whole set without needing a per-photo lookup that a
+       newly added alumnus would silently miss.
+       Re-runnable and staggered like the pathway injection above: the
+       carousel's extract-and-append timing is not guaranteed to be done the
+       moment the custom element upgrades. -->
+  <script>
+  (function () {
+    var CSS = '.umd-asset-image-aspect-standard img{object-position:center 25%;}';
+    function injectCard(card) {
+      if (!card.shadowRoot || card.dataset.alumniCropDone) return;
+      var s = document.createElement('style');
+      s.textContent = CSS;
+      card.shadowRoot.appendChild(s);
+      card.dataset.alumniCropDone = '1';
+    }
+    function run() {
+      var carousel = document.querySelector('umd-element-carousel-thumbnail');
+      if (!carousel || !carousel.shadowRoot) return;
+      carousel.shadowRoot.querySelectorAll('umd-element-card').forEach(injectCard);
+    }
+    if (window.customElements) {
+      customElements.whenDefined('umd-element-carousel-thumbnail').then(function () {
+        [0, 250, 750, 1500].forEach(function (ms) { setTimeout(run, ms); });
+      });
+    }
+    document.addEventListener('DOMContentLoaded', run);
+  })();
+  </script>
+
   <!-- NO description clamp. Program descriptions run 250-875 characters and
        every one displays in full: truncating a program's description is a
        content decision, not a layout one, and this page is the reader's index
