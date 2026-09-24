@@ -864,6 +864,23 @@
 
        The careers list is likewise unstyled: it is the plain rich-text <ul>
        the source page uses, single-column, bullets from the DS. */
+
+    /* ---- Overlay feature card: .size-large needs an EXPLICIT height ----
+       web-components.min.css ships ONLY the min-height half of this class
+       (umd-element-card-overlay.size-large { min-height: 320px; 560px @768px }).
+       That sizes the HOST but not the card -- the shadow's .card-overlay-image
+       uses height:100%, which does not resolve against a parent whose own
+       height is auto, so it falls back to .card-overlay-image-container's
+       internal min-height (360px mobile / 424px tablet+) and leaves dead
+       space under the painted card. An explicit height gives the percentage
+       something to resolve against. Same fix as
+       how-to-apply/transfer-applicants.html §10; see OVERRIDES.md "Overlay
+       card .size-large min-height is host-only" for the full derivation.
+       Tablet+ only -- below 768px the card is left at its natural 360px and
+       the bundle's own min-height:320px is the floor. */
+    @media (min-width: 768px) {
+      umd-element-card-overlay.size-large { height: 560px; }
+    }
   </style>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
@@ -1388,28 +1405,33 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </section>
 
-  <!-- 5. RELATED MAJORS — pathway carries the headline + copy, the DS card-list
-       stack follows it inside the same section (RULES §33: standalone card list
-       takes the umd-layout-space-horizontal-small 992px lock).
-       34 programs tagged "Engineering & Technology".
+  <!-- 5. RELATED MAJORS — sticky-columns (RULES §20 "Featured item + list";
+       LAYOUT-PATTERNS.md "Events Section — Featured Promo + Stacked List" is
+       the same shape with a card-overlay feature instead of an event promo).
+       34 programs tagged "Engineering & Technology" scroll past a pinned
+       feature card carrying the copy that used to live in a standalone
+       umd-element-pathway above the grid. Precedent:
+       how-to-apply/transfer-applicants.html §10.
 
-       The pathway wrapper takes umd-layout-vertical-landing (120px desktop),
-       NOT -child (48px): the pathway and the grid are two components stacked
-       in one section, not a section-intro and the content it introduces. The
-       -child gap belongs on a section intro -- see the colleges section below,
-       where it is what produces the required 48px. -->
+       Host takes umd-layout-space-horizontal-larger (1600px, via the sticky-
+       columns component) -- NOT the -small 992px lock the majors list used
+       standalone. RULES §33: a card list inside sticky-columns is governed by
+       the host lock, so no -small wrapper goes back inside the static column.
+
+       size-large needs the explicit height fix (see page CSS below) --
+       web-components.min.css only ships the min-height half of the class. -->
   <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-vertical-landing">
-      <umd-element-pathway data-layout-image-position="right">
-        <img slot="image" src="../../images/interest/wind-tunnel.jpg" alt="Students working in the Glenn L. Martin wind tunnel" />
-        <h2 slot="headline">Related Majors</h2>
-        <div slot="text">
-          <p>Students will learn how to make innovative scientific and technological contributions to an evolving world through research and experimentation to design, build and use an array of different systems, machines and structures.</p>
-        </div>
-      </umd-element-pathway>
-    </div>
-    <div class="umd-layout-space-horizontal-small">
-      <div class="interest-majors-grid">
+    <umd-element-sticky-columns class="umd-layout-space-horizontal-larger" data-layout-position="100px">
+      <div slot="sticky-column">
+        <umd-element-card-overlay type="image" class="size-large">
+          <img slot="image" src="../../images/academics/engr-news-hero.jpg" alt="A researcher holding a microchip component under pink and blue lab lighting" />
+          <h2 slot="headline">Related Majors</h2>
+          <div slot="text">
+            <p>Students will learn how to make innovative scientific and technological contributions to an evolving world through research and experimentation to design, build and use an array of different systems, machines and structures.</p>
+          </div>
+        </umd-element-card-overlay>
+      </div>
+      <div slot="static-column" class="interest-majors-grid">
 
         <umd-element-card data-display="list" class="interest-major">
           <p slot="eyebrow">Minor</p>
@@ -1583,18 +1605,18 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         </umd-element-card>
 
       </div>
-    </div>
+    </umd-element-sticky-columns>
   </section>
 
-  <!-- 6. CAREERS — dark overlay pathway, image opposite the majors pathway.
+  <!-- 6. CAREERS — dark overlay pathway, image on the right.
        data-display="overlay" data-theme="dark" is self-contained: it paints its
        own black panel inside the content lock, so NO umd-layout-background-full-dark
        wrapper (OVERRIDES.md § "Overlay pathway as a dark editorial block").
        The list is the source page's plain rich-text <ul>, single column. -->
   <section class="umd-layout-vertical-landing">
     <umd-element-pathway data-display="overlay" data-theme="dark"
-                         data-layout-image-position="left">
-      <img slot="image" src="../../images/interest/neutral-buoyancy.jpg" alt="A diver in the Neutral Buoyancy Research Facility tank" />
+                         data-layout-image-position="right">
+      <img slot="image" src="../../images/academics/astronomy.jpg" alt="Students and a researcher viewing a telescope at dusk under red observatory lighting" />
       <h2 slot="headline">Careers in Engineering &amp; Technology</h2>
       <div slot="text">
         <ul class="interest-careers-list">
@@ -1824,6 +1846,54 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     }
     if (window.customElements) {
       customElements.whenDefined('umd-element-pathway').then(function () {
+        run();
+        setTimeout(run, 300);
+      });
+    }
+    document.addEventListener('DOMContentLoaded', run);
+  })();
+  </script>
+
+  <!-- Related Majors overlay-card text restore — page-content-driven
+       (OVERRIDES.md "Card-overlay: the IMAGE variant clamps slot="text", the
+       COLOR variant does not"). umd-element-card-overlay type="image" clamps
+       slot="text" to a hard-coded character budget in the shadow DOM and
+       appends " ..." — verified empirically against the pinned
+       components@2.0.0 that the combined headline+text budget here is
+       tighter than OVERRIDES.md's cdn.js@1.18.12 figures (300, ~220 with
+       actions), truncating this card's 224-char paragraph at 221 chars even
+       with no actions slot present. The clamp is destructive (cut from the
+       shadow DOM, not hidden by CSS) and the component re-renders and
+       re-truncates after first paint, so a one-shot fix does not hold — this
+       restores the light-DOM slot's own HTML into the truncated node on every
+       mutation, guarded by a check that the current text still ends in the
+       clamp's ellipsis so the observer does not loop against itself. -->
+  <script>
+  (function () {
+    function restore(card) {
+      var root = card.shadowRoot;
+      var source = card.querySelector('[slot="text"]');
+      if (!root || !source) return;
+      var target = root.querySelector(
+        '.card-overlay-image-text-content .umd-text-rich-simple-scaling-dark,' +
+        '.card-overlay-image-text-content .umd-text-rich-simple-scaling'
+      );
+      if (target && target.textContent.trim().endsWith('...')) {
+        target.innerHTML = source.innerHTML;
+      }
+    }
+    function watch(card) {
+      if (card.dataset.overlayTextRestoreDone || !card.shadowRoot) return;
+      card.dataset.overlayTextRestoreDone = '1';
+      restore(card);
+      new MutationObserver(function () { restore(card); })
+        .observe(card.shadowRoot, { childList: true, subtree: true, characterData: true });
+    }
+    function run() {
+      document.querySelectorAll('umd-element-card-overlay[type="image"]').forEach(watch);
+    }
+    if (window.customElements) {
+      customElements.whenDefined('umd-element-card-overlay').then(function () {
         run();
         setTimeout(run, 300);
       });
