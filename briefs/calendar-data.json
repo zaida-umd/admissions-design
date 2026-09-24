@@ -566,12 +566,21 @@
    "audience": [
     "Prospective Students"
    ],
-   "register": null,
-   "description": "Are you a high school student starting to think about college? Are you thinking business might be the right degree for you? If so, register today for our Smith Friday to learn more about the Robert H. Smith School of Business at the University of Maryland, College Park. During each Smith Friday you, and your family, will have the opportunity to meet with current faculty, staff, and students, participate in a college information session and specific prospective student and family Q&A sessions, and tour the home of the Smith School, Van Munching Hall.",
+   "register": {
+    "url": "https://umd.alumniq.com/events/private/Sept26SmithFriday",
+    "label": "Register Now"
+   },
+   "description": "Are you a high school student starting to think about college? Are you thinking business might be the right degree for you? If so, register today for our Smith Friday to learn more about the Robert H. Smith School of Business at the University of Maryland, College Park.\n\nDuring each Smith Friday you, and your family, will have the opportunity to meet with current faculty, staff, and students, participate in a college information session and specific prospective student and family Q&A sessions, and tour the home of the Smith School, Van Munching Hall.",
    "image": {
     "file": "edward-st-john.jpg",
     "alt": "Students walking through the Edward St. John Learning Teaching Center."
-   }
+   },
+   "address": {
+    "venue": "Van Munching Hall",
+    "street": "7699 Mowatt Lane",
+    "city": "College Park, MD 20742"
+   },
+   "detail_page": "bmgt-smith-friday-92526-900am.html"
   },
   {
    "date": "2026-09-25",

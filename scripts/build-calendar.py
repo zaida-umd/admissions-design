@@ -97,6 +97,10 @@ for e in data['events']:
     if e['register']:
         r['r'] = e['register']['url']
         r['rl'] = e['register']['label']
+    # Events with a built detail page (briefs/calendar-data.json "detail_page")
+    # link internally instead of out to the live site — see scripts/build-event.py.
+    if e.get('detail_page'):
+        r['dp'] = e['detail_page']
     records.append(r)
 
 # The list is chronological and never re-sorts client-side, so sort here.
@@ -398,6 +402,13 @@ BODY = r'''  </style>
     var TODAY  = @@TODAY@@;
     var RANGE  = @@RANGE@@;   // [earliest event date, latest event date]
 
+    // Every card links to the one built event detail page (scripts/build-
+    // event.py), template-style, regardless of which event it is -- this is
+    // a prototype showing what an event detail page looks like, not a claim
+    // that all 64 events have their own page. An event whose own record sets
+    // "detail_page" (e.dp) still wins, for when a second real page exists.
+    var TEMPLATE_EVENT_PAGE = 'bmgt-smith-friday-92526-900am.html';
+
     var GROUP_ORDER  = ['audience', 'location', 'type', 'college'];
     var GROUP_LABELS = {
       audience: 'Audience',
@@ -558,10 +569,14 @@ BODY = r'''  </style>
           '<a href="' + esc(e.r) + '" target="_blank" rel="noopener">' + esc(e.rl || 'Register') + '</a>' +
           '</umd-element-call-to-action></div>'
         : '';
+      // Every card links to the template event detail page (see the
+      // TEMPLATE_EVENT_PAGE note above); a record with its own "detail_page"
+      // (e.dp) links to that instead.
+      var href = e.dp || TEMPLATE_EVENT_PAGE;
       return '<umd-element-event data-display="list" data-date="' + e.d +
         '" data-visual-time="' + (e.t ? 'true' : 'false') + '">' +
         img +
-        '<h3 slot="headline"><a href="' + esc(e.u) + '">' + esc(e.n) + '</a></h3>' +
+        '<h3 slot="headline"><a href="' + esc(href) + '">' + esc(e.n) + '</a></h3>' +
         text +
         '<time slot="start-date-iso" datetime="' + stamp + '">' + stamp + '</time>' +
         '<time slot="end-date-iso" datetime="' + stamp + '">' + stamp + '</time>' +
