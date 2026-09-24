@@ -324,19 +324,26 @@ BODY = r'''  </style>
 @@CHROME:header@@
 
   <!-- HERO — background, small, centered. Matches the section landing
-       pages and pages/search/. Headline only: the live calendar page
-       carries a breadcrumb and an <h1> and nothing else. An earlier
-       revision added a supporting paragraph and a "Plan Your Visit"
-       CTA; both were invented here, not taken from the source, and are
-       gone. The image is shared with the search page on purpose --
-       both are utility pages, and the motion-blurred crowd around a
-       still Testudo reads as time passing on one and as everything on
-       the site moving past on the other. -->
+       pages and pages/search/. The image is shared with the search page
+       on purpose -- both are utility pages, and the motion-blurred crowd
+       around a still Testudo reads as time passing on one and as
+       everything on the site moving past on the other.
+
+       Supporting text + CTA (2026-09-24): a prior revision had invented
+       copy here and it was pulled back to headline-only. This pass is a
+       deliberate, requested addition, not a repeat of that -- text and
+       CTA below per explicit brief. -->
   <section class="umd-layout-vertical-landing">
     <umd-element-hero data-layout-height="small" data-layout-text="center">
       <img slot="image" src="../../images/calendar/blurry-testudo-FirstDayofClass_08262024_DS_2384_DAM.webp" alt="Students streaming past the Testudo statue outside McKeldin Library" />
       <p slot="eyebrow">Visit UMD</p>
       <h1 slot="headline">Calendar</h1>
+      <div slot="text"><p>Don't know what kind of events are for you? Go to our Visit page for more information.</p></div>
+      <div slot="actions">
+        <umd-element-call-to-action data-display="primary">
+          <a href="https://admissions.umd.edu/visit">Visit UMD</a>
+        </umd-element-call-to-action>
+      </div>
     </umd-element-hero>
   </section>
 
