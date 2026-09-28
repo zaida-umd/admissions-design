@@ -24,8 +24,8 @@
     "hero": {
       "headline": "Engineering &amp; Technology",
       "text": "Turn your passion for creating systems and structures through science and technology into a career.",
-      "image": "{{ROOT}}images/interest/hero-kim-building.jpg",
-      "alt": "The entrance to the Jeong H. Kim Engineering Building"
+      "image": "{{ROOT}}images/academics/ZupnickHall_IdeaFactory_08032026_SC_8476_1920x10801.webp",
+      "alt": "Students working at Zupnick Hall's Idea Factory maker space"
     },
     "intro": {
       "lead": "Find the YOU in UMD!",
@@ -34,15 +34,14 @@
     "majors": {
       "headline": "Related Majors",
       "text": "Students will learn how to make innovative scientific and technological contributions to an evolving world through research and experimentation to design, build and use an array of different systems, machines and structures.",
-      "image": "{{ROOT}}images/interest/wind-tunnel.jpg",
-      "alt": "Students working in the Glenn L. Martin wind tunnel",
-      "imagePosition": "right"
+      "image": "{{ROOT}}images/academics/DSC4165-Edit_1920x1080_2021-08-27-144919_iuvd.webp",
+      "alt": "A micro-drone hovering above a sunflower during a robotics demonstration"
     },
     "careers": {
       "headline": "Careers in Engineering &amp; Technology",
-      "image": "{{ROOT}}images/interest/neutral-buoyancy.jpg",
-      "alt": "A diver in the Neutral Buoyancy Research Facility tank",
-      "imagePosition": "left",
+      "image": "{{ROOT}}images/academics/ASTR288T_04012025_RS_9626_DAM.jpg",
+      "alt": "Students and a researcher viewing a telescope at dusk under red observatory lighting",
+      "imagePosition": "right",
       "items": [
         "Architecture",
         "Bioengineering",
