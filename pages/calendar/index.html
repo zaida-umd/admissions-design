@@ -1021,6 +1021,19 @@
     }
 
     .cal-more-wrap[hidden] { display:none; }
+
+    /* --- Upcoming Events — bordered, image-less card grid, three up.
+       Same rules as the event detail page (scripts/build-event.py); the
+       border is the shadow injection at the foot of the page. */
+    .event-upcoming-heading { background-color: var(--umd-color-white); margin: 0; }
+
+    .event-upcoming-grid { margin-top: var(--umd-space-xl); }
+
+    @media (max-width: 767px) { .event-upcoming-grid { grid-template-columns: 1fr; } }
+
+    @media (min-width: 768px) and (max-width: 1019px) {
+      .event-upcoming-grid { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
@@ -1572,6 +1585,37 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </section>
 
+  <!-- UPCOMING EVENTS — bordered, image-less card grid, three up. Same
+       block as the event detail page; the border is a shadow injection
+       below, not CSS. -->
+  <section class="umd-layout-vertical-landing">
+    <div class="umd-layout-space-horizontal-larger">
+      <h2 class="event-upcoming-heading umd-text-line-trailing"><span>Upcoming Events</span></h2>
+      <div class="event-upcoming-grid umd-layout-grid-gap-three" data-animation="off">
+        <umd-element-event class="event-upcoming-card" data-visual-time="true"><h3 slot="headline"><a href="https://admissions.umd.edu/calendar/2026-09-25/agnr-iaa-info-session-92526-1000am">AGNR &amp; IAA Information Session</a></h3><p slot="text">The College of Agriculture and Natural Resources (AGNR) invites you to join a comprehensive presentation highlighting our diverse academic program options.…</p><time slot="start-date-iso" datetime="2026-09-25T10:00:00">2026-09-25T10:00:00</time><time slot="end-date-iso" datetime="2026-09-25T10:00:00">2026-09-25T10:00:00</time><p slot="location">On Campus</p></umd-element-event>
+        <umd-element-event class="event-upcoming-card" data-visual-time="true"><h3 slot="headline"><a href="https://admissions.umd.edu/calendar/2026-10-05/agnr-iaa-info-session-92826-1015am">AGNR &amp; IAA Information Session</a></h3><p slot="text">The College of Agriculture and Natural Resources (AGNR) invites you to join a comprehensive presentation highlighting our diverse academic program options.…</p><time slot="start-date-iso" datetime="2026-10-05T10:15:00">2026-10-05T10:15:00</time><time slot="end-date-iso" datetime="2026-10-05T10:15:00">2026-10-05T10:15:00</time><p slot="location">On Campus</p></umd-element-event>
+        <umd-element-event class="event-upcoming-card" data-visual-time="true"><h3 slot="headline"><a href="https://admissions.umd.edu/calendar/2026-10-05/arch-fa26-tours-200pm">ARCH Tour</a></h3><p slot="text">The School of Architecture, Planning &amp; Preservation invites prospective student to attend an advisor-led tour. During this tour guests will preview details of…</p><time slot="start-date-iso" datetime="2026-10-05T14:00:00">2026-10-05T14:00:00</time><time slot="end-date-iso" datetime="2026-10-05T14:00:00">2026-10-05T14:00:00</time><p slot="location">On Campus</p></umd-element-event>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAY CONNECTED — banner promo, per-site page closer convention.
+       Wrapped in the -larger lock per RULES.md's carousel/banner-promo
+       matrix. -->
+  <section class="umd-layout-vertical-landing">
+    <div class="umd-layout-space-horizontal-larger">
+      <umd-element-banner-promo>
+        <h2 slot="headline">There is a lot more to learn about UMD</h2>
+        <p slot="text">Let&rsquo;s stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Join the mailing list</a> or <a href="https://admissions.umd.edu/connect">connect</a>!</p>
+        <div slot="actions">
+          <umd-element-call-to-action data-display="primary">
+            <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Subscribe</a>
+          </umd-element-call-to-action>
+        </div>
+      </umd-element-banner-promo>
+    </div>
+  </section>
+
   <!-- SCROLL TO TOP — fixed 24px from viewport bottom-right -->
   <umd-element-scroll-top data-layout-fixed="true"></umd-element-scroll-top>
 
@@ -1580,7 +1624,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <a slot="logo" href="../../pages/">
       <img src="../../images/logos/footer-logo.svg" alt="University of Maryland" />
     </a>
-    <img slot="image" src="../../page-builder/images/large/campus/footer-campus.jpg" alt="University of Maryland campus" />
+    <img slot="image" src="../../images/shared/existing%203%20campus-generic.jpg" alt="University of Maryland campus" />
 
     <p slot="contact-headline">Undergraduate Admissions</p>
     <!-- Every address line needs its own <span>: umd-element-footer extracts and
@@ -1982,6 +2026,35 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     collect();
     render();
   })();
+  </script>
+
+  <!-- UPCOMING EVENTS — border injection. umd-element-event has no working
+       data-visual-bordered (OVERRIDES.md), so this reproduces what
+       card.block({hasBorder:true}) renders. Identical to the event detail
+       page's; driven by page content, so it lives here, not in shared/. -->
+  <script>
+    (function () {
+      var CARD_BORDER_CSS =
+        '.layout-block-stacked-container{border:1px solid var(--umd-color-gray-light)}' +
+        '.layout-block-stacked-text{padding:24px}';
+
+      function inject(el) {
+        if (!el.shadowRoot || el.__eventCardBorderInjected) return;
+        var style = document.createElement('style');
+        style.textContent = CARD_BORDER_CSS;
+        el.shadowRoot.appendChild(style);
+        el.__eventCardBorderInjected = true;
+      }
+      function applyAll() {
+        document.querySelectorAll('.event-upcoming-card').forEach(inject);
+      }
+      customElements.whenDefined('umd-element-event').then(function () {
+        applyAll();
+        setTimeout(applyAll, 0);
+        setTimeout(applyAll, 250);
+        setTimeout(applyAll, 1000);
+      });
+    })();
   </script>
 
   <!-- SHARED:chrome-scripts:START — generated from shared/chrome-scripts.html; do not edit here -->

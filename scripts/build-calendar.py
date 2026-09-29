@@ -20,6 +20,15 @@ the last one because with the list running from today it was literally its own
 first six rows. Pagination is by COUNT (15) behind a Load More button, and
 there is no text search, matching <https://calendar.umd.edu/search>.
 
+UPCOMING EVENTS + BANNER PROMO (2026-09-29, by request). The page now closes
+with the event detail page's "Upcoming Events" grid and its "stay connected"
+banner promo, copied from pages/calendar/bmgt-smith-friday-92526-900am.html.
+The cards are that page's exact three -- build-event.py's own pick_upcoming()
+and upcoming_card_html() over the bmgt record -- so the two pages cannot
+drift. (Not the next three from "today": those repeat the list's first rows,
+which is why the block was pulled on 2026-09-10.) The border is the same
+page-level shadow injection the event page carries.
+
 The rail is the programs page's rail (scripts/build-programs.py): the same
 `pf-*` markup, accordion groups, "Show all N" toggles, pill row and reset CTA,
 over this page's four facets. It differs in one place -- a leading Date group
@@ -106,6 +115,21 @@ for e in data['events']:
 # The list is chronological and never re-sorts client-side, so sort here.
 # All-day events (t is None) lead their day.
 records.sort(key=lambda r: (r['d'], r['t'] or ''))
+
+# Upcoming Events cards -- same helper the event detail page uses.
+import importlib.util
+_spec = importlib.util.spec_from_file_location(
+    'build_event', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'build-event.py'))
+_event = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_event)
+# The SAME three cards the event detail page shows (its pick_upcoming() over
+# its own record), not the next three from "today" -- those just repeat the
+# list's first rows.
+_template_rec = next(e for e in data['events']
+                     if e.get('detail_page') == 'bmgt-smith-friday-92526-900am.html')
+_upcoming = _event.pick_upcoming(data['events'], _template_rec)
+assert len(_upcoming) == _event.UPCOMING_COUNT, 'not enough upcoming events to fill the grid'
+upcoming_html = '\n        '.join(_event.upcoming_card_html(e) for e in _upcoming)
 
 events_json = json.dumps(records, ensure_ascii=False, separators=(',', ':'))
 facets_json = json.dumps(data['facets'], ensure_ascii=False, separators=(',', ':'))
@@ -317,6 +341,19 @@ BODY = r'''  </style>
     }
 
     .cal-more-wrap[hidden] { display:none; }
+
+    /* --- Upcoming Events — bordered, image-less card grid, three up.
+       Same rules as the event detail page (scripts/build-event.py); the
+       border is the shadow injection at the foot of the page. */
+    .event-upcoming-heading { background-color: var(--umd-color-white); margin: 0; }
+
+    .event-upcoming-grid { margin-top: var(--umd-space-xl); }
+
+    @media (max-width: 767px) { .event-upcoming-grid { grid-template-columns: 1fr; } }
+
+    @media (min-width: 768px) and (max-width: 1019px) {
+      .event-upcoming-grid { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 
 @@CHROME:chrome-css@@
@@ -386,6 +423,35 @@ BODY = r'''  </style>
         </div>
 
       </div>
+    </div>
+  </section>
+
+  <!-- UPCOMING EVENTS — bordered, image-less card grid, three up. Same
+       block as the event detail page; the border is a shadow injection
+       below, not CSS. -->
+  <section class="umd-layout-vertical-landing">
+    <div class="umd-layout-space-horizontal-larger">
+      <h2 class="event-upcoming-heading umd-text-line-trailing"><span>Upcoming Events</span></h2>
+      <div class="event-upcoming-grid umd-layout-grid-gap-three" data-animation="off">
+        @@UPCOMING@@
+      </div>
+    </div>
+  </section>
+
+  <!-- STAY CONNECTED — banner promo, per-site page closer convention.
+       Wrapped in the -larger lock per RULES.md's carousel/banner-promo
+       matrix. -->
+  <section class="umd-layout-vertical-landing">
+    <div class="umd-layout-space-horizontal-larger">
+      <umd-element-banner-promo>
+        <h2 slot="headline">There is a lot more to learn about UMD</h2>
+        <p slot="text">Let&rsquo;s stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Join the mailing list</a> or <a href="https://admissions.umd.edu/connect">connect</a>!</p>
+        <div slot="actions">
+          <umd-element-call-to-action data-display="primary">
+            <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Subscribe</a>
+          </umd-element-call-to-action>
+        </div>
+      </umd-element-banner-promo>
     </div>
   </section>
 
@@ -738,6 +804,35 @@ BODY = r'''  </style>
   })();
   </script>
 
+  <!-- UPCOMING EVENTS — border injection. umd-element-event has no working
+       data-visual-bordered (OVERRIDES.md), so this reproduces what
+       card.block({hasBorder:true}) renders. Identical to the event detail
+       page's; driven by page content, so it lives here, not in shared/. -->
+  <script>
+    (function () {
+      var CARD_BORDER_CSS =
+        '.layout-block-stacked-container{border:1px solid var(--umd-color-gray-light)}' +
+        '.layout-block-stacked-text{padding:24px}';
+
+      function inject(el) {
+        if (!el.shadowRoot || el.__eventCardBorderInjected) return;
+        var style = document.createElement('style');
+        style.textContent = CARD_BORDER_CSS;
+        el.shadowRoot.appendChild(style);
+        el.__eventCardBorderInjected = true;
+      }
+      function applyAll() {
+        document.querySelectorAll('.event-upcoming-card').forEach(inject);
+      }
+      customElements.whenDefined('umd-element-event').then(function () {
+        applyAll();
+        setTimeout(applyAll, 0);
+        setTimeout(applyAll, 250);
+        setTimeout(applyAll, 1000);
+      });
+    })();
+  </script>
+
 @@CHROME:chrome-scripts@@
 </body>
 </html>
@@ -752,6 +847,7 @@ body = BODY.replace('@@EVENTS@@', events_json)
 body = body.replace('@@FACETS@@', facets_json)
 body = body.replace('@@TODAY@@', today_json)
 body = body.replace('@@RANGE@@', range_json)
+body = body.replace('@@UPCOMING@@', upcoming_html)
 for key in _chrome.keys():
     token = '@@CHROME:%s@@' % key
     assert token in body, 'BODY lost the %s slot' % key
