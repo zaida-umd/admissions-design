@@ -46,7 +46,7 @@ the wrong place and conclude it is unimplemented.
 |---|---|---|
 | 1 | Profile | `umd-element-person-hero` (owns the breadcrumb and the only contact action) |
 | 2 | Favorite Maryland Moment | eyebrow lockup + rich text — **omitted if the rep has no bio** |
-| 3 | Territories | `.rep-regions-list` — **omitted if the rep has no regions** |
+| 3 | Territories | `.umd-admissions-representative-regions-list` — **omitted if the rep has no regions** |
 | 4 | Back to directory | `umd-element-call-to-action data-display="secondary"` |
 
 ### Search page (`search.html`) — an alternative to the index

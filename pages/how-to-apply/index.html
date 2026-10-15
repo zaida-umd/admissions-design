@@ -825,13 +825,13 @@
     /* Brand chevron animation flanking the Study Here rich text and
        overlapping ~120px up into the hero above. Hidden below tablet
        to avoid crowding the single-column stacked content. */
-    .study-here-section {
+    .umd-admissions-study-here-section {
       position: relative;
       overflow: visible;
       z-index: 100;
     }
 
-    .study-here-content {
+    .umd-admissions-study-here-content {
       position: relative;
       z-index: 2;
     }
@@ -839,7 +839,7 @@
     /* The brand-logo-animation hardcodes its inner container to
        width:100vw, height:50vw and anchors chevrons to right:0. So
        the host must span full width — sizing/clipping won't work. */
-    .study-here-chevron {
+    .umd-admissions-study-here-chevron {
       position: absolute;
       top: -180px;
       left: 0;
@@ -850,7 +850,7 @@
       overflow: visible;
     }
 
-    .study-here-chevron > umd-element-brand-logo-animation {
+    .umd-admissions-study-here-chevron > umd-element-brand-logo-animation {
       position: absolute;
       top: 0;
       left: 0;
@@ -859,7 +859,7 @@
     }
 
     @media (max-width: 1023px) {
-      .study-here-chevron { display: none; }
+      .umd-admissions-study-here-chevron { display: none; }
     }
   </style>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
@@ -931,7 +931,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 
    The shadow supplies the column box (.nav-item-dropdown-multiple-column
    > * { min-width: 232px }); everything inside it is ours. */
-.umd-nav-promo a {
+.umd-shell-nav-promo a {
   display: block;
   width: 232px;
   max-width: 100%;
@@ -939,13 +939,13 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   text-decoration: none;
   background-image: none;
 }
-.umd-nav-promo img {
+.umd-shell-nav-promo img {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
 }
-.umd-nav-promo .umd-nav-promo-title {
+.umd-shell-nav-promo .umd-shell-nav-promo-headline {
   display: block;
   margin-top: 12px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -955,7 +955,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   color: var(--umd-color-black, #000);
   transition: color 0.3s ease-in-out;
 }
-.umd-nav-promo .umd-nav-promo-text {
+.umd-shell-nav-promo .umd-shell-nav-promo-text {
   display: block;
   margin-top: 4px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -964,8 +964,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   line-height: 1.4;
   color: var(--umd-color-gray-darker, #454545);
 }
-.umd-nav-promo a:hover .umd-nav-promo-title,
-.umd-nav-promo a:focus .umd-nav-promo-title {
+.umd-shell-nav-promo a:hover .umd-shell-nav-promo-headline,
+.umd-shell-nav-promo a:focus .umd-shell-nav-promo-headline {
   color: var(--umd-color-red, #e21833);
 }
   </style>
@@ -1215,12 +1215,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://ugst.umd.edu/llsop/index.html">Living-Learning &amp; Special Programs</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="../../pages/academics/programs.html">
             <img src="../../images/academics/students-walking.jpg" alt="" />
-            <span class="umd-nav-promo-title">All Programs</span>
-            <span class="umd-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
+            <span class="umd-shell-nav-promo-headline">All Programs</span>
+            <span class="umd-shell-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1247,12 +1247,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="../../pages/how-to-apply/application-faqs.html">Application FAQs</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="https://admissions.umd.edu/apply/application-deadlines">
             <img src="../../images/admissions/how-to-apply-hero.jpg" alt="" />
-            <span class="umd-nav-promo-title">Application Deadlines</span>
-            <span class="umd-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
+            <span class="umd-shell-nav-promo-headline">Application Deadlines</span>
+            <span class="umd-shell-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1266,12 +1266,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">
             <img src="../../images/tuition/idea-factory-hero.jpg" alt="" />
-            <span class="umd-nav-promo-title">Cost of Attendance</span>
-            <span class="umd-nav-promo-text">See what a year at Maryland actually costs.</span>
+            <span class="umd-shell-nav-promo-headline">Cost of Attendance</span>
+            <span class="umd-shell-nav-promo-text">See what a year at Maryland actually costs.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1358,11 +1358,11 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </section>
 
   <!-- 4. GET TO KNOW OUR PROCESS — eyebrow intro + brand chevron, CTAs pulled here -->
-  <section class="umd-layout-vertical-landing study-here-section">
-    <div class="study-here-chevron" aria-hidden="true">
+  <section class="umd-layout-vertical-landing umd-admissions-study-here-section">
+    <div class="umd-admissions-study-here-chevron" aria-hidden="true">
       <umd-element-brand-logo-animation></umd-element-brand-logo-animation>
     </div>
-    <div class="umd-layout-space-horizontal-small study-here-content">
+    <div class="umd-layout-space-horizontal-small umd-admissions-study-here-content">
       <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
       <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">Get to Know Our Process</p>
       <div class="umd-text-rich-advanced">
@@ -1445,12 +1445,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </section>
 
   <!-- 9. WHEN TO APPLY — custom deadline-finder widget (no DS equivalent); light-gray band, width matched to the pathway lock -->
-  <section class="umd-layout-vertical-landing wta-section">
-    <div class="wta-chevron" aria-hidden="true">
+  <section class="umd-layout-vertical-landing umd-admissions-deadline-finder-section">
+    <div class="umd-admissions-deadline-finder-chevron" aria-hidden="true">
       <umd-element-brand-logo-animation></umd-element-brand-logo-animation>
     </div>
     <div class="umd-layout-space-horizontal-larger">
-      <div class="wta-band">
+      <div class="umd-admissions-deadline-finder-band">
         <umd-element-section-intro>
           <h2 slot="headline">When to Apply</h2>
           <div slot="text"><p>Answer the questions below to check your application deadlines.</p></div>
@@ -1459,44 +1459,44 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       <style>
         /* When-to-Apply widget — page-local; light-gray band, all-black text,
            DS typography classes on content; band width = pathway lock content. */
-        .wta-band { background-color: var(--umd-color-gray-lighter); padding: 80px 48px; }
-        @media (max-width: 649px) { .wta-band { padding: 48px 24px; } }
+        .umd-admissions-deadline-finder-band { background-color: var(--umd-color-gray-lighter); padding: 80px 48px; }
+        @media (max-width: 649px) { .umd-admissions-deadline-finder-band { padding: 48px 24px; } }
         /* Brand chevron animation — same element as the study-here section, mirrored
            to the LEFT edge of the SCREEN; enters from the viewport edge and tucks
            BEHIND the inset gray band (z-index below the content lock). */
-        .wta-section { position: relative; }
-        .wta-section > .umd-layout-space-horizontal-larger { position: relative; z-index: 1; }
-        /* Chevron sits UNDER the gray band (z-index 0); JS adds .is-in when the section
+        .umd-admissions-deadline-finder-section { position: relative; }
+        .umd-admissions-deadline-finder-section > .umd-layout-space-horizontal-larger { position: relative; z-index: 1; }
+        /* Chevron sits UNDER the gray band (z-index 0); JS sets [data-in-view] when the section
            scrolls into view, sliding it from off-screen left to rest (a reliable
            transition, not view-timeline). No overflow clip — the stack only extends
            off-screen left (no h-scroll) and would otherwise crop the lower chevrons. */
-        .wta-chevron {
+        .umd-admissions-deadline-finder-chevron {
           position: absolute; top: 0; right: 0; bottom: 0; left: 0;
           pointer-events: none; z-index: 0;
           transform: translateX(-24vw);
           transition: transform 1.1s cubic-bezier(.16, 1, .3, 1);
         }
-        .wta-chevron.is-in { transform: translateX(0); }
-        @media (prefers-reduced-motion: reduce) { .wta-chevron { transition: none; } }
+        .umd-admissions-deadline-finder-chevron[data-in-view] { transform: translateX(0); }
+        @media (prefers-reduced-motion: reduce) { .umd-admissions-deadline-finder-chevron { transition: none; } }
         /* Chevron is anchored to the RIGHT of a 100vw internal container and points
            right. Keep it unmirrored (arrows point right) and shift it a full viewport
            left, bringing the cluster onto the band's left edge. */
-        .wta-chevron > umd-element-brand-logo-animation {
+        .umd-admissions-deadline-finder-chevron > umd-element-brand-logo-animation {
           position: absolute; top: 50%; left: 0; right: 0;
           transform: translateY(-151px) translateX(calc(-100vw + 170px)); display: block;
           /* The DS ':defined' rule clips this element to a 25vw box (overflow:clip),
              cropping the lower two chevrons. Let them show in full here. */
           overflow: visible;
         }
-        @media (max-width: 1023px) { .wta-chevron { display: none; } }
-        .wta { max-width: 860px; margin: 24px auto 0; font-family: inherit; color: var(--umd-color-black); }
-        .wta__controls {
+        @media (max-width: 1023px) { .umd-admissions-deadline-finder-chevron { display: none; } }
+        .umd-admissions-deadline-finder { max-width: 860px; margin: 24px auto 0; font-family: inherit; color: var(--umd-color-black); }
+        .umd-admissions-deadline-finder-controls {
           display: grid; grid-template-columns: 1fr; gap: 16px;
         }
-        @media (min-width: 650px) { .wta__controls { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
-        .wta__group { display: flex; flex-direction: column; gap: 8px; }
-        .wta__label { font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--umd-color-black); }
-        .wta__select {
+        @media (min-width: 650px) { .umd-admissions-deadline-finder-controls { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
+        .umd-admissions-deadline-finder-group { display: flex; flex-direction: column; gap: 8px; }
+        .umd-admissions-deadline-finder-label { font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--umd-color-black); }
+        .umd-admissions-deadline-finder-select {
           appearance: none; -webkit-appearance: none; width: 100%;
           font-family: inherit; font-size: 16px; line-height: 1.3; color: var(--umd-color-black);
           padding: 14px 44px 14px 16px; background-color: var(--umd-color-white);
@@ -1504,53 +1504,51 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23000000' stroke-width='2'/%3E%3C/svg%3E");
           background-repeat: no-repeat; background-position: right 16px center;
         }
-        .wta__select:focus-visible { outline: 2px solid var(--umd-color-black); outline-offset: 2px; }
-        .wta__result {
+        .umd-admissions-deadline-finder-select:focus-visible { outline: 2px solid var(--umd-color-black); outline-offset: 2px; }
+        .umd-admissions-deadline-finder-result {
           margin-top: 32px; border-left: 4px solid var(--umd-color-red); background: rgba(0,0,0,0.05);
-          padding: 28px 28px 24px; display: none;
+          padding: 28px 28px 24px;
         }
-        .wta__result.is-visible { display: block; }
-        .wta__result-title { color: var(--umd-color-black); margin: 0 0 16px; }
-        .wta__rows { margin: 0; }
-        .wta__row {
+        .umd-admissions-deadline-finder-result-title { color: var(--umd-color-black); margin: 0 0 16px; }
+        .umd-admissions-deadline-finder-rows { margin: 0; }
+        .umd-admissions-deadline-finder-row {
           display: flex; align-items: baseline; gap: 12px; justify-content: space-between;
           padding: 12px 0; border-bottom: 1px solid var(--umd-color-black);
         }
-        .wta__row:last-child { border-bottom: 0; }
-        .wta__row dt { color: var(--umd-color-black); margin: 0; }
-        .wta__row dd { color: var(--umd-color-black); font-weight: 700; margin: 0; text-align: right; white-space: nowrap; }
-        .wta__hint {
-          display: none; margin-top: 32px; padding: 24px; border: 1px dashed var(--umd-color-black);
+        .umd-admissions-deadline-finder-row:last-child { border-bottom: 0; }
+        .umd-admissions-deadline-finder-row dt { color: var(--umd-color-black); margin: 0; }
+        .umd-admissions-deadline-finder-row dd { color: var(--umd-color-black); font-weight: 700; margin: 0; text-align: right; white-space: nowrap; }
+        .umd-admissions-deadline-finder-hint {
+          margin-top: 32px; padding: 24px; border: 1px dashed var(--umd-color-black);
           text-align: center; color: var(--umd-color-black);
         }
-        .wta__hint.is-visible { display: block; }
-        .wta__foot { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
-        .wta__all { color: var(--umd-color-black); }
-        .wta__note { margin-top: 20px; color: var(--umd-color-black); }
+        .umd-admissions-deadline-finder-footer { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+        .umd-admissions-deadline-finder-all { color: var(--umd-color-black); }
+        .umd-admissions-deadline-finder-note { margin-top: 20px; color: var(--umd-color-black); }
       </style>
 
-      <div class="wta" id="whenToApply">
-        <div class="wta__controls">
-          <div class="wta__group">
-            <label class="wta__label umd-sans-smaller" for="wta-type">Student Type</label>
-            <select class="wta__select" id="wta-type" aria-label="Student type">
+      <div class="umd-admissions-deadline-finder" id="whenToApply">
+        <div class="umd-admissions-deadline-finder-controls">
+          <div class="umd-admissions-deadline-finder-group">
+            <label class="umd-admissions-deadline-finder-label umd-sans-smaller" for="wta-type">Student Type</label>
+            <select class="umd-admissions-deadline-finder-select" id="wta-type" aria-label="Student type">
               <option value="" selected>I'm a…</option>
               <option value="freshman">Freshman</option>
               <option value="transfer">Transfer</option>
               <option value="shadygrove">Shady Grove student</option>
             </select>
           </div>
-          <div class="wta__group">
-            <label class="wta__label umd-sans-smaller" for="wta-status">US or International</label>
-            <select class="wta__select" id="wta-status" aria-label="US or international">
+          <div class="umd-admissions-deadline-finder-group">
+            <label class="umd-admissions-deadline-finder-label umd-sans-smaller" for="wta-status">US or International</label>
+            <select class="umd-admissions-deadline-finder-select" id="wta-status" aria-label="US or international">
               <option value="" selected>I'm a…</option>
               <option value="us">US student</option>
               <option value="intl">International student</option>
             </select>
           </div>
-          <div class="wta__group">
-            <label class="wta__label umd-sans-smaller" for="wta-semester">Semester</label>
-            <select class="wta__select" id="wta-semester" aria-label="Semester">
+          <div class="umd-admissions-deadline-finder-group">
+            <label class="umd-admissions-deadline-finder-label umd-sans-smaller" for="wta-semester">Semester</label>
+            <select class="umd-admissions-deadline-finder-select" id="wta-semester" aria-label="Semester">
               <option value="" selected>Choose one…</option>
               <option value="fall">Fall</option>
               <option value="spring">Spring</option>
@@ -1558,18 +1556,18 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           </div>
         </div>
 
-        <div class="wta__hint is-visible umd-sans-small" id="wta-hint">Make a selection above to see your deadlines.</div>
+        <div class="umd-admissions-deadline-finder-hint umd-sans-small" id="wta-hint">Make a selection above to see your deadlines.</div>
 
-        <div class="wta__result" id="wta-result" role="region" aria-live="polite">
-          <p class="wta__result-title umd-sans-larger-bold" id="wta-result-title"></p>
-          <dl class="wta__rows" id="wta-rows"></dl>
+        <div class="umd-admissions-deadline-finder-result" id="wta-result" hidden role="region" aria-live="polite">
+          <p class="umd-admissions-deadline-finder-result-title umd-sans-larger-bold" id="wta-result-title"></p>
+          <dl class="umd-admissions-deadline-finder-rows" id="wta-rows"></dl>
         </div>
 
-        <div class="wta__foot">
+        <div class="umd-admissions-deadline-finder-footer">
           <umd-element-call-to-action data-display="secondary" id="wta-reset-cta" style="display:none;">
             <button type="button" id="wta-reset">Start over</button>
           </umd-element-call-to-action>
-          <span class="wta__all umd-sans-smaller">Not sure? <a class="umd-text-link-red" href="https://admissions.umd.edu/apply/application-deadlines">See all application deadlines</a></span>
+          <span class="umd-admissions-deadline-finder-all umd-sans-smaller">Not sure? <a class="umd-text-link-red" href="https://admissions.umd.edu/apply/application-deadlines">See all application deadlines</a></span>
         </div>
       </div>
 
@@ -1613,9 +1611,9 @@ umd-element-scroll-top[data-layout-fixed="true"] {
             var t = typeEl.value, s = statusEl.value, sem = semEl.value;
             var any = t || s || sem;
             if (!(t && s && sem)) {
-              resultEl.classList.remove('is-visible');
+              resultEl.hidden = true;
               resetCta.style.display = 'none';
-              hintEl.classList.add('is-visible');
+              hintEl.hidden = false;
               hintEl.textContent = any ? 'Finish the remaining selections to see your deadlines.' : 'Make a selection above to see your deadlines.';
               return;
             }
@@ -1626,12 +1624,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
             entry.rows.forEach(function (row) {
               var dt = document.createElement('dt'); dt.textContent = row[0]; dt.className = 'umd-sans-small';
               var dd = document.createElement('dd'); dd.textContent = row[1]; dd.className = 'umd-sans-small';
-              var wrap = document.createElement('div'); wrap.className = 'wta__row';
+              var wrap = document.createElement('div'); wrap.className = 'umd-admissions-deadline-finder-row';
               wrap.appendChild(dt); wrap.appendChild(dd);
               rowsEl.appendChild(wrap);
             });
-            hintEl.classList.remove('is-visible');
-            resultEl.classList.add('is-visible');
+            hintEl.hidden = true;
+            resultEl.hidden = false;
             resetCta.style.display = '';
           }
           function reset() {
@@ -1641,7 +1639,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           [typeEl, statusEl, semEl].forEach(function (el) { el.addEventListener('change', render); });
           // Delegate on the light-DOM foot so the click still fires after the
           // call-to-action component reprojects its slotted button.
-          var footEl = document.querySelector('.wta__foot');
+          var footEl = document.querySelector('.umd-admissions-deadline-finder-footer');
           if (footEl) footEl.addEventListener('click', function (e) {
             if (e.target.closest('#wta-reset-cta')) { e.preventDefault(); reset(); }
           });
@@ -1650,14 +1648,14 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           // box, so pure-CSS viewport math drifts it off-screen on wide monitors.
           // Anchor it to the gray band's LEFT edge in JS instead (tuck ~70px under),
           // and recompute on resize so it stays with the content at any width.
-          var chevronEl = document.querySelector('.wta-chevron');
-          var sectionEl = document.querySelector('.wta-section');
+          var chevronEl = document.querySelector('.umd-admissions-deadline-finder-chevron');
+          var sectionEl = document.querySelector('.umd-admissions-deadline-finder-section');
           var chevronAnim = chevronEl && chevronEl.querySelector('umd-element-brand-logo-animation');
           function positionChevron() {
             if (!chevronEl || !chevronAnim || !chevronAnim.shadowRoot) return;
             if (getComputedStyle(chevronEl).display === 'none') return;
             var svg = chevronAnim.shadowRoot.querySelector('svg');
-            var band = document.querySelector('.wta-band');
+            var band = document.querySelector('.umd-admissions-deadline-finder-band');
             if (!svg || !band) return;
             var wrapTx = new DOMMatrixReadOnly(getComputedStyle(chevronEl).transform).m41;
             chevronAnim.style.transform = 'translateY(-151px)';
@@ -1678,12 +1676,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           if (chevronEl && sectionEl && 'IntersectionObserver' in window) {
             var io = new IntersectionObserver(function (entries) {
               entries.forEach(function (en) {
-                if (en.isIntersecting) { positionChevron(); chevronEl.classList.add('is-in'); io.disconnect(); }
+                if (en.isIntersecting) { positionChevron(); chevronEl.setAttribute('data-in-view', ''); io.disconnect(); }
               });
             }, { threshold: 0.2 });
             io.observe(sectionEl);
           } else if (chevronEl) {
-            positionChevron(); chevronEl.classList.add('is-in');
+            positionChevron(); chevronEl.setAttribute('data-in-view', '');
           }
         })();
       </script>

@@ -150,10 +150,10 @@ def render(slug, data, programs, colleges_by_slug):
               <a href="{e(p["titleLink"])}" target="_blank" rel="noopener">Learn more</a>
             </umd-element-call-to-action>
           </div>''' if p['titleLink'] else '')
-        cards.append(f'''        <umd-element-card data-display="list" class="interest-major">
+        cards.append(f'''        <umd-element-card data-display="list" class="umd-admissions-interest-major">
           <p slot="eyebrow">{e(types)}</p>
           <h3 slot="headline">{head}</h3>
-          <p slot="text" class="interest-major-desc">{e(plain(p["description"]))}</p>{actions}
+          <p slot="text" class="umd-admissions-interest-major-description">{e(plain(p["description"]))}</p>{actions}
         </umd-element-card>''')
     cards_html = '\n'.join(cards)
 
@@ -337,7 +337,7 @@ def render(slug, data, programs, colleges_by_slug):
           </div>
         </umd-element-card-overlay>
       </div>
-      <div slot="static-column" class="interest-majors-grid">
+      <div slot="static-column" class="umd-admissions-interest-majors-grid">
 
 {cards_html}
 
@@ -356,7 +356,7 @@ def render(slug, data, programs, colleges_by_slug):
       <img slot="image" src="{e(careers['image'])}" alt="{e(careers['alt'])}" />
       <h2 slot="headline">{careers['headline']}</h2>
       <div slot="text">
-        <ul class="interest-careers-list">
+        <ul class="umd-admissions-interest-careers-list">
 {careers_items}
         </ul>
       </div>

@@ -81,13 +81,13 @@ BODY = r'''  </style>
     /* Brand chevron animation flanking the Study Here rich text and
        overlapping ~120px up into the hero above. Hidden below tablet
        to avoid crowding the single-column stacked content. */
-    .study-here-section {
+    .umd-admissions-study-here-section {
       position: relative;
       overflow: visible;
       z-index: 100;
     }
 
-    .study-here-content {
+    .umd-admissions-study-here-content {
       position: relative;
       z-index: 2;
     }
@@ -95,7 +95,7 @@ BODY = r'''  </style>
     /* The brand-logo-animation hardcodes its inner container to
        width:100vw, height:50vw and anchors chevrons to right:0. So
        the host must span full width — sizing/clipping won't work. */
-    .study-here-chevron {
+    .umd-admissions-study-here-chevron {
       position: absolute;
       top: -180px;
       left: 0;
@@ -106,7 +106,7 @@ BODY = r'''  </style>
       overflow: visible;
     }
 
-    .study-here-chevron > umd-element-brand-logo-animation {
+    .umd-admissions-study-here-chevron > umd-element-brand-logo-animation {
       position: absolute;
       top: 0;
       left: 0;
@@ -115,7 +115,7 @@ BODY = r'''  </style>
     }
 
     @media (max-width: 1023px) {
-      .study-here-chevron { display: none; }
+      .umd-admissions-study-here-chevron { display: none; }
     }
   </style>
   <!-- Programs explorer — page-specific styles -->
@@ -125,164 +125,164 @@ BODY = r'''  </style>
        it was a hand-rolled duplicate of --umd-color-red and is gone. */
 
     /* two-column layout: filter rail + results */
-    .programs-layout { display:block; }
+    .umd-admissions-filter-layout { display:block; }
 
     @media (min-width:1020px) {
-      .programs-layout { display:flex; align-items:flex-start; gap:64px; }
+      .umd-admissions-filter-layout { display:flex; align-items:flex-start; gap:64px; }
       /* deliberately NOT sticky: a pinned rail has to cap its own height, and
          that nested scroller (plus the per-group ones) meant up to three
          scrollbars on one screen. The rail scrolls with the page instead. */
-      .programs-filters { width:30%; min-width:260px; max-width:360px; }
+      .umd-admissions-filter-sidebar { width:30%; min-width:260px; max-width:360px; }
     }
 
-    .programs-results { flex:1; min-width:0; }
+    .umd-admissions-filter-results { flex:1; min-width:0; }
 
     /* mobile filter toggle */
-    .pf-mobile-toggle {
+    .umd-admissions-filter-mobile-toggle {
       display:flex; justify-content:space-between; align-items:center; gap:16px;
       width:100%; padding:14px 16px; margin-bottom:16px; cursor:pointer;
       background:var(--umd-color-black); color:var(--umd-color-white); border:0; font-weight:700;
     }
 
-    .pf-mobile-toggle::after { content:"+"; font-size:22px; line-height:1; }
+    .umd-admissions-filter-mobile-toggle::after { content:"+"; font-size:22px; line-height:1; }
 
-    .pf-mobile-toggle[aria-expanded="true"]::after { content:"\2212"; }
+    .umd-admissions-filter-mobile-toggle[aria-expanded="true"]::after { content:"\2212"; }
 
-    @media (min-width:1020px) { .pf-mobile-toggle { display:none; } }
+    @media (min-width:1020px) { .umd-admissions-filter-mobile-toggle { display:none; } }
 
     #pf-form { display:block; }
 
     @media (max-width:1019px) {
       #pf-form { display:none; }
-      #pf-form.is-open { display:block; }
+      #pf-form[data-open] { display:block; }
     }
 
     /* search bar — lifted from the experts page (input + red square submit) */
-    .pf-search-bar { margin:0 0 32px; }
+    .umd-admissions-filter-search-bar { margin:0 0 32px; }
 
-    .pf-search-row { display:flex; gap:8px; align-items:center; }
+    .umd-admissions-filter-search-row { display:flex; gap:8px; align-items:center; }
 
-    .pf-search-row input {
+    .umd-admissions-filter-search-row input {
       flex:1 1 auto; min-width:0; height:48px; padding:12px 16px;
       border:1px solid var(--umd-color-gray-light); border-radius:0; background:var(--umd-color-white);
       font:inherit; font-size:16px; -webkit-appearance:none; appearance:none;
     }
 
-    .pf-search-row input:focus-visible { outline:2px solid var(--umd-color-red); outline-offset:1px; border-color:var(--umd-color-red); }
+    .umd-admissions-filter-search-row input:focus-visible { outline:2px solid var(--umd-color-red); outline-offset:1px; border-color:var(--umd-color-red); }
 
-    .pf-search-submit {
+    .umd-admissions-filter-search-submit {
       flex:0 0 auto; width:48px; height:48px; border:0; border-radius:0; cursor:pointer;
       background:var(--umd-color-red); display:flex; align-items:center; justify-content:center;
       transition:background-color .5s;
     }
 
-    .pf-search-submit:hover, .pf-search-submit:focus-visible { background:var(--umd-color-red-dark); }
+    .umd-admissions-filter-search-submit:hover, .umd-admissions-filter-search-submit:focus-visible { background:var(--umd-color-red-dark); }
 
-    .pf-search-submit svg { width:20px; height:20px; fill:var(--umd-color-white); }
+    .umd-admissions-filter-search-submit svg { width:20px; height:20px; fill:var(--umd-color-white); }
 
     /* accordion filter groups (adapted from the experts REFINE rail) */
-    .pf-group { border-bottom:1px solid var(--umd-color-black); margin-bottom:24px; padding-bottom:24px; }
+    .umd-admissions-filter-group { border-bottom:1px solid var(--umd-color-black); margin-bottom:24px; padding-bottom:24px; }
 
-    .pf-group:last-of-type { border-bottom:0; }
+    .umd-admissions-filter-group:last-of-type { border-bottom:0; }
 
-    .pf-group > button {
+    .umd-admissions-filter-group > button {
       display:flex; position:relative; justify-content:space-between; align-items:center;
       gap:16px; width:100%; padding:0 24px 0 0; background:none; border:0; cursor:pointer;
       font:inherit; font-weight:700; font-size:18px; text-align:left; color:var(--umd-color-black);
       transition:color .3s;
     }
 
-    .pf-group > button:hover, .pf-group > button:focus-visible { color:var(--umd-color-red); }
+    .umd-admissions-filter-group > button:hover, .umd-admissions-filter-group > button:focus-visible { color:var(--umd-color-red); }
 
-    .pf-group > button::before, .pf-group > button::after {
+    .umd-admissions-filter-group > button::before, .umd-admissions-filter-group > button::after {
       content:""; position:absolute; top:calc(50% - 1px); right:0;
       width:12px; height:2px; background:currentColor; transition:transform .3s;
     }
 
-    .pf-group > button::after { transform:rotate(90deg); }
+    .umd-admissions-filter-group > button::after { transform:rotate(90deg); }
 
-    .pf-group.open > button::after { transform:rotate(0); }
+    .umd-admissions-filter-group[data-open] > button::after { transform:rotate(0); }
 
-    .pf-body { display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; }
+    .umd-admissions-filter-group-body { display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; }
 
-    .pf-group.open .pf-body { grid-template-rows:1fr; }
+    .umd-admissions-filter-group[data-open] .umd-admissions-filter-group-body { grid-template-rows:1fr; }
 
-    .pf-body > div { min-height:0; overflow:hidden; }
+    .umd-admissions-filter-group-body > div { min-height:0; overflow:hidden; }
 
-    .pf-body fieldset {
+    .umd-admissions-filter-group-body fieldset {
       border:0; margin:0; padding:18px 0 2px; display:flex; flex-direction:column; gap:14px;
     }
 
     /* groups longer than PF_SHOW_LIMIT hide the tail behind a "Show all" toggle
        rather than a nested scrollbar (see buildGroups) */
-    .pf-body fieldset.is-collapsed .pf-extra { display:none; }
+    .umd-admissions-filter-group-body fieldset[data-collapsed] .umd-admissions-filter-option-extra { display:none; }
 
     /* the toggle reuses the DS .umd-text-cluster-pill chip, same as the active-filter
        pills above; neutralize its wrapping-margin hack and set our own offset. */
-    .pf-more-cluster.umd-text-cluster-pill { display:inline-flex; margin-top:8px; }
+    .umd-admissions-filter-show-all-cluster.umd-text-cluster-pill { display:inline-flex; margin-top:8px; }
 
-    .pf-more-cluster.umd-text-cluster-pill > .pf-more { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
+    .umd-admissions-filter-show-all-cluster.umd-text-cluster-pill > .umd-admissions-filter-show-all { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
 
-    .pf-more-cluster.umd-text-cluster-pill > .pf-more:hover,
-    .pf-more-cluster.umd-text-cluster-pill > .pf-more:focus-visible { background-color:var(--umd-color-gold); }
+    .umd-admissions-filter-show-all-cluster.umd-text-cluster-pill > .umd-admissions-filter-show-all:hover,
+    .umd-admissions-filter-show-all-cluster.umd-text-cluster-pill > .umd-admissions-filter-show-all:focus-visible { background-color:var(--umd-color-gold); }
 
     /* option rows use the DS .umd-field-checkbox-wrapper (font-weight:400 — the
        DS-native counter to the global label{font-weight:700}
 
     rule) so only the
        group header stays bold. */
-    .pf-body .umd-field-checkbox-wrapper { align-items:flex-start; gap:12px; margin-bottom:0; line-height:1.3; }
+    .umd-admissions-filter-group-body .umd-field-checkbox-wrapper { align-items:flex-start; gap:12px; margin-bottom:0; line-height:1.3; }
 
-    .pf-body input[type="checkbox"] { margin:.15em 0 0; width:18px; height:18px; accent-color:var(--umd-color-red); flex:0 0 auto; }
+    .umd-admissions-filter-group-body input[type="checkbox"] { margin:.15em 0 0; width:18px; height:18px; accent-color:var(--umd-color-red); flex:0 0 auto; }
 
-    .pf-count { color:var(--umd-color-gray-medium-a-a); font-variant-numeric:tabular-nums; }
+    .umd-admissions-filter-count { color:var(--umd-color-gray-medium-a-a); font-variant-numeric:tabular-nums; }
 
-    .pf-actions { margin-top:24px; }
+    .umd-admissions-filter-actions { margin-top:24px; }
 
     /* A–Z quick-nav (umd-campaign-extrasmall provides the italic Barlow face) */
-    .az-nav { display:flex; flex-wrap:wrap; gap:6px 18px; margin:0 0 40px; padding-bottom:24px; border-bottom:2px solid var(--umd-color-red); }
+    .umd-admissions-alphabet-nav { display:flex; flex-wrap:wrap; gap:6px 18px; margin:0 0 40px; padding-bottom:24px; border-bottom:2px solid var(--umd-color-red); }
 
-    .az-nav a { color:var(--umd-color-red); text-decoration:none; line-height:1; transition:opacity .2s; }
+    .umd-admissions-alphabet-nav a { color:var(--umd-color-red); text-decoration:none; line-height:1; transition:opacity .2s; }
 
-    .az-nav a:hover, .az-nav a:focus-visible { text-decoration:underline; }
+    .umd-admissions-alphabet-nav a:hover, .umd-admissions-alphabet-nav a:focus-visible { text-decoration:underline; }
 
-    .az-nav .az-off { color:var(--umd-color-gray-medium); opacity:.5; line-height:1; pointer-events:none; }
+    .umd-admissions-alphabet-nav .umd-admissions-alphabet-letter-empty { color:var(--umd-color-gray-medium); opacity:.5; line-height:1; pointer-events:none; }
 
     /* active-filter pills */
-    .pf-pills { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:24px; }
+    .umd-admissions-filter-pills { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:24px; }
 
-    .pf-pills-label { font-weight:700; margin-right:4px; }
+    .umd-admissions-filter-pills-label { font-weight:700; margin-right:4px; }
 
     /* active-filter pills use the DS .umd-text-cluster-pill chip (#FAFAFA, 12px);
        neutralize its wrapping-margin hack and use flex gap instead. */
-    .pf-pill-cluster.umd-text-cluster-pill { margin-top:0; display:inline-flex; flex-wrap:wrap; gap:8px; }
+    .umd-admissions-filter-pill-cluster.umd-text-cluster-pill { margin-top:0; display:inline-flex; flex-wrap:wrap; gap:8px; }
 
-    .pf-pills .umd-text-cluster-pill > * { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
+    .umd-admissions-filter-pills .umd-text-cluster-pill > * { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
 
-    .pf-pills .umd-text-cluster-pill > button:hover,
-    .pf-pills .umd-text-cluster-pill > button:focus-visible { background-color:var(--umd-color-gold); }
+    .umd-admissions-filter-pills .umd-text-cluster-pill > button:hover,
+    .umd-admissions-filter-pills .umd-text-cluster-pill > button:focus-visible { background-color:var(--umd-color-gold); }
 
-    .pf-clear {
+    .umd-admissions-filter-clear {
       background:none; border:0; padding:0 0 0 6px; cursor:pointer; color:var(--umd-color-black);
       text-decoration:underline; text-underline-offset:.15em;
     }
 
-    .pf-clear:hover { color:var(--umd-color-red); }
+    .umd-admissions-filter-clear:hover { color:var(--umd-color-red); }
 
-    .pf-count-line { margin:0 0 24px; }
+    .umd-admissions-filter-count-line { margin:0 0 24px; }
 
-    .pf-empty { font-size:18px; }
+    .umd-admissions-filter-empty { font-size:18px; }
 
     /* letter sections + rows */
-    .az-section { scroll-margin-top:120px; margin-bottom:40px; }
+    .umd-admissions-alphabet-section { scroll-margin-top:120px; margin-bottom:40px; }
 
-    .az-letter { color:var(--umd-color-red); margin:0 0 8px; }
+    .umd-admissions-alphabet-letter { color:var(--umd-color-red); margin:0 0 8px; }
 
-    @media (min-width:1024px) { .az-letter { margin-bottom:24px; } }
+    @media (min-width:1024px) { .umd-admissions-alphabet-letter { margin-bottom:24px; } }
 
-    .program-row { display:block; }
+    .umd-admissions-program-row { display:block; }
 
-    .program-row + .program-row { margin-top:0; }
+    .umd-admissions-program-row + .umd-admissions-program-row { margin-top:0; }
   </style>
 
 @@CHROME:chrome-css@@
@@ -311,17 +311,17 @@ BODY = r'''  </style>
   <!-- 4. PROGRAMS EXPLORER — experts-style faceted filter + A–Z directory -->
   <section class="umd-layout-vertical-landing">
     <div class="umd-layout-space-horizontal-larger">
-      <div class="programs-layout">
+      <div class="umd-admissions-filter-layout">
 
         <!-- FILTER RAIL -->
-        <aside class="programs-filters" aria-label="Filter programs">
-          <button type="button" id="pf-mobile-toggle" class="pf-mobile-toggle" aria-expanded="false" aria-controls="pf-form">
+        <aside class="umd-admissions-filter-sidebar" aria-label="Filter programs">
+          <button type="button" id="umd-admissions-filter-mobile-toggle" class="umd-admissions-filter-mobile-toggle" aria-expanded="false" aria-controls="pf-form">
             <span>Filter programs</span>
           </button>
           <form id="pf-form">
             <h2 class="umd-tailwing-right-headline"><span>REFINE</span></h2>
             <div id="pf-groups"></div>
-            <div class="pf-actions">
+            <div class="umd-admissions-filter-actions">
               <umd-element-call-to-action data-display="outline">
                 <button type="button" id="pf-reset">Reset filters</button>
               </umd-element-call-to-action>
@@ -330,25 +330,25 @@ BODY = r'''  </style>
         </aside>
 
         <!-- RESULTS -->
-        <div class="programs-results">
-          <nav class="az-nav umd-campaign-extrasmall" id="az-nav" aria-label="Jump to programs by letter"></nav>
+        <div class="umd-admissions-filter-results">
+          <nav class="umd-admissions-alphabet-nav umd-campaign-extrasmall" id="umd-admissions-alphabet-nav" aria-label="Jump to programs by letter"></nav>
 
           <!-- search bar (styled after the umdrightnow.umd.edu/experts search:
                DS highlight card = gray bg + red left rule) -->
-          <form id="pf-search-bar" class="pf-search-bar umd-layout-background-highlight-light" role="search" action="#">
+          <form id="umd-admissions-filter-search-bar" class="umd-admissions-filter-search-bar umd-layout-background-highlight-light" role="search" action="#">
             <label class="sr-only" for="pf-q">Search programs</label>
-            <div class="pf-search-row">
+            <div class="umd-admissions-filter-search-row">
               <input type="search" id="pf-q" name="q" placeholder="Search programs" autocomplete="off" />
-              <button type="submit" class="pf-search-submit" aria-label="Submit search">
+              <button type="submit" class="umd-admissions-filter-search-submit" aria-label="Submit search">
                 <svg viewBox="0 0 96 96" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M79.3401 42.2306C79.3401 54.1438 69.6826 63.8013 57.7694 63.8013C45.8562 63.8013 36.1987 54.1438 36.1987 42.2306C36.1987 30.3174 45.8562 20.6599 57.7694 20.6599C69.6826 20.6599 79.3401 30.3174 79.3401 42.2306ZM91 42.2306C91 60.5833 76.1222 75.4612 57.7694 75.4612C51.3447 75.4612 45.3458 73.6379 40.2619 70.4806L24.2216 86.5209H5L30.2245 60.8255C26.6351 55.5189 24.5388 49.1195 24.5388 42.2306C24.5388 23.8778 39.4167 9 57.7694 9C76.1222 9 91 23.8778 91 42.2306Z"></path></svg>
               </button>
             </div>
           </form>
 
-          <div class="pf-pills" id="pf-pills" hidden></div>
-          <p class="pf-count-line umd-sans-smaller" id="pf-count" role="status" aria-live="polite"></p>
+          <div class="umd-admissions-filter-pills" id="umd-admissions-filter-pills" hidden></div>
+          <p class="umd-admissions-filter-count-line umd-sans-smaller" id="umd-admissions-filter-count" role="status" aria-live="polite"></p>
           <div id="pf-list"></div>
-          <p id="pf-empty" class="pf-empty" hidden>No programs match your filters. Try removing a filter.</p>
+          <p id="umd-admissions-filter-empty" class="umd-admissions-filter-empty" hidden>No programs match your filters. Try removing a filter.</p>
         </div>
 
       </div>
@@ -467,10 +467,10 @@ BODY = r'''  </style>
     var qInput    = document.getElementById('pf-q');
     var groupsHost= document.getElementById('pf-groups');
     var listHost  = document.getElementById('pf-list');
-    var emptyEl   = document.getElementById('pf-empty');
-    var countEl   = document.getElementById('pf-count');
-    var pillsHost = document.getElementById('pf-pills');
-    var navEl     = document.getElementById('az-nav');
+    var emptyEl   = document.getElementById('umd-admissions-filter-empty');
+    var countEl   = document.getElementById('umd-admissions-filter-count');
+    var pillsHost = document.getElementById('umd-admissions-filter-pills');
+    var navEl     = document.getElementById('umd-admissions-alphabet-nav');
 
     function esc(s) {
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
@@ -490,22 +490,22 @@ BODY = r'''  </style>
         var long = opts.length > PF_SHOW_LIMIT;
         var rows = opts.map(function (o, i) {
           return '<label class="umd-field-checkbox-wrapper' +
-            (long && i >= PF_SHOW_LIMIT ? ' pf-extra' : '') +
+            (long && i >= PF_SHOW_LIMIT ? ' umd-admissions-filter-option-extra' : '') +
             '"><input type="checkbox" data-group="' + key +
             '" value="' + esc(o.title) + '"><span>' + esc(o.title) +
-            ' <span class="pf-count umd-sans-smaller">(' + o.count + ')</span></span></label>';
+            ' <span class="umd-admissions-filter-count umd-sans-smaller">(' + o.count + ')</span></span></label>';
         }).join('');
         var more = long
-          ? '<span class="umd-text-cluster-pill pf-more-cluster">' +
-            '<button type="button" class="pf-more" aria-expanded="false" aria-controls="pf-set-' + key + '">' +
+          ? '<span class="umd-text-cluster-pill umd-admissions-filter-show-all-cluster">' +
+            '<button type="button" class="umd-admissions-filter-show-all" aria-expanded="false" aria-controls="pf-set-' + key + '">' +
             'Show all ' + opts.length + '</button></span>'
           : '';
         var open = idx === 0;
-        return '<div class="pf-group' + (open ? ' open' : '') + '" data-group="' + key + '">' +
+        return '<div class="umd-admissions-filter-group"' + (open ? ' data-open' : '') + ' data-group="' + key + '">' +
           '<button type="button" aria-expanded="' + open + '" aria-controls="pf-body-' + key + '">' +
           '<span>' + GROUP_LABELS[key] + '</span></button>' +
-          '<div class="pf-body" id="pf-body-' + key + '"><div>' +
-          '<fieldset id="pf-set-' + key + '"' + (long ? ' class="is-collapsed"' : '') + '>' +
+          '<div class="umd-admissions-filter-group-body" id="pf-body-' + key + '"><div>' +
+          '<fieldset id="pf-set-' + key + '"' + (long ? ' data-collapsed' : '') + '>' +
           rows + '</fieldset>' + more + '</div></div></div>';
       }).join('');
     }
@@ -532,7 +532,7 @@ BODY = r'''  </style>
     function cardHTML(p) {
       var text = p.d ? '<p slot="text">' + esc(p.d) + '</p>' : '';
       var types = p.t.length ? '<p slot="date">' + esc(p.t.join(' | ')) + '</p>' : '';
-      return '<umd-element-card data-display="list" class="program-row">' +
+      return '<umd-element-card data-display="list" class="umd-admissions-program-row">' +
         '<h3 slot="headline"><a href="' + esc(p.u) + '">' + esc(p.n) + '</a></h3>' +
         text + types + '</umd-element-card>';
     }
@@ -549,7 +549,7 @@ BODY = r'''  </style>
       navEl.innerHTML = ALPHA.map(function (L) {
         return byLetter[L]
           ? '<a href="#letter-' + L + '" data-letter="' + L + '">' + L + '</a>'
-          : '<span class="az-off" aria-hidden="true">' + L + '</span>';
+          : '<span class="umd-admissions-alphabet-letter-empty" aria-hidden="true">' + L + '</span>';
       }).join('');
 
       // results
@@ -559,8 +559,8 @@ BODY = r'''  </style>
       } else {
         emptyEl.hidden = true;
         listHost.innerHTML = ALPHA.filter(function (L) { return byLetter[L]; }).map(function (L) {
-          return '<section class="az-section" id="letter-' + L + '" aria-labelledby="letter-h-' + L + '">' +
-            '<h2 class="az-letter umd-campaign-small" id="letter-h-' + L + '">' + L + '</h2>' +
+          return '<section class="umd-admissions-alphabet-section" id="letter-' + L + '" aria-labelledby="letter-h-' + L + '">' +
+            '<h2 class="umd-admissions-alphabet-letter umd-campaign-small" id="letter-h-' + L + '">' + L + '</h2>' +
             byLetter[L].map(cardHTML).join('') + '</section>';
         }).join('');
       }
@@ -577,15 +577,15 @@ BODY = r'''  </style>
       });
       if (!items.length) { pillsHost.hidden = true; pillsHost.innerHTML = ''; return; }
       pillsHost.hidden = false;
-      pillsHost.innerHTML = '<span class="pf-pills-label">Filtered by:</span>' +
-        '<span class="umd-text-cluster-pill pf-pill-cluster">' +
+      pillsHost.innerHTML = '<span class="umd-admissions-filter-pills-label">Filtered by:</span>' +
+        '<span class="umd-text-cluster-pill umd-admissions-filter-pill-cluster">' +
         items.map(function (it) {
           return '<button type="button" class="pf-pill" data-k="' + it.k + '" data-v="' +
             esc(it.v) + '"><span>' + esc(it.label) +
             ' <span aria-hidden="true">\u00d7</span></span></button>';
         }).join('') +
         '</span>' +
-        '<button type="button" class="pf-clear umd-sans-smaller" id="pf-clearall">Clear all</button>';
+        '<button type="button" class="umd-admissions-filter-clear umd-sans-smaller" id="pf-clearall">Clear all</button>';
     }
 
     // ---- events ----
@@ -597,7 +597,7 @@ BODY = r'''  </style>
 
     form.addEventListener('submit', function (e) { e.preventDefault(); collect(); render(); });
 
-    var searchForm = document.getElementById('pf-search-bar');
+    var searchForm = document.getElementById('umd-admissions-filter-search-bar');
     searchForm.addEventListener('submit', function (e) { e.preventDefault(); collect(); render(); });
 
     form.addEventListener('change', function (e) {
@@ -606,10 +606,10 @@ BODY = r'''  </style>
 
     // "Show all N" / "Show less" toggle on long groups
     groupsHost.addEventListener('click', function (e) {
-      var more = e.target.closest('.pf-more');
+      var more = e.target.closest('.umd-admissions-filter-show-all');
       if (!more) return;
       var set = document.getElementById(more.getAttribute('aria-controls'));
-      var collapsed = set.classList.toggle('is-collapsed');
+      var collapsed = set.toggleAttribute('data-collapsed');
       more.setAttribute('aria-expanded', String(!collapsed));
       more.textContent = collapsed
         ? 'Show all ' + set.querySelectorAll('input[type="checkbox"]').length
@@ -617,25 +617,25 @@ BODY = r'''  </style>
     });
 
     // accordion toggle — the group's own header button only, so the nested
-    // .pf-more button doesn't fall through and toggle the fieldset
+    // .umd-admissions-filter-show-all button doesn't fall through and toggle the fieldset
     groupsHost.addEventListener('click', function (e) {
-      var btn = e.target.closest('.pf-group > button');
+      var btn = e.target.closest('.umd-admissions-filter-group > button');
       if (!btn) return;
       var group = btn.parentElement;
-      var open = group.classList.toggle('open');
+      var open = group.toggleAttribute('data-open');
       btn.setAttribute('aria-expanded', open);
     });
 
     // reset — the "Reset filters" outline CTA clones its <button> into shadow DOM,
     // so the visible click can't drive a native form reset. Catch it on the
-    // light-DOM .pf-actions wrapper (the composed click retargets to the CTA host
+    // light-DOM .umd-admissions-filter-actions wrapper (the composed click retargets to the CTA host
     // and bubbles here) and clear state explicitly.
     function clearAll() {
       form.querySelectorAll('input[type="checkbox"]:checked').forEach(function (cb) { cb.checked = false; });
       qInput.value = '';
       collect(); render();
     }
-    document.querySelector('.pf-actions').addEventListener('click', clearAll);
+    document.querySelector('.umd-admissions-filter-actions').addEventListener('click', clearAll);
     form.addEventListener('reset', function () { setTimeout(clearAll, 0); });
 
     // pill removal / clear all
@@ -667,9 +667,9 @@ BODY = r'''  </style>
     });
 
     // mobile filter toggle
-    var mobileToggle = document.getElementById('pf-mobile-toggle');
+    var mobileToggle = document.getElementById('umd-admissions-filter-mobile-toggle');
     mobileToggle.addEventListener('click', function () {
-      var open = form.classList.toggle('is-open');
+      var open = form.toggleAttribute('data-open');
       mobileToggle.setAttribute('aria-expanded', open);
     });
 

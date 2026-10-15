@@ -837,16 +837,16 @@
        no order:-1 flip; see the zig-zag pattern notes in CLAUDE.md
        for why this project avoids that. 1024px matches the DS's own
        desktop.min breakpoint. */
-    .event-layout { display: block; }
+    .umd-admissions-event-layout { display: block; }
 
     @media (min-width: 1024px) {
-      .event-layout { display: flex; align-items: flex-start; gap: 64px; }
-      .event-main { flex: 1; min-width: 0; }
-      .event-rail { width: 360px; flex: none; }
+      .umd-admissions-event-layout { display: flex; align-items: flex-start; gap: 64px; }
+      .umd-admissions-event-main { flex: 1; min-width: 0; }
+      .umd-admissions-event-rail { width: 360px; flex: none; }
     }
 
-    .event-main figure { margin-top: 32px; }
-    .event-main img { display: block; width: 100%; height: auto; }
+    .umd-admissions-event-main figure { margin-top: 32px; }
+    .umd-admissions-event-main img { display: block; width: 100%; height: auto; }
 
     /* --- rail fields -----------------------------------------------
        Plain white -- same background the trailing-rule label already
@@ -854,7 +854,7 @@
        behind it put two different whites next to each other, which is
        what read as broken; the fix is to not fight it with a second
        background. */
-    .event-rail-field + .event-rail-field { margin-top: 32px; }
+    .umd-admissions-event-rail-field + .umd-admissions-event-rail-field { margin-top: 32px; }
 
     /* umd-text-line-trailing (composeTrailing's default theme) sets no
        text `color` of its own -- only elements.labelSmall (font/size/
@@ -873,7 +873,7 @@
        umd-tailwing-right-headline / umd-text-line-trailing-light): both
        compute color:#000 there too -- they just happen to be <h2>s, so
        they never hit the collision this page's <p> labels do. */
-    .event-rail-field .umd-text-line-trailing { color: var(--umd-color-black); }
+    .umd-admissions-event-rail-field .umd-text-line-trailing { color: var(--umd-color-black); }
 
     /* umd-element-event-sign-container ships no box and no colour: the
        plain umd-sans-small / umd-sans-extralarge classes only get a
@@ -884,7 +884,7 @@
        theme. So the date sign otherwise just inherits whatever colour
        its context happens to be — pin it to the token explicitly.
 
-       The rule has to target .event-sign-start (the <p>) directly, not
+       The rule has to target .umd-admissions-event-date-sign (the <p>) directly, not
        just the container div: base.min.css ships a bare `p{color:
        #454545}` element rule, and a rule that DIRECTLY matches an
        element always wins over an inherited value, no matter how much
@@ -892,7 +892,7 @@
        color only on the container left the container itself black while
        its <p> (and the spans inside it) stayed gray-dark. */
     .umd-element-event-sign-container,
-    .event-sign-start { color: var(--umd-color-black); }
+    .umd-admissions-event-date-sign { color: var(--umd-color-black); }
 
     /* umd-element-event-meta-item is only ever laid out icon-beside-
        text by umd-element-event-meta-wrapper's position selectors
@@ -907,12 +907,12 @@
        center either), and center reads wrong the moment location wraps
        to a second line, pulling the pin icon down to the middle of both
        lines instead of sitting level with the first. */
-    .event-rail-field .umd-element-event-meta-item {
+    .umd-admissions-event-rail-field .umd-element-event-meta-item {
       display: flex;
       align-items: flex-start;
       gap: 8px;
     }
-    .event-rail-field .umd-element-event-meta-item + .umd-element-event-meta-item {
+    .umd-admissions-event-rail-field .umd-element-event-meta-item + .umd-element-event-meta-item {
       margin-top: 8px;
     }
 
@@ -920,35 +920,35 @@
        Per LAYOUT-PATTERNS.md's "Active-filter chips" note: neutralise the
        container's margin-top:-8px hack and the children's matching
        margin-top:8px with flex + gap, or wrapped rows double up. */
-    .event-rail-field .umd-text-cluster-pill {
+    .umd-admissions-event-rail-field .umd-text-cluster-pill {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin-top: 0;
     }
-    .event-rail-field .umd-text-cluster-pill > * {
+    .umd-admissions-event-rail-field .umd-text-cluster-pill > * {
       margin-top: 0;
     }
 
-    .event-rail-actions {
+    .umd-admissions-event-rail-actions {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-    .event-rail-actions umd-element-call-to-action { display: block; }
+    .umd-admissions-event-rail-actions umd-element-call-to-action { display: block; }
 
     /* --- Upcoming Events — bordered, image-less card grid, three up
        (the calendar page's own pre-2026-09-10 "Upcoming Events" block;
        see OVERRIDES.md). Border comes from a shadow injection, not this
        CSS -- umd-element-event has no working data-visual-bordered. */
-    .event-upcoming-heading { background-color: var(--umd-color-white); margin: 0; }
+    .umd-admissions-event-upcoming-heading { background-color: var(--umd-color-white); margin: 0; }
 
-    .event-upcoming-grid { margin-top: var(--umd-space-xl); }
+    .umd-admissions-event-upcoming-grid { margin-top: var(--umd-space-xl); }
 
-    @media (max-width: 767px) { .event-upcoming-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 767px) { .umd-admissions-event-upcoming-grid { grid-template-columns: 1fr; } }
 
     @media (min-width: 768px) and (max-width: 1019px) {
-      .event-upcoming-grid { grid-template-columns: repeat(2, 1fr); }
+      .umd-admissions-event-upcoming-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
@@ -1020,7 +1020,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 
    The shadow supplies the column box (.nav-item-dropdown-multiple-column
    > * { min-width: 232px }); everything inside it is ours. */
-.umd-nav-promo a {
+.umd-shell-nav-promo a {
   display: block;
   width: 232px;
   max-width: 100%;
@@ -1028,13 +1028,13 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   text-decoration: none;
   background-image: none;
 }
-.umd-nav-promo img {
+.umd-shell-nav-promo img {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
 }
-.umd-nav-promo .umd-nav-promo-title {
+.umd-shell-nav-promo .umd-shell-nav-promo-headline {
   display: block;
   margin-top: 12px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -1044,7 +1044,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   color: var(--umd-color-black, #000);
   transition: color 0.3s ease-in-out;
 }
-.umd-nav-promo .umd-nav-promo-text {
+.umd-shell-nav-promo .umd-shell-nav-promo-text {
   display: block;
   margin-top: 4px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -1053,8 +1053,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   line-height: 1.4;
   color: var(--umd-color-gray-darker, #454545);
 }
-.umd-nav-promo a:hover .umd-nav-promo-title,
-.umd-nav-promo a:focus .umd-nav-promo-title {
+.umd-shell-nav-promo a:hover .umd-shell-nav-promo-headline,
+.umd-shell-nav-promo a:focus .umd-shell-nav-promo-headline {
   color: var(--umd-color-red, #e21833);
 }
   </style>
@@ -1303,12 +1303,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://ugst.umd.edu/llsop/index.html">Living-Learning &amp; Special Programs</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="../../pages/academics/programs.html">
             <img src="../../images/academics/students-walking.jpg" alt="" />
-            <span class="umd-nav-promo-title">All Programs</span>
-            <span class="umd-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
+            <span class="umd-shell-nav-promo-headline">All Programs</span>
+            <span class="umd-shell-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1335,12 +1335,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="../../pages/how-to-apply/application-faqs.html">Application FAQs</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="https://admissions.umd.edu/apply/application-deadlines">
             <img src="../../images/admissions/how-to-apply-hero.jpg" alt="" />
-            <span class="umd-nav-promo-title">Application Deadlines</span>
-            <span class="umd-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
+            <span class="umd-shell-nav-promo-headline">Application Deadlines</span>
+            <span class="umd-shell-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1354,12 +1354,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">
             <img src="../../images/tuition/idea-factory-hero.jpg" alt="" />
-            <span class="umd-nav-promo-title">Cost of Attendance</span>
-            <span class="umd-nav-promo-text">See what a year at Maryland actually costs.</span>
+            <span class="umd-shell-nav-promo-headline">Cost of Attendance</span>
+            <span class="umd-shell-nav-promo-text">See what a year at Maryland actually costs.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1467,8 +1467,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
          <umd-element-event> component itself renders. -->
     <section class="umd-layout-space-vertical-interior">
       <div class="umd-layout-space-horizontal-larger">
-        <div class="event-layout">
-          <div class="event-main">
+        <div class="umd-admissions-event-layout">
+          <div class="umd-admissions-event-main">
             <div class="umd-text-rich-advanced">
               <p class="umd-sans-large text-black">Are you a high school student starting to think about college? Are you thinking business might be the right degree for you? If so, register today for our Smith Friday to learn more about the Robert H. Smith School of Business at the University of Maryland, College Park.</p>
           <p>During each Smith Friday you, and your family, will have the opportunity to meet with current faculty, staff, and students, participate in a college information session and specific prospective student and family Q&amp;A sessions, and tour the home of the Smith School, Van Munching Hall.</p>
@@ -1478,17 +1478,17 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         </figure>
           </div>
 
-          <aside class="event-rail">
-            <div class="event-rail-field">
+          <aside class="umd-admissions-event-rail">
+            <div class="umd-admissions-event-rail-field">
               <div class="umd-element-event-sign-container">
-                <p class="event-sign-start">
+                <p class="umd-admissions-event-date-sign">
                   <span class="umd-sans-small">Sep</span>
                   <span class="umd-sans-extralarge">25</span>
                 </p>
               </div>
             </div>
 
-            <div class="event-rail-field">
+            <div class="umd-admissions-event-rail-field">
               <p class="umd-text-line-trailing"><span>Date &amp; Time</span></p>
               <p class="umd-element-event-meta-item">
                 <span><svg title="calendar icon" aria-hidden="true" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.48311 0H3.46959V1.66667H10.7534V0H12.7399V1.66667H13.8986V4.33333H0.158783V1.66667H1.48311V0ZM13.8986 5.33333H0.158783V14.1667H13.8986V5.33333Z" fill="#454545"/></svg></span>
@@ -1500,7 +1500,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
               </p>
             </div>
 
-            <div class="event-rail-field">
+            <div class="umd-admissions-event-rail-field">
               <p class="umd-text-line-trailing"><span>Location</span></p>
               <p class="umd-element-event-meta-item">
                 <span><svg title="pin icon" aria-hidden="true" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.7842 0.5C2.86055 0.5 0.481873 2.59352 0.481873 5.16668C0.481873 5.93914 0.701308 6.70504 1.11846 7.38436L5.49424 14.3496C5.55249 14.4425 5.6635 14.5 5.7842 14.5C5.9049 14.5 6.0159 14.4425 6.07416 14.3496L10.4516 7.38207C10.8671 6.70504 11.0865 5.93911 11.0865 5.16665C11.0865 2.59352 8.70784 0.5 5.7842 0.5ZM5.7842 8.16667C4.32237 8.16667 3.29972 6.95325 3.29972 5.66668C3.29972 4.3801 4.32237 3.16669 5.7842 3.16669C7.24602 3.16669 8.26868 4.3801 8.26868 5.66668C8.26868 6.95325 7.24602 8.16667 5.7842 8.16667Z" fill="#454545"/></svg></span>
@@ -1508,7 +1508,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
               </p>
             </div>
 
-              <div class="event-rail-field">
+              <div class="umd-admissions-event-rail-field">
                 <p class="umd-text-line-trailing"><span>Event Type</span></p>
                 <div class="umd-text-cluster-pill">
           <span>Academic Programs</span>
@@ -1516,14 +1516,14 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         </div>
               </div>
 
-              <div class="event-rail-field">
+              <div class="umd-admissions-event-rail-field">
                 <p class="umd-text-line-trailing"><span>Audience</span></p>
                 <div class="umd-text-cluster-pill">
           <span>Prospective Students</span>
         </div>
               </div>
 
-            <div class="event-rail-field event-rail-actions">
+            <div class="umd-admissions-event-rail-field umd-admissions-event-rail-actions">
               <umd-element-call-to-action data-display="primary">
             <a href="https://umd.alumniq.com/events/private/Sept26SmithFriday" target="_blank" rel="noopener">Register Now</a>
           </umd-element-call-to-action>
@@ -1542,11 +1542,11 @@ umd-element-scroll-top[data-layout-fixed="true"] {
          gap"); the border is a shadow injection below, not CSS. -->
     <section class="umd-layout-space-vertical-interior">
       <div class="umd-layout-space-horizontal-larger">
-        <h2 class="event-upcoming-heading umd-text-line-trailing"><span>Upcoming Events</span></h2>
-        <div class="event-upcoming-grid umd-layout-grid-gap-three" data-animation="off">
-        <umd-element-event class="event-upcoming-card" data-visual-time="true"><h3 slot="headline"><a href="https://admissions.umd.edu/calendar/2026-09-25/agnr-iaa-info-session-92526-1000am">AGNR &amp; IAA Information Session</a></h3><p slot="text">The College of Agriculture and Natural Resources (AGNR) invites you to join a comprehensive presentation highlighting our diverse academic program options.…</p><time slot="start-date-iso" datetime="2026-09-25T10:00:00">2026-09-25T10:00:00</time><time slot="end-date-iso" datetime="2026-09-25T10:00:00">2026-09-25T10:00:00</time><p slot="location">On Campus</p></umd-element-event>
-        <umd-element-event class="event-upcoming-card" data-visual-time="true"><h3 slot="headline"><a href="https://admissions.umd.edu/calendar/2026-10-05/agnr-iaa-info-session-92826-1015am">AGNR &amp; IAA Information Session</a></h3><p slot="text">The College of Agriculture and Natural Resources (AGNR) invites you to join a comprehensive presentation highlighting our diverse academic program options.…</p><time slot="start-date-iso" datetime="2026-10-05T10:15:00">2026-10-05T10:15:00</time><time slot="end-date-iso" datetime="2026-10-05T10:15:00">2026-10-05T10:15:00</time><p slot="location">On Campus</p></umd-element-event>
-        <umd-element-event class="event-upcoming-card" data-visual-time="true"><h3 slot="headline"><a href="https://admissions.umd.edu/calendar/2026-10-05/arch-fa26-tours-200pm">ARCH Tour</a></h3><p slot="text">The School of Architecture, Planning &amp; Preservation invites prospective student to attend an advisor-led tour. During this tour guests will preview details of…</p><time slot="start-date-iso" datetime="2026-10-05T14:00:00">2026-10-05T14:00:00</time><time slot="end-date-iso" datetime="2026-10-05T14:00:00">2026-10-05T14:00:00</time><p slot="location">On Campus</p></umd-element-event>
+        <h2 class="umd-admissions-event-upcoming-heading umd-text-line-trailing"><span>Upcoming Events</span></h2>
+        <div class="umd-admissions-event-upcoming-grid umd-layout-grid-gap-three" data-animation="off">
+        <umd-element-event class="umd-admissions-event-upcoming-card" data-visual-time="true"><h3 slot="headline"><a href="https://admissions.umd.edu/calendar/2026-09-25/agnr-iaa-info-session-92526-1000am">AGNR &amp; IAA Information Session</a></h3><p slot="text">The College of Agriculture and Natural Resources (AGNR) invites you to join a comprehensive presentation highlighting our diverse academic program options.…</p><time slot="start-date-iso" datetime="2026-09-25T10:00:00">2026-09-25T10:00:00</time><time slot="end-date-iso" datetime="2026-09-25T10:00:00">2026-09-25T10:00:00</time><p slot="location">On Campus</p></umd-element-event>
+        <umd-element-event class="umd-admissions-event-upcoming-card" data-visual-time="true"><h3 slot="headline"><a href="https://admissions.umd.edu/calendar/2026-10-05/agnr-iaa-info-session-92826-1015am">AGNR &amp; IAA Information Session</a></h3><p slot="text">The College of Agriculture and Natural Resources (AGNR) invites you to join a comprehensive presentation highlighting our diverse academic program options.…</p><time slot="start-date-iso" datetime="2026-10-05T10:15:00">2026-10-05T10:15:00</time><time slot="end-date-iso" datetime="2026-10-05T10:15:00">2026-10-05T10:15:00</time><p slot="location">On Campus</p></umd-element-event>
+        <umd-element-event class="umd-admissions-event-upcoming-card" data-visual-time="true"><h3 slot="headline"><a href="https://admissions.umd.edu/calendar/2026-10-05/arch-fa26-tours-200pm">ARCH Tour</a></h3><p slot="text">The School of Architecture, Planning &amp; Preservation invites prospective student to attend an advisor-led tour. During this tour guests will preview details of…</p><time slot="start-date-iso" datetime="2026-10-05T14:00:00">2026-10-05T14:00:00</time><time slot="end-date-iso" datetime="2026-10-05T14:00:00">2026-10-05T14:00:00</time><p slot="location">On Campus</p></umd-element-event>
         </div>
       </div>
     </section>
@@ -1657,7 +1657,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         el.__eventCardBorderInjected = true;
       }
       function applyAll() {
-        document.querySelectorAll('.event-upcoming-card').forEach(inject);
+        document.querySelectorAll('.umd-admissions-event-upcoming-card').forEach(inject);
       }
       customElements.whenDefined('umd-element-event').then(function () {
         applyAll();

@@ -842,18 +842,18 @@
        The animation hardcodes its inner container to width:100vw /
        height:50vw and anchors chevrons to right:0, so the host must
        span full width -- sizing or clipping it does not work. */
-    .reps-intro-section {
+    .umd-admissions-representatives-intro-section {
       position: relative;
       overflow: visible;
       z-index: 100;
     }
 
-    .reps-intro-content {
+    .umd-admissions-representatives-intro-content {
       position: relative;
       z-index: 2;
     }
 
-    .reps-chevron {
+    .umd-admissions-representatives-chevron {
       position: absolute;
       top: -180px;
       left: 0;
@@ -864,7 +864,7 @@
       overflow: visible;
     }
 
-    .reps-chevron > umd-element-brand-logo-animation {
+    .umd-admissions-representatives-chevron > umd-element-brand-logo-animation {
       position: absolute;
       top: 0;
       left: 0;
@@ -873,7 +873,7 @@
     }
 
     @media (max-width: 1023px) {
-      .reps-chevron { display: none; }
+      .umd-admissions-representatives-chevron { display: none; }
     }
 
     /* --- rep grid ----------------------------------------------
@@ -906,14 +906,14 @@
        Measured against the loaded bundles, not assumed. The rules below are
        the "minimal lift" from briefs/experts-filter.md, which documents this
        same search bar on the experts page. */
-    .reps-search-row {
+    .umd-admissions-representatives-search-row {
       display: flex;
       gap: 8px;
       align-items: center;
     }
-    .reps-search-row input { flex: 1; }
+    .umd-admissions-representatives-search-row input { flex: 1; }
     /* 44x44 red submit, matching the template's Tailwind box exactly. */
-    .reps-search-submit {
+    .umd-admissions-representatives-search-submit {
       flex: none;
       width: 44px;
       height: 44px;
@@ -925,9 +925,9 @@
       cursor: pointer;
       transition: background-color .5s;
     }
-    .reps-search-submit:hover,
-    .reps-search-submit:focus-visible { background: #a90007; }
-    .reps-search-submit svg { width: 20px; height: 20px; fill: #fff; }
+    .umd-admissions-representatives-search-submit:hover,
+    .umd-admissions-representatives-search-submit:focus-visible { background: #a90007; }
+    .umd-admissions-representatives-search-submit svg { width: 20px; height: 20px; fill: #fff; }
 
     /* Gap between the results grid and whatever follows it.
 
@@ -945,27 +945,27 @@
        the copy would jump back up against the grid the moment a filter
        narrowed the results. Followers have margin-top: 0, so there is no
        collapsing to reason about -- the gap is exactly this value. */
-    .reps-results-wrap { margin-bottom: 80px; }
+    .umd-admissions-representatives-results { margin-bottom: 80px; }
 
     /* Results count + empty state. The template's .umd-shell-pagination-results
        is site CSS, not DS, so the type is set here. */
-    .reps-results-status {
+    .umd-admissions-representatives-results-status {
       font-size: 14px;
       color: var(--umd-color-gray-dark, #757575);
       margin-top: 24px;
     }
-    .reps-empty { padding: 48px 0; text-align: center; }
-    .reps-load-more { display: flex; justify-content: center; }
+    .umd-admissions-representatives-empty { padding: 48px 0; text-align: center; }
+    .umd-admissions-representatives-load-more { display: flex; justify-content: center; }
     /* JS hides this when every match is already on screen; without JS the
        whole set is rendered, so the button has nothing to do and stays gone. */
-    .reps-load-more[hidden] { display: none; }
+    .umd-admissions-representatives-load-more[hidden] { display: none; }
 
     /* --- territory list (bio pages) ----------------------------
        The territories are a plain list, but a rep can cover nine of them
        (Abigail Trice) or none at all, so a single column runs long and a
        fixed multi-column grid leaves a ragged hole. Columns that fill on
        width keep both ends honest. */
-    .rep-regions-list {
+    .umd-admissions-representative-regions-list {
       list-style: none;
       margin: 0;
       padding: 0;
@@ -974,12 +974,12 @@
       gap: 12px 32px;
     }
     @media (min-width: 650px) {
-      .rep-regions-list { grid-template-columns: repeat(2, 1fr); }
+      .umd-admissions-representative-regions-list { grid-template-columns: repeat(2, 1fr); }
     }
     @media (min-width: 1024px) {
-      .rep-regions-list { grid-template-columns: repeat(3, 1fr); }
+      .umd-admissions-representative-regions-list { grid-template-columns: repeat(3, 1fr); }
     }
-    .rep-regions-list li {
+    .umd-admissions-representative-regions-list li {
       border-top: 1px solid var(--umd-color-gray-light, #e6e6e6);
       padding-top: 12px;
     }
@@ -1053,7 +1053,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 
    The shadow supplies the column box (.nav-item-dropdown-multiple-column
    > * { min-width: 232px }); everything inside it is ours. */
-.umd-nav-promo a {
+.umd-shell-nav-promo a {
   display: block;
   width: 232px;
   max-width: 100%;
@@ -1061,13 +1061,13 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   text-decoration: none;
   background-image: none;
 }
-.umd-nav-promo img {
+.umd-shell-nav-promo img {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
 }
-.umd-nav-promo .umd-nav-promo-title {
+.umd-shell-nav-promo .umd-shell-nav-promo-headline {
   display: block;
   margin-top: 12px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -1077,7 +1077,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   color: var(--umd-color-black, #000);
   transition: color 0.3s ease-in-out;
 }
-.umd-nav-promo .umd-nav-promo-text {
+.umd-shell-nav-promo .umd-shell-nav-promo-text {
   display: block;
   margin-top: 4px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -1086,8 +1086,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   line-height: 1.4;
   color: var(--umd-color-gray-darker, #454545);
 }
-.umd-nav-promo a:hover .umd-nav-promo-title,
-.umd-nav-promo a:focus .umd-nav-promo-title {
+.umd-shell-nav-promo a:hover .umd-shell-nav-promo-headline,
+.umd-shell-nav-promo a:focus .umd-shell-nav-promo-headline {
   color: var(--umd-color-red, #e21833);
 }
   </style>
@@ -1336,12 +1336,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://ugst.umd.edu/llsop/index.html">Living-Learning &amp; Special Programs</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="../../pages/academics/programs.html">
             <img src="../../images/academics/students-walking.jpg" alt="" />
-            <span class="umd-nav-promo-title">All Programs</span>
-            <span class="umd-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
+            <span class="umd-shell-nav-promo-headline">All Programs</span>
+            <span class="umd-shell-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1368,12 +1368,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="../../pages/how-to-apply/application-faqs.html">Application FAQs</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="https://admissions.umd.edu/apply/application-deadlines">
             <img src="../../images/admissions/how-to-apply-hero.jpg" alt="" />
-            <span class="umd-nav-promo-title">Application Deadlines</span>
-            <span class="umd-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
+            <span class="umd-shell-nav-promo-headline">Application Deadlines</span>
+            <span class="umd-shell-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1387,12 +1387,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">
             <img src="../../images/tuition/idea-factory-hero.jpg" alt="" />
-            <span class="umd-nav-promo-title">Cost of Attendance</span>
-            <span class="umd-nav-promo-text">See what a year at Maryland actually costs.</span>
+            <span class="umd-shell-nav-promo-headline">Cost of Attendance</span>
+            <span class="umd-shell-nav-promo-text">See what a year at Maryland actually costs.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1588,16 +1588,16 @@ umd-element-scroll-top[data-layout-fixed="true"] {
             </div>
           </div>
 
-          <div class="reps-search-row">
+          <div class="umd-admissions-representatives-search-row">
             <label for="reps-search" class="sr-only">Search</label>
             <input type="text" id="reps-search" name="search" class="umd-field-input"
                    placeholder="Search by name or title" autocomplete="off" />
-            <button type="submit" class="reps-search-submit" aria-label="Submit search"><svg aria-hidden="true" width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M79.3401 42.2306C79.3401 54.1438 69.6826 63.8013 57.7694 63.8013C45.8562 63.8013 36.1987 54.1438 36.1987 42.2306C36.1987 30.3174 45.8562 20.6599 57.7694 20.6599C69.6826 20.6599 79.3401 30.3174 79.3401 42.2306ZM91 42.2306C91 60.5833 76.1222 75.4612 57.7694 75.4612C51.3447 75.4612 45.3458 73.6379 40.2619 70.4806L24.2216 86.5209H5L30.2245 60.8255C26.6351 55.5189 24.5388 49.1195 24.5388 42.2306C24.5388 23.8778 39.4167 9 57.7694 9C76.1222 9 91 23.8778 91 42.2306Z" /></svg></button>
+            <button type="submit" class="umd-admissions-representatives-search-submit" aria-label="Submit search"><svg aria-hidden="true" width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M79.3401 42.2306C79.3401 54.1438 69.6826 63.8013 57.7694 63.8013C45.8562 63.8013 36.1987 54.1438 36.1987 42.2306C36.1987 30.3174 45.8562 20.6599 57.7694 20.6599C69.6826 20.6599 79.3401 30.3174 79.3401 42.2306ZM91 42.2306C91 60.5833 76.1222 75.4612 57.7694 75.4612C51.3447 75.4612 45.3458 73.6379 40.2619 70.4806L24.2216 86.5209H5L30.2245 60.8255C26.6351 55.5189 24.5388 49.1195 24.5388 42.2306C24.5388 23.8778 39.4167 9 57.7694 9C76.1222 9 91 23.8778 91 42.2306Z" /></svg></button>
           </div>
         </div>
       </form>
 
-      <p class="reps-results-status" id="reps-status" role="status" aria-live="polite"></p>
+      <p class="umd-admissions-representatives-results-status" id="reps-status" role="status" aria-live="polite"></p>
     </div>
   </section>
 
@@ -1608,7 +1608,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
        hidden cells: critical.css §19's partial-row rules key off :nth-child,
        and display:none-ing a card leaves it in the count and paints the
        borders wrong. -->
-  <div class="umd-layout-space-horizontal-larger reps-results-wrap">
+  <div class="umd-layout-space-horizontal-larger umd-admissions-representatives-results">
     <section id="reps-results" class="umd-layout-grid-border-four">
 
         <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height"
@@ -1757,10 +1757,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         </umd-element-person>
 
     </section>
-    <p class="reps-empty" id="reps-empty" hidden>No representatives match those filters.</p>
+    <p class="umd-admissions-representatives-empty" id="umd-admissions-representatives-empty" hidden>No representatives match those filters.</p>
   </div>
 
-  <section class="umd-layout-vertical-landing reps-load-more" id="reps-load-more" hidden>
+  <section class="umd-layout-vertical-landing umd-admissions-representatives-load-more" id="umd-admissions-representatives-load-more" hidden>
     <button type="button" class="umd-action-outline" id="reps-load-more-button">Load More</button>
   </section>
 
@@ -1941,8 +1941,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     var form = document.getElementById('reps-filter');
     var grid = document.getElementById('reps-results');
     var status = document.getElementById('reps-status');
-    var empty = document.getElementById('reps-empty');
-    var more = document.getElementById('reps-load-more');
+    var empty = document.getElementById('umd-admissions-representatives-empty');
+    var more = document.getElementById('umd-admissions-representatives-load-more');
     var moreBtn = document.getElementById('reps-load-more-button');
     var termSel = document.getElementById('reps-territory');
     var searchIn = document.getElementById('reps-search');

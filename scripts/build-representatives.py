@@ -82,18 +82,18 @@ PAGE_CSS = '''
        The animation hardcodes its inner container to width:100vw /
        height:50vw and anchors chevrons to right:0, so the host must
        span full width -- sizing or clipping it does not work. */
-    .reps-intro-section {
+    .umd-admissions-representatives-intro-section {
       position: relative;
       overflow: visible;
       z-index: 100;
     }
 
-    .reps-intro-content {
+    .umd-admissions-representatives-intro-content {
       position: relative;
       z-index: 2;
     }
 
-    .reps-chevron {
+    .umd-admissions-representatives-chevron {
       position: absolute;
       top: -180px;
       left: 0;
@@ -104,7 +104,7 @@ PAGE_CSS = '''
       overflow: visible;
     }
 
-    .reps-chevron > umd-element-brand-logo-animation {
+    .umd-admissions-representatives-chevron > umd-element-brand-logo-animation {
       position: absolute;
       top: 0;
       left: 0;
@@ -113,7 +113,7 @@ PAGE_CSS = '''
     }
 
     @media (max-width: 1023px) {
-      .reps-chevron { display: none; }
+      .umd-admissions-representatives-chevron { display: none; }
     }
 
     /* --- rep grid ----------------------------------------------
@@ -146,14 +146,14 @@ PAGE_CSS = '''
        Measured against the loaded bundles, not assumed. The rules below are
        the "minimal lift" from briefs/experts-filter.md, which documents this
        same search bar on the experts page. */
-    .reps-search-row {
+    .umd-admissions-representatives-search-row {
       display: flex;
       gap: 8px;
       align-items: center;
     }
-    .reps-search-row input { flex: 1; }
+    .umd-admissions-representatives-search-row input { flex: 1; }
     /* 44x44 red submit, matching the template's Tailwind box exactly. */
-    .reps-search-submit {
+    .umd-admissions-representatives-search-submit {
       flex: none;
       width: 44px;
       height: 44px;
@@ -165,9 +165,9 @@ PAGE_CSS = '''
       cursor: pointer;
       transition: background-color .5s;
     }
-    .reps-search-submit:hover,
-    .reps-search-submit:focus-visible { background: #a90007; }
-    .reps-search-submit svg { width: 20px; height: 20px; fill: #fff; }
+    .umd-admissions-representatives-search-submit:hover,
+    .umd-admissions-representatives-search-submit:focus-visible { background: #a90007; }
+    .umd-admissions-representatives-search-submit svg { width: 20px; height: 20px; fill: #fff; }
 
     /* Gap between the results grid and whatever follows it.
 
@@ -185,27 +185,27 @@ PAGE_CSS = '''
        the copy would jump back up against the grid the moment a filter
        narrowed the results. Followers have margin-top: 0, so there is no
        collapsing to reason about -- the gap is exactly this value. */
-    .reps-results-wrap { margin-bottom: 80px; }
+    .umd-admissions-representatives-results { margin-bottom: 80px; }
 
     /* Results count + empty state. The template's .umd-shell-pagination-results
        is site CSS, not DS, so the type is set here. */
-    .reps-results-status {
+    .umd-admissions-representatives-results-status {
       font-size: 14px;
       color: var(--umd-color-gray-dark, #757575);
       margin-top: 24px;
     }
-    .reps-empty { padding: 48px 0; text-align: center; }
-    .reps-load-more { display: flex; justify-content: center; }
+    .umd-admissions-representatives-empty { padding: 48px 0; text-align: center; }
+    .umd-admissions-representatives-load-more { display: flex; justify-content: center; }
     /* JS hides this when every match is already on screen; without JS the
        whole set is rendered, so the button has nothing to do and stays gone. */
-    .reps-load-more[hidden] { display: none; }
+    .umd-admissions-representatives-load-more[hidden] { display: none; }
 
     /* --- territory list (bio pages) ----------------------------
        The territories are a plain list, but a rep can cover nine of them
        (Abigail Trice) or none at all, so a single column runs long and a
        fixed multi-column grid leaves a ragged hole. Columns that fill on
        width keep both ends honest. */
-    .rep-regions-list {
+    .umd-admissions-representative-regions-list {
       list-style: none;
       margin: 0;
       padding: 0;
@@ -214,12 +214,12 @@ PAGE_CSS = '''
       gap: 12px 32px;
     }
     @media (min-width: 650px) {
-      .rep-regions-list { grid-template-columns: repeat(2, 1fr); }
+      .umd-admissions-representative-regions-list { grid-template-columns: repeat(2, 1fr); }
     }
     @media (min-width: 1024px) {
-      .rep-regions-list { grid-template-columns: repeat(3, 1fr); }
+      .umd-admissions-representative-regions-list { grid-template-columns: repeat(3, 1fr); }
     }
-    .rep-regions-list li {
+    .umd-admissions-representative-regions-list li {
       border-top: 1px solid var(--umd-color-gray-light, #e6e6e6);
       padding-top: 12px;
     }
@@ -344,11 +344,11 @@ def render_landing(doc):
        same treatment as how-to-apply/index.html § "Get to Know Our Process".
        The source page's instruction to click a photo is rewritten to point at
        the profile pages, since this recreation has no modals. -->
-  <section class="umd-layout-vertical-landing reps-intro-section">
-    <div class="reps-chevron" aria-hidden="true">
+  <section class="umd-layout-vertical-landing umd-admissions-representatives-intro-section">
+    <div class="umd-admissions-representatives-chevron" aria-hidden="true">
       <umd-element-brand-logo-animation></umd-element-brand-logo-animation>
     </div>
-    <div class="umd-layout-space-horizontal-small reps-intro-content">
+    <div class="umd-layout-space-horizontal-small umd-admissions-representatives-intro-content">
       <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
       <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">%(intro_lead)s</p>
       <div class="umd-text-rich-advanced">
@@ -593,16 +593,16 @@ def render_search(doc):
             </div>
           </div>
 
-          <div class="reps-search-row">
+          <div class="umd-admissions-representatives-search-row">
             <label for="reps-search" class="sr-only">Search</label>
             <input type="text" id="reps-search" name="search" class="umd-field-input"
                    placeholder="Search by name or title" autocomplete="off" />
-            <button type="submit" class="reps-search-submit" aria-label="Submit search">%(icon)s</button>
+            <button type="submit" class="umd-admissions-representatives-search-submit" aria-label="Submit search">%(icon)s</button>
           </div>
         </div>
       </form>
 
-      <p class="reps-results-status" id="reps-status" role="status" aria-live="polite"></p>
+      <p class="umd-admissions-representatives-results-status" id="reps-status" role="status" aria-live="polite"></p>
     </div>
   </section>
 
@@ -613,16 +613,16 @@ def render_search(doc):
        hidden cells: critical.css §19's partial-row rules key off :nth-child,
        and display:none-ing a card leaves it in the count and paints the
        borders wrong. -->
-  <div class="umd-layout-space-horizontal-larger reps-results-wrap">
+  <div class="umd-layout-space-horizontal-larger umd-admissions-representatives-results">
     <section id="reps-results" class="umd-layout-grid-border-four">
 
 %(cards)s
 
     </section>
-    <p class="reps-empty" id="reps-empty" hidden>No representatives match those filters.</p>
+    <p class="umd-admissions-representatives-empty" id="umd-admissions-representatives-empty" hidden>No representatives match those filters.</p>
   </div>
 
-  <section class="umd-layout-vertical-landing reps-load-more" id="reps-load-more" hidden>
+  <section class="umd-layout-vertical-landing umd-admissions-representatives-load-more" id="umd-admissions-representatives-load-more" hidden>
     <button type="button" class="umd-action-outline" id="reps-load-more-button">Load More</button>
   </section>
 
@@ -732,8 +732,8 @@ FILTER_SCRIPT = '''  <!-- Filter controller — page-content-driven, this page o
     var form = document.getElementById('reps-filter');
     var grid = document.getElementById('reps-results');
     var status = document.getElementById('reps-status');
-    var empty = document.getElementById('reps-empty');
-    var more = document.getElementById('reps-load-more');
+    var empty = document.getElementById('umd-admissions-representatives-empty');
+    var more = document.getElementById('umd-admissions-representatives-load-more');
     var moreBtn = document.getElementById('reps-load-more-button');
     var termSel = document.getElementById('reps-territory');
     var searchIn = document.getElementById('reps-search');
@@ -850,7 +850,7 @@ def render_rep(doc, person):
     <div class="umd-layout-space-horizontal-small">
       <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
       <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">Territories</p>
-      <ul class="rep-regions-list">
+      <ul class="umd-admissions-representative-regions-list">
 %s
       </ul>
     </div>

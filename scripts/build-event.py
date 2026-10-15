@@ -155,16 +155,16 @@ PAGE_CSS = '''
        no order:-1 flip; see the zig-zag pattern notes in CLAUDE.md
        for why this project avoids that. 1024px matches the DS's own
        desktop.min breakpoint. */
-    .event-layout { display: block; }
+    .umd-admissions-event-layout { display: block; }
 
     @media (min-width: 1024px) {
-      .event-layout { display: flex; align-items: flex-start; gap: 64px; }
-      .event-main { flex: 1; min-width: 0; }
-      .event-rail { width: 360px; flex: none; }
+      .umd-admissions-event-layout { display: flex; align-items: flex-start; gap: 64px; }
+      .umd-admissions-event-main { flex: 1; min-width: 0; }
+      .umd-admissions-event-rail { width: 360px; flex: none; }
     }
 
-    .event-main figure { margin-top: 32px; }
-    .event-main img { display: block; width: 100%; height: auto; }
+    .umd-admissions-event-main figure { margin-top: 32px; }
+    .umd-admissions-event-main img { display: block; width: 100%; height: auto; }
 
     /* --- rail fields -----------------------------------------------
        Plain white -- same background the trailing-rule label already
@@ -172,7 +172,7 @@ PAGE_CSS = '''
        behind it put two different whites next to each other, which is
        what read as broken; the fix is to not fight it with a second
        background. */
-    .event-rail-field + .event-rail-field { margin-top: 32px; }
+    .umd-admissions-event-rail-field + .umd-admissions-event-rail-field { margin-top: 32px; }
 
     /* umd-text-line-trailing (composeTrailing's default theme) sets no
        text `color` of its own -- only elements.labelSmall (font/size/
@@ -191,7 +191,7 @@ PAGE_CSS = '''
        umd-tailwing-right-headline / umd-text-line-trailing-light): both
        compute color:#000 there too -- they just happen to be <h2>s, so
        they never hit the collision this page's <p> labels do. */
-    .event-rail-field .umd-text-line-trailing { color: var(--umd-color-black); }
+    .umd-admissions-event-rail-field .umd-text-line-trailing { color: var(--umd-color-black); }
 
     /* umd-element-event-sign-container ships no box and no colour: the
        plain umd-sans-small / umd-sans-extralarge classes only get a
@@ -202,7 +202,7 @@ PAGE_CSS = '''
        theme. So the date sign otherwise just inherits whatever colour
        its context happens to be — pin it to the token explicitly.
 
-       The rule has to target .event-sign-start (the <p>) directly, not
+       The rule has to target .umd-admissions-event-date-sign (the <p>) directly, not
        just the container div: base.min.css ships a bare `p{color:
        #454545}` element rule, and a rule that DIRECTLY matches an
        element always wins over an inherited value, no matter how much
@@ -210,7 +210,7 @@ PAGE_CSS = '''
        color only on the container left the container itself black while
        its <p> (and the spans inside it) stayed gray-dark. */
     .umd-element-event-sign-container,
-    .event-sign-start { color: var(--umd-color-black); }
+    .umd-admissions-event-date-sign { color: var(--umd-color-black); }
 
     /* umd-element-event-meta-item is only ever laid out icon-beside-
        text by umd-element-event-meta-wrapper's position selectors
@@ -225,12 +225,12 @@ PAGE_CSS = '''
        center either), and center reads wrong the moment location wraps
        to a second line, pulling the pin icon down to the middle of both
        lines instead of sitting level with the first. */
-    .event-rail-field .umd-element-event-meta-item {
+    .umd-admissions-event-rail-field .umd-element-event-meta-item {
       display: flex;
       align-items: flex-start;
       gap: 8px;
     }
-    .event-rail-field .umd-element-event-meta-item + .umd-element-event-meta-item {
+    .umd-admissions-event-rail-field .umd-element-event-meta-item + .umd-element-event-meta-item {
       margin-top: 8px;
     }
 
@@ -238,35 +238,35 @@ PAGE_CSS = '''
        Per LAYOUT-PATTERNS.md's "Active-filter chips" note: neutralise the
        container's margin-top:-8px hack and the children's matching
        margin-top:8px with flex + gap, or wrapped rows double up. */
-    .event-rail-field .umd-text-cluster-pill {
+    .umd-admissions-event-rail-field .umd-text-cluster-pill {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin-top: 0;
     }
-    .event-rail-field .umd-text-cluster-pill > * {
+    .umd-admissions-event-rail-field .umd-text-cluster-pill > * {
       margin-top: 0;
     }
 
-    .event-rail-actions {
+    .umd-admissions-event-rail-actions {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-    .event-rail-actions umd-element-call-to-action { display: block; }
+    .umd-admissions-event-rail-actions umd-element-call-to-action { display: block; }
 
     /* --- Upcoming Events — bordered, image-less card grid, three up
        (the calendar page's own pre-2026-09-10 "Upcoming Events" block;
        see OVERRIDES.md). Border comes from a shadow injection, not this
        CSS -- umd-element-event has no working data-visual-bordered. */
-    .event-upcoming-heading { background-color: var(--umd-color-white); margin: 0; }
+    .umd-admissions-event-upcoming-heading { background-color: var(--umd-color-white); margin: 0; }
 
-    .event-upcoming-grid { margin-top: var(--umd-space-xl); }
+    .umd-admissions-event-upcoming-grid { margin-top: var(--umd-space-xl); }
 
-    @media (max-width: 767px) { .event-upcoming-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 767px) { .umd-admissions-event-upcoming-grid { grid-template-columns: 1fr; } }
 
     @media (min-width: 768px) and (max-width: 1019px) {
-      .event-upcoming-grid { grid-template-columns: repeat(2, 1fr); }
+      .umd-admissions-event-upcoming-grid { grid-template-columns: repeat(2, 1fr); }
     }
 '''
 
@@ -300,7 +300,7 @@ def upcoming_card_html(rec):
             % (e(rec['register']['url']), e(rec['register'].get('label', 'Register'))))
     href = rec.get('detail_page') or rec['url']
     return (
-        '<umd-element-event class="event-upcoming-card" data-visual-time="%s">'
+        '<umd-element-event class="umd-admissions-event-upcoming-card" data-visual-time="%s">'
         '<h3 slot="headline"><a href="%s">%s</a></h3>'
         '%s'
         '<time slot="start-date-iso" datetime="%s">%s</time>'
@@ -375,7 +375,7 @@ def render_event(rec, upcoming):
     type_field = ''
     if types:
         type_field = '''
-              <div class="event-rail-field">
+              <div class="umd-admissions-event-rail-field">
                 <p class="umd-text-line-trailing"><span>Event Type</span></p>
                 %s
               </div>
@@ -384,7 +384,7 @@ def render_event(rec, upcoming):
     audience_field = ''
     if audience:
         audience_field = '''
-              <div class="event-rail-field">
+              <div class="umd-admissions-event-rail-field">
                 <p class="umd-text-line-trailing"><span>Audience</span></p>
                 %s
               </div>
@@ -435,24 +435,24 @@ def render_event(rec, upcoming):
          <umd-element-event> component itself renders. -->
     <section class="umd-layout-space-vertical-interior">
       <div class="umd-layout-space-horizontal-larger">
-        <div class="event-layout">
-          <div class="event-main">
+        <div class="umd-admissions-event-layout">
+          <div class="umd-admissions-event-main">
             <div class="umd-text-rich-advanced">
               %(description)s
             </div>%(image)s
           </div>
 
-          <aside class="event-rail">
-            <div class="event-rail-field">
+          <aside class="umd-admissions-event-rail">
+            <div class="umd-admissions-event-rail-field">
               <div class="umd-element-event-sign-container">
-                <p class="event-sign-start">
+                <p class="umd-admissions-event-date-sign">
                   <span class="umd-sans-small">%(month)s</span>
                   <span class="umd-sans-extralarge">%(day)s</span>
                 </p>
               </div>
             </div>
 
-            <div class="event-rail-field">
+            <div class="umd-admissions-event-rail-field">
               <p class="umd-text-line-trailing"><span>Date &amp; Time</span></p>
               <p class="umd-element-event-meta-item">
                 <span>%(icon_calendar)s</span>
@@ -464,7 +464,7 @@ def render_event(rec, upcoming):
               </p>
             </div>
 
-            <div class="event-rail-field">
+            <div class="umd-admissions-event-rail-field">
               <p class="umd-text-line-trailing"><span>Location</span></p>
               <p class="umd-element-event-meta-item">
                 <span>%(icon_pin)s</span>
@@ -472,7 +472,7 @@ def render_event(rec, upcoming):
               </p>
             </div>
 %(type_field)s%(audience_field)s
-            <div class="event-rail-field event-rail-actions">
+            <div class="umd-admissions-event-rail-field umd-admissions-event-rail-actions">
               %(register)s
               <umd-element-call-to-action data-display="secondary">
                 <a href="index.html">Back to Calendar</a>
@@ -489,8 +489,8 @@ def render_event(rec, upcoming):
          gap"); the border is a shadow injection below, not CSS. -->
     <section class="umd-layout-space-vertical-interior">
       <div class="umd-layout-space-horizontal-larger">
-        <h2 class="event-upcoming-heading umd-text-line-trailing"><span>Upcoming Events</span></h2>
-        <div class="event-upcoming-grid umd-layout-grid-gap-three" data-animation="off">
+        <h2 class="umd-admissions-event-upcoming-heading umd-text-line-trailing"><span>Upcoming Events</span></h2>
+        <div class="umd-admissions-event-upcoming-grid umd-layout-grid-gap-three" data-animation="off">
         %(upcoming)s
         </div>
       </div>
@@ -539,7 +539,7 @@ def render_event(rec, upcoming):
         el.__eventCardBorderInjected = true;
       }
       function applyAll() {
-        document.querySelectorAll('.event-upcoming-card').forEach(inject);
+        document.querySelectorAll('.umd-admissions-event-upcoming-card').forEach(inject);
       }
       customElements.whenDefined('umd-element-event').then(function () {
         applyAll();

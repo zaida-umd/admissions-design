@@ -44,8 +44,8 @@ LEDE_CSS = """\
        The adjacency rule supplies the gap where body copy follows the lede
        directly — as it does here — since the block's own
        `> *:first-child { margin-top: 0 }` would otherwise zero it. */
-    .page-lede { max-width: 960px; }
-    .page-lede + .umd-text-rich-advanced { margin-top: 24px; }
+    .umd-admissions-page-lede { max-width: 960px; }
+    .umd-admissions-page-lede + .umd-text-rich-advanced { margin-top: 24px; }
 """
 
 
@@ -67,7 +67,7 @@ def card(item):
 
 cards = "\n".join(card(item) for item in data["items"])
 lede = data["lede_html"].replace(
-    '<p>', '<p class="umd-sans-larger-bold text-black page-lede">', 1)
+    '<p>', '<p class="umd-sans-larger-bold text-black umd-admissions-page-lede">', 1)
 body = f'''{LEDE_CSS}  </style>
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@{pin}/dist/cdn.js"></script>
 @@CHROME:chrome-css@@
@@ -139,10 +139,10 @@ assert "@@" not in output
 # Inside .umd-text-rich-advanced a size class is INERT, not wrong: the block
 # pins every direct child to 18px, so the page looks fine and measures wrong.
 # Only an assertion catches it.
-assert '<p class="umd-sans-larger-bold text-black page-lede">' in output
-assert output.count("text-black page-lede") == 1
+assert '<p class="umd-sans-larger-bold text-black umd-admissions-page-lede">' in output
+assert output.count("text-black umd-admissions-page-lede") == 1
 assert "umd-sans-large text-black" not in output
 assert '<h2 class="umd-sans-large' not in output
-assert ".page-lede { max-width: 960px; }" in output
+assert ".umd-admissions-page-lede { max-width: 960px; }" in output
 OUT.write_text(output)
 print(OUT.relative_to(ROOT))

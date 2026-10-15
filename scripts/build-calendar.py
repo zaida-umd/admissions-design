@@ -155,17 +155,17 @@ BODY = r'''  </style>
        (scripts/build-programs.py). 1020px is this page's ONE desktop
        breakpoint; don't introduce a second.
        ============================================================ */
-    .cal-layout { display:block; }
+    .umd-admissions-filter-layout { display:block; }
 
     @media (min-width:1020px) {
-      .cal-layout { display:flex; align-items:flex-start; gap:64px; }
+      .umd-admissions-filter-layout { display:flex; align-items:flex-start; gap:64px; }
       /* deliberately NOT sticky: a pinned rail has to cap its own height, and
          that nested scroller (plus the per-group ones) meant up to three
          scrollbars on one screen. The rail scrolls with the page instead. */
-      .cal-filters { width:30%; min-width:260px; max-width:360px; }
+      .umd-admissions-filter-sidebar { width:30%; min-width:260px; max-width:360px; }
     }
 
-    .cal-results { flex:1; min-width:0; }
+    .umd-admissions-filter-results { flex:1; min-width:0; }
 
     /* ============================================================
        FILTER RAIL — the programs page's rail, verbatim apart from the
@@ -173,37 +173,37 @@ BODY = r'''  </style>
        these two pages are the only users and the build scripts have no
        include mechanism; if a third page wants it, extract then.
        ============================================================ */
-    .pf-mobile-toggle {
+    .umd-admissions-filter-mobile-toggle {
       display:flex; justify-content:space-between; align-items:center; gap:16px;
       width:100%; padding:14px 16px; margin-bottom:16px; cursor:pointer;
       background:var(--umd-color-black); color:var(--umd-color-white); border:0; font-weight:700;
     }
 
-    .pf-mobile-toggle::after { content:"+"; font-size:22px; line-height:1; }
+    .umd-admissions-filter-mobile-toggle::after { content:"+"; font-size:22px; line-height:1; }
 
-    .pf-mobile-toggle[aria-expanded="true"]::after { content:"\2212"; }
+    .umd-admissions-filter-mobile-toggle[aria-expanded="true"]::after { content:"\2212"; }
 
-    @media (min-width:1020px) { .pf-mobile-toggle { display:none; } }
+    @media (min-width:1020px) { .umd-admissions-filter-mobile-toggle { display:none; } }
 
     #pf-form { display:block; }
 
     @media (max-width:1019px) {
       #pf-form { display:none; }
-      #pf-form.is-open { display:block; }
+      #pf-form[data-open] { display:block; }
     }
 
-    .pf-group { border-bottom:1px solid var(--umd-color-black); margin-bottom:24px; padding-bottom:24px; }
+    .umd-admissions-filter-group { border-bottom:1px solid var(--umd-color-black); margin-bottom:24px; padding-bottom:24px; }
 
-    .pf-group:last-of-type { border-bottom:0; }
+    .umd-admissions-filter-group:last-of-type { border-bottom:0; }
 
-    .pf-group > button {
+    .umd-admissions-filter-group > button {
       display:flex; position:relative; justify-content:space-between; align-items:center;
       gap:16px; width:100%; padding:0 24px 0 0; background:none; border:0; cursor:pointer;
       font:inherit; font-weight:700; font-size:18px; text-align:left; color:var(--umd-color-black);
       transition:color .3s;
     }
 
-    .pf-group > button:hover, .pf-group > button:focus-visible { color:var(--umd-color-red); }
+    .umd-admissions-filter-group > button:hover, .umd-admissions-filter-group > button:focus-visible { color:var(--umd-color-red); }
 
     /* The open/closed glyph is a PLUS that becomes a MINUS: two 12x2 bars
        stacked at the same spot, ::before horizontal and ::after rotated
@@ -215,43 +215,43 @@ BODY = r'''  </style>
        horizontal one open -- no plus at any point. `position:relative` on the
        button and its 24px right padding are what the absolutely-placed bars
        hang off; without them they escape to the nearest positioned ancestor. */
-    .pf-group > button::before, .pf-group > button::after {
+    .umd-admissions-filter-group > button::before, .umd-admissions-filter-group > button::after {
       content:""; position:absolute; top:calc(50% - 1px); right:0;
       width:12px; height:2px; background:currentColor; transition:transform .3s;
     }
 
-    .pf-group > button::after { transform:rotate(90deg); }
+    .umd-admissions-filter-group > button::after { transform:rotate(90deg); }
 
-    .pf-group.open > button::after { transform:rotate(0); }
+    .umd-admissions-filter-group[data-open] > button::after { transform:rotate(0); }
 
-    .pf-body { display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; }
+    .umd-admissions-filter-group-body { display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; }
 
-    .pf-group.open .pf-body { grid-template-rows:1fr; }
+    .umd-admissions-filter-group[data-open] .umd-admissions-filter-group-body { grid-template-rows:1fr; }
 
-    .pf-body > div { min-height:0; overflow:hidden; }
+    .umd-admissions-filter-group-body > div { min-height:0; overflow:hidden; }
 
-    .pf-body fieldset {
+    .umd-admissions-filter-group-body fieldset {
       border:0; margin:0; padding:16px 0 0; display:flex; flex-direction:column; gap:12px;
     }
 
-    .pf-body fieldset.is-collapsed .pf-extra { display:none; }
+    .umd-admissions-filter-group-body fieldset[data-collapsed] .umd-admissions-filter-option-extra { display:none; }
 
     /* the DS pill chip is a display element, so its wrapping-margin hack and
        border have to be neutralized before it can be a button */
-    .pf-more-cluster.umd-text-cluster-pill { display:inline-flex; margin-top:8px; }
+    .umd-admissions-filter-show-all-cluster.umd-text-cluster-pill { display:inline-flex; margin-top:8px; }
 
-    .pf-more-cluster.umd-text-cluster-pill > .pf-more { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
+    .umd-admissions-filter-show-all-cluster.umd-text-cluster-pill > .umd-admissions-filter-show-all { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
 
-    .pf-more-cluster.umd-text-cluster-pill > .pf-more:hover,
-    .pf-more-cluster.umd-text-cluster-pill > .pf-more:focus-visible { background-color:var(--umd-color-gold); }
+    .umd-admissions-filter-show-all-cluster.umd-text-cluster-pill > .umd-admissions-filter-show-all:hover,
+    .umd-admissions-filter-show-all-cluster.umd-text-cluster-pill > .umd-admissions-filter-show-all:focus-visible { background-color:var(--umd-color-gold); }
 
-    .pf-body .umd-field-checkbox-wrapper { align-items:flex-start; gap:12px; margin-bottom:0; line-height:1.3; }
+    .umd-admissions-filter-group-body .umd-field-checkbox-wrapper { align-items:flex-start; gap:12px; margin-bottom:0; line-height:1.3; }
 
-    .pf-body input[type="checkbox"] { margin:.15em 0 0; width:18px; height:18px; accent-color:var(--umd-color-red); flex:0 0 auto; }
+    .umd-admissions-filter-group-body input[type="checkbox"] { margin:.15em 0 0; width:18px; height:18px; accent-color:var(--umd-color-red); flex:0 0 auto; }
 
-    .pf-count { color:var(--umd-color-gray-medium-a-a); font-variant-numeric:tabular-nums; }
+    .umd-admissions-filter-count { color:var(--umd-color-gray-medium-a-a); font-variant-numeric:tabular-nums; }
 
-    .pf-actions { margin-top:24px; }
+    .umd-admissions-filter-actions { margin-top:24px; }
 
     /* ---- DATE GROUP ----------------------------------------------------
        The one thing the programs rail has no equivalent of. Two native
@@ -270,14 +270,14 @@ BODY = r'''  </style>
        the rules that hide the native webkit picker indicator behind it. An
        earlier revision hand-rolled all of that, which critical.css's header
        explicitly warns against. Only the row below is page CSS. */
-    .pf-dates { display:flex; align-items:center; gap:8px; padding-top:16px; }
+    .umd-admissions-filter-dates { display:flex; align-items:center; gap:8px; padding-top:16px; }
 
     /* the wrappers share the row evenly; min-width:0 lets them shrink below
        the input's intrinsic width instead of forcing the row wider than the
        rail (a flex item's default min-width:auto would) */
-    .pf-dates .umd-field-input-date-time-wrapper { flex:1 1 0; min-width:0; }
+    .umd-admissions-filter-dates .umd-field-input-date-time-wrapper { flex:1 1 0; min-width:0; }
 
-    .pf-date-sep { flex:0 0 auto; font-size:14px; font-weight:700; color:var(--umd-color-gray-dark); }
+    .umd-admissions-filter-date-separator { flex:0 0 auto; font-size:14px; font-weight:700; color:var(--umd-color-gray-dark); }
 
     /* The rail is the query container, as the old mini-calendar rail was, so
        the date type keys off the RAIL's width rather than the viewport's —
@@ -290,10 +290,10 @@ BODY = r'''  </style>
        narrowest, since below 1020 it stacks full width — and about 1130px.
        Shrinking the type there is what the live search page does too: its
        fields measure 12px where the rail is narrow. */
-    .cal-filters { container-type:inline-size; }
+    .umd-admissions-filter-sidebar { container-type:inline-size; }
 
     @container (max-width:320px) {
-      .pf-dates .umd-field-input { font-size:13px; padding-left:12px; padding-right:12px; }
+      .umd-admissions-filter-dates .umd-field-input { font-size:13px; padding-left:12px; padding-right:12px; }
     }
 
     /* ============================================================
@@ -302,31 +302,31 @@ BODY = r'''  </style>
     /* active-filter pills use the DS .umd-text-cluster-pill chip
        (var(--umd-color-gray-lightest), 12px); neutralize its wrapping-margin
        hack and use flex gap instead. */
-    .pf-pills { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:24px; }
+    .umd-admissions-filter-pills { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:24px; }
 
     /* display:flex beats the UA sheet's [hidden]{display:none}, so without
        this an empty pill row leaks its margin above the count line */
-    .pf-pills[hidden] { display:none; }
+    .umd-admissions-filter-pills[hidden] { display:none; }
 
-    .pf-pills-label { font-weight:700; margin-right:4px; }
+    .umd-admissions-filter-pills-label { font-weight:700; margin-right:4px; }
 
-    .pf-pill-cluster.umd-text-cluster-pill { margin-top:0; display:inline-flex; flex-wrap:wrap; gap:8px; }
+    .umd-admissions-filter-pill-cluster.umd-text-cluster-pill { margin-top:0; display:inline-flex; flex-wrap:wrap; gap:8px; }
 
-    .pf-pills .umd-text-cluster-pill > * { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
+    .umd-admissions-filter-pills .umd-text-cluster-pill > * { margin-top:0; border:0; cursor:pointer; color:var(--umd-color-black); }
 
-    .pf-pills .umd-text-cluster-pill > button:hover,
-    .pf-pills .umd-text-cluster-pill > button:focus-visible { background-color:var(--umd-color-gold); }
+    .umd-admissions-filter-pills .umd-text-cluster-pill > button:hover,
+    .umd-admissions-filter-pills .umd-text-cluster-pill > button:focus-visible { background-color:var(--umd-color-gold); }
 
-    .pf-clear {
+    .umd-admissions-filter-clear {
       background:none; border:0; padding:0 0 0 6px; cursor:pointer; color:var(--umd-color-black);
       text-decoration:underline; text-underline-offset:.15em;
     }
 
-    .pf-clear:hover { color:var(--umd-color-red); }
+    .umd-admissions-filter-clear:hover { color:var(--umd-color-red); }
 
-    .pf-count-line { margin:0 0 24px; }
+    .umd-admissions-filter-count-line { margin:0 0 24px; }
 
-    .pf-empty { font-size:18px; }
+    .umd-admissions-filter-empty { font-size:18px; }
 
     /* The cards are direct siblings of #cal-list, which is what upstream
        web-components.min.css needs for its
@@ -335,24 +335,24 @@ BODY = r'''  </style>
 
     /* Load More sits under the list on the same 56px/32px rule the month
        pager used, so the results column keeps its old bottom rhythm. */
-    .cal-more-wrap {
+    .umd-admissions-calendar-load-more {
       margin-top:56px; padding-top:32px; border-top:1px solid var(--umd-color-gray-light);
       display:flex; justify-content:center;
     }
 
-    .cal-more-wrap[hidden] { display:none; }
+    .umd-admissions-calendar-load-more[hidden] { display:none; }
 
     /* --- Upcoming Events — bordered, image-less card grid, three up.
        Same rules as the event detail page (scripts/build-event.py); the
        border is the shadow injection at the foot of the page. */
-    .event-upcoming-heading { background-color: var(--umd-color-white); margin: 0; }
+    .umd-admissions-event-upcoming-heading { background-color: var(--umd-color-white); margin: 0; }
 
-    .event-upcoming-grid { margin-top: var(--umd-space-xl); }
+    .umd-admissions-event-upcoming-grid { margin-top: var(--umd-space-xl); }
 
-    @media (max-width: 767px) { .event-upcoming-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 767px) { .umd-admissions-event-upcoming-grid { grid-template-columns: 1fr; } }
 
     @media (min-width: 768px) and (max-width: 1019px) {
-      .event-upcoming-grid { grid-template-columns: repeat(2, 1fr); }
+      .umd-admissions-event-upcoming-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 
@@ -391,17 +391,17 @@ BODY = r'''  </style>
   <!-- EVENTS EXPLORER — filter rail + flat chronological list -->
   <section class="umd-layout-vertical-landing">
     <div class="umd-layout-space-horizontal-larger">
-      <div class="cal-layout">
+      <div class="umd-admissions-filter-layout">
 
         <!-- FILTER RAIL -->
-        <aside class="cal-filters" aria-label="Filter events">
-          <button type="button" id="pf-mobile-toggle" class="pf-mobile-toggle" aria-expanded="false" aria-controls="pf-form">
+        <aside class="umd-admissions-filter-sidebar" aria-label="Filter events">
+          <button type="button" id="umd-admissions-filter-mobile-toggle" class="umd-admissions-filter-mobile-toggle" aria-expanded="false" aria-controls="pf-form">
             <span>Filter events</span>
           </button>
           <form id="pf-form" action="#">
             <h2 class="umd-tailwing-right-headline"><span>REFINE</span></h2>
             <div id="pf-groups"></div>
-            <div class="pf-actions">
+            <div class="umd-admissions-filter-actions">
               <umd-element-call-to-action data-display="outline">
                 <button type="button" id="pf-reset">Reset filters</button>
               </umd-element-call-to-action>
@@ -410,12 +410,12 @@ BODY = r'''  </style>
         </aside>
 
         <!-- RESULTS -->
-        <div class="cal-results">
-          <div class="pf-pills" id="pf-pills" hidden></div>
-          <p class="pf-count-line umd-sans-smaller" id="pf-count" role="status" aria-live="polite"></p>
+        <div class="umd-admissions-filter-results">
+          <div class="umd-admissions-filter-pills" id="umd-admissions-filter-pills" hidden></div>
+          <p class="umd-admissions-filter-count-line umd-sans-smaller" id="umd-admissions-filter-count" role="status" aria-live="polite"></p>
           <div id="cal-list"></div>
-          <p id="pf-empty" class="pf-empty" hidden></p>
-          <div class="cal-more-wrap" id="cal-more-wrap" hidden>
+          <p id="umd-admissions-filter-empty" class="umd-admissions-filter-empty" hidden></p>
+          <div class="umd-admissions-calendar-load-more" id="umd-admissions-calendar-load-more" hidden>
             <umd-element-call-to-action data-display="outline">
               <button type="button" id="cal-more">Load More Events</button>
             </umd-element-call-to-action>
@@ -431,8 +431,8 @@ BODY = r'''  </style>
        below, not CSS. -->
   <section class="umd-layout-vertical-landing">
     <div class="umd-layout-space-horizontal-larger">
-      <h2 class="event-upcoming-heading umd-text-line-trailing"><span>Upcoming Events</span></h2>
-      <div class="event-upcoming-grid umd-layout-grid-gap-three" data-animation="off">
+      <h2 class="umd-admissions-event-upcoming-heading umd-text-line-trailing"><span>Upcoming Events</span></h2>
+      <div class="umd-admissions-event-upcoming-grid umd-layout-grid-gap-three" data-animation="off">
         @@UPCOMING@@
       </div>
     </div>
@@ -497,10 +497,10 @@ BODY = r'''  </style>
     var form       = document.getElementById('pf-form');
     var groupsHost = document.getElementById('pf-groups');
     var listHost   = document.getElementById('cal-list');
-    var emptyEl    = document.getElementById('pf-empty');
-    var countEl    = document.getElementById('pf-count');
-    var pillsHost  = document.getElementById('pf-pills');
-    var moreWrap   = document.getElementById('cal-more-wrap');
+    var emptyEl    = document.getElementById('umd-admissions-filter-empty');
+    var countEl    = document.getElementById('umd-admissions-filter-count');
+    var pillsHost  = document.getElementById('umd-admissions-filter-pills');
+    var moreWrap   = document.getElementById('umd-admissions-calendar-load-more');
 
     function esc(s) {
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
@@ -542,13 +542,13 @@ BODY = r'''  </style>
     }
 
     function dateGroup() {
-      return '<div class="pf-group open" data-group="date">' +
+      return '<div class="umd-admissions-filter-group" data-open data-group="date">' +
         '<button type="button" aria-expanded="true" aria-controls="pf-body-date">' +
         '<span>Date</span></button>' +
-        '<div class="pf-body" id="pf-body-date"><div>' +
-        '<div class="pf-dates">' +
+        '<div class="umd-admissions-filter-group-body" id="pf-body-date"><div>' +
+        '<div class="umd-admissions-filter-dates">' +
         dateField('pf-start', 'Start date', TODAY) +
-        '<span class="pf-date-sep" aria-hidden="true">to</span>' +
+        '<span class="umd-admissions-filter-date-separator" aria-hidden="true">to</span>' +
         dateField('pf-end', 'End date', '') +
         '</div></div></div></div>';
     }
@@ -559,22 +559,22 @@ BODY = r'''  </style>
         var long = opts.length > PF_SHOW_LIMIT;
         var rows = opts.map(function (o, i) {
           return '<label class="umd-field-checkbox-wrapper' +
-            (long && i >= PF_SHOW_LIMIT ? ' pf-extra' : '') +
+            (long && i >= PF_SHOW_LIMIT ? ' umd-admissions-filter-option-extra' : '') +
             '"><input type="checkbox" data-group="' + key +
             '" value="' + esc(o.title) + '"><span>' + esc(o.title) +
-            ' <span class="pf-count umd-sans-smaller">(' + o.count + ')</span></span></label>';
+            ' <span class="umd-admissions-filter-count umd-sans-smaller">(' + o.count + ')</span></span></label>';
         }).join('');
         var more = long
-          ? '<span class="umd-text-cluster-pill pf-more-cluster">' +
-            '<button type="button" class="pf-more" aria-expanded="false" aria-controls="pf-set-' + key + '">' +
+          ? '<span class="umd-text-cluster-pill umd-admissions-filter-show-all-cluster">' +
+            '<button type="button" class="umd-admissions-filter-show-all" aria-expanded="false" aria-controls="pf-set-' + key + '">' +
             'Show all ' + opts.length + '</button></span>'
           : '';
         var open = idx === 0;
-        return '<div class="pf-group' + (open ? ' open' : '') + '" data-group="' + key + '">' +
+        return '<div class="umd-admissions-filter-group"' + (open ? ' data-open' : '') + ' data-group="' + key + '">' +
           '<button type="button" aria-expanded="' + open + '" aria-controls="pf-body-' + key + '">' +
           '<span>' + GROUP_LABELS[key] + '</span></button>' +
-          '<div class="pf-body" id="pf-body-' + key + '"><div>' +
-          '<fieldset id="pf-set-' + key + '"' + (long ? ' class="is-collapsed"' : '') + '>' +
+          '<div class="umd-admissions-filter-group-body" id="pf-body-' + key + '"><div>' +
+          '<fieldset id="pf-set-' + key + '"' + (long ? ' data-collapsed' : '') + '>' +
           rows + '</fieldset>' + more + '</div></div></div>';
       }).join('');
     }
@@ -704,15 +704,15 @@ BODY = r'''  </style>
       });
       if (!items.length) { pillsHost.hidden = true; pillsHost.innerHTML = ''; return; }
       pillsHost.hidden = false;
-      pillsHost.innerHTML = '<span class="pf-pills-label">Filtered by:</span>' +
-        '<span class="umd-text-cluster-pill pf-pill-cluster">' +
+      pillsHost.innerHTML = '<span class="umd-admissions-filter-pills-label">Filtered by:</span>' +
+        '<span class="umd-text-cluster-pill umd-admissions-filter-pill-cluster">' +
         items.map(function (it) {
           return '<button type="button" class="pf-pill" data-k="' + it.k + '" data-v="' +
             esc(it.v) + '"><span>' + esc(it.label) +
             ' <span aria-hidden="true">×</span></span></button>';
         }).join('') +
         '</span>' +
-        '<button type="button" class="pf-clear umd-sans-smaller" id="pf-clearall">Clear all</button>';
+        '<button type="button" class="umd-admissions-filter-clear umd-sans-smaller" id="pf-clearall">Clear all</button>';
     }
 
     // ---- events --------------------------------------------------------
@@ -726,10 +726,10 @@ BODY = r'''  </style>
 
     // "Show all N" / "Show less" toggle on long groups
     groupsHost.addEventListener('click', function (e) {
-      var more = e.target.closest('.pf-more');
+      var more = e.target.closest('.umd-admissions-filter-show-all');
       if (!more) return;
       var set = document.getElementById(more.getAttribute('aria-controls'));
-      var collapsed = set.classList.toggle('is-collapsed');
+      var collapsed = set.toggleAttribute('data-collapsed');
       more.setAttribute('aria-expanded', String(!collapsed));
       more.textContent = collapsed
         ? 'Show all ' + set.querySelectorAll('input[type="checkbox"]').length
@@ -737,18 +737,18 @@ BODY = r'''  </style>
     });
 
     // accordion toggle — the group's own header button only, so the nested
-    // .pf-more button doesn't fall through and toggle the fieldset
+    // .umd-admissions-filter-show-all button doesn't fall through and toggle the fieldset
     groupsHost.addEventListener('click', function (e) {
-      var btn = e.target.closest('.pf-group > button');
+      var btn = e.target.closest('.umd-admissions-filter-group > button');
       if (!btn) return;
       var group = btn.parentElement;
-      var open = group.classList.toggle('open');
+      var open = group.toggleAttribute('data-open');
       btn.setAttribute('aria-expanded', open);
     });
 
     // reset — the "Reset filters" outline CTA clones its <button> into shadow DOM,
     // so the visible click can't drive a native form reset. Catch it on the
-    // light-DOM .pf-actions wrapper (the composed click retargets to the CTA host
+    // light-DOM .umd-admissions-filter-actions wrapper (the composed click retargets to the CTA host
     // and bubbles here) and clear state explicitly.
     function clearAll() {
       form.querySelectorAll('input[type="checkbox"]:checked').forEach(function (cb) { cb.checked = false; });
@@ -756,7 +756,7 @@ BODY = r'''  </style>
       document.getElementById('pf-end').value = '';
       refilter();
     }
-    document.querySelector('.pf-actions').addEventListener('click', clearAll);
+    document.querySelector('.umd-admissions-filter-actions').addEventListener('click', clearAll);
     form.addEventListener('reset', function () { setTimeout(clearAll, 0); });
 
     // pill removal / clear all
@@ -792,9 +792,9 @@ BODY = r'''  </style>
     });
 
     // mobile filter toggle
-    var mobileToggle = document.getElementById('pf-mobile-toggle');
+    var mobileToggle = document.getElementById('umd-admissions-filter-mobile-toggle');
     mobileToggle.addEventListener('click', function () {
-      var open = form.classList.toggle('is-open');
+      var open = form.toggleAttribute('data-open');
       mobileToggle.setAttribute('aria-expanded', open);
     });
 
@@ -822,7 +822,7 @@ BODY = r'''  </style>
         el.__eventCardBorderInjected = true;
       }
       function applyAll() {
-        document.querySelectorAll('.event-upcoming-card').forEach(inject);
+        document.querySelectorAll('.umd-admissions-event-upcoming-card').forEach(inject);
       }
       customElements.whenDefined('umd-element-event').then(function () {
         applyAll();

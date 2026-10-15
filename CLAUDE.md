@@ -90,6 +90,22 @@ When `images-index.json` is needed, read `page-builder/images/images-index.json`
 
 When shrinking oversized images (the `/optimize-images` skill or ad-hoc), only touch **static** JPG/PNG/WebP. **GIFs, animated WebPs, and video files are out of scope** — don't resave or report on them (resampling breaks animation, and they need dedicated tooling). Exclude `.gif` and video extensions from scans, and check `n_frames > 1` on any WebP before touching it. This rule is also baked into `~/.claude/commands/optimize-images.md`.
 
+## Class namespace
+
+House classes are `umd-admissions-<component>[-<part>]`, written in full words
+(`page-builder/RULES.md` §40). The live site already uses this prefix
+(`<umd-admissions-resources>`), and the developer approved the convention on
+2026-10-15. Classes the CMS shell already defines keep the CMS name. The nav
+dropdown promo is `umd-shell-nav-promo` / `-headline` / `-text`, though our
+markup is still flatter than the CMS's (`-img` and `-content` wrappers).
+
+State lives on attributes, not classes: `data-open`, `data-collapsed`,
+`data-in-view` and `hidden`. Check a page with:
+
+```bash
+python3 page-builder/tools/check-class-names.py --namespace admissions pages/**/*.html
+```
+
 ## ⚠️ Interior pages pulled (2026-09-18)
 
 Dev feedback: the interior-page work below **cannot be implemented as built**.
@@ -516,7 +532,7 @@ Only the content between the header and footer is page-specific.
 |---|---|
 | `umd-element-navigation-header div[slot="utility-navigation"] a` | `critical.css` §11's BASE layer styles `.umd-shell-utility-item a`, which never matches this project's plain `<a>` children — they render browser-default blue and underlined without it. Must load **after** the critical block to win at equal specificity. |
 | `umd-element-scroll-top[data-layout-fixed="true"]` | Pins to `right:24px; bottom:24px`; the DS default is `right:40px; bottom:10vh`. Opt-in per page, but styled from `shared/` wherever used. |
-| `.umd-nav-promo` | The nav dropdown promos. `slot="dropdown-callout"` is projected through a real `<slot>`, so the promo stays in the **light DOM** — the nav-item's shadow CSS cannot reach it, and a bare `<a>` there gets no colour from `critical.css` and renders default blue. Same root cause as the utility-nav row above. |
+| `.umd-shell-nav-promo` | The nav dropdown promos. `slot="dropdown-callout"` is projected through a real `<slot>`, so the promo stays in the **light DOM** — the nav-item's shadow CSS cannot reach it, and a bare `<a>` there gets no colour from `critical.css` and renders default blue. Same root cause as the utility-nav row above. |
 
 **Chrome vs. page-level shadow injections.** Only injections driven by the *chrome* belong in `shared/chrome-scripts.html` — currently just the nav-header logo width. The pathway aspect-ratio, banner-promo stacked-actions, call-to-action and card-overlay injections are driven by **page content** and stay in the page that uses them. Don't move them to `shared/`; a page with no `umd-element-pathway` should not carry the pathway injection.
 
@@ -699,7 +715,7 @@ over:
 | `headline-four-san-serif` | 24px | **level 2** `umd-sans-larger-bold` (22px) | nearest step; the most common case |
 | `headline-five-san-serif` | 20px | **level 2 or 3 — break the tie by role** | see below |
 | bare `<strong>` used as a label | 18px | **level 3** `umd-sans-large` (18px) | exact match — see below |
-| `.rich-text.intro` (the page lede) | 24px / **400** | `<p class="umd-sans-larger-bold text-black page-lede">` **outside** `.umd-text-rich-advanced` | a paragraph, **not** a heading, and **not** inside the rich-text block — see below |
+| `.rich-text.intro` (the page lede) | 24px / **400** | `<p class="umd-sans-larger-bold text-black umd-admissions-page-lede">` **outside** `.umd-text-rich-advanced` | a paragraph, **not** a heading, and **not** inside the rich-text block — see below |
 
 Chrome and section components need no class: `headline-one` becomes the hero's
 `slot="headline"`, `headline-two` is the Resources component's own heading, and
@@ -712,7 +728,7 @@ block.** Source `.rich-text.intro` copy becomes:
 
 ```html
 <section class="umd-layout-space-vertical-interior">
-  <p class="umd-sans-larger-bold text-black page-lede">Full introduction.</p>
+  <p class="umd-sans-larger-bold text-black umd-admissions-page-lede">Full introduction.</p>
   <div class="umd-text-rich-advanced">
     <p>Body copy follows here, if the section has any.</p>
   </div>
@@ -723,8 +739,8 @@ with this CSS, **byte-identical on every page that has a lede — do not rename
 it per page**:
 
 ```css
-.page-lede { max-width: 960px; }
-.page-lede + .umd-text-rich-advanced { margin-top: 24px; }
+.umd-admissions-page-lede { max-width: 960px; }
+.umd-admissions-page-lede + .umd-text-rich-advanced { margin-top: 24px; }
 ```
 
 #### ⚠️ Why it cannot live inside the rich-text block
@@ -769,10 +785,10 @@ heading with nothing beneath it. Both were converted back to `<p>` on
 
 | Page | Lede | How |
 |---|---|---|
-| `know-before-you-go.html` | `page-lede`, 22px | wrapper dropped (lede was its section's only child) |
-| `student-life/student-support.html` | `page-lede`, 22px | wrapper dropped, via `build-student-support.py` |
-| `how-to-apply/freshman-application-faqs.html` | `page-lede`, 22px | wrapper dropped, via its builder |
-| `how-to-apply/english-language-proficiency.html` | `page-lede`, 22px | lede **lifted above** the block — it has sibling paragraphs |
+| `know-before-you-go.html` | `umd-admissions-page-lede`, 22px | wrapper dropped (lede was its section's only child) |
+| `student-life/student-support.html` | `umd-admissions-page-lede`, 22px | wrapper dropped, via `build-student-support.py` |
+| `how-to-apply/freshman-application-faqs.html` | `umd-admissions-page-lede`, 22px | wrapper dropped, via its builder |
+| `how-to-apply/english-language-proficiency.html` | `umd-admissions-page-lede`, 22px | lede **lifted above** the block — it has sibling paragraphs |
 | `tuition/frederick-douglass-scholarship.html` | `umd-sans-large`, 18px, **inside** rich text | **a different pattern, deliberately — float-wrapped prose, see below** |
 
 **`frederick-douglass-scholarship.html` keeps its 18px lede inside the
@@ -788,14 +804,14 @@ shape. Keep the lede in the text with the floated image.
 
 Two things follow:
 
-- **Do not "fix" it to match the four `page-lede` pages.** The `slot` attribute
+- **Do not "fix" it to match the four `umd-admissions-page-lede` pages.** The `slot` attribute
   is on the rich-text div itself, so the lede cannot leave that block and stay
   in the slot — and it should not. Restructuring the component to hoist the lede
   out would break the float wrap, which is the whole point of the page.
 - **On migration it maps to a headline in rich text**, and that is fine. It does
-  not need the `page-lede` treatment.
+  not need the `umd-admissions-page-lede` treatment.
 
-It is no longer the reference page for the *lede size* (the four `page-lede`
+It is no longer the reference page for the *lede size* (the four `umd-admissions-page-lede`
 pages are), but it remains the reference for **float-wrapped prose**.
 
 Each of the three generated pages asserts `'umd-sans-large text-black' not in

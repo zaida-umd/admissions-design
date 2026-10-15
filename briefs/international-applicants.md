@@ -15,7 +15,7 @@ and the mobile drawer.
 | 3 | Applying as an International Student | rule + uppercase eyebrow + rich text + brand chevron; the hero's Apply Now CTA pulled down here | freshman §3 |
 | 4 | Application Requirements | `umd-element-pathway data-display="sticky"` — text column sticks, image scrolls | — |
 | 5 | Choosing a Major | `umd-element-pathway`, standard, light, image left | freshman §5 (light, not the overlay/dark it uses) |
-| 6 | Benefits of Applying Early Action + Application Platforms | dark band, `umd-element-card-overlay` pair **with the brand chevron** (`.fa-cta-section` / `.fa-chevron` + the end-of-body positioning script) | freshman §6 |
+| 6 | Benefits of Applying Early Action + Application Platforms | dark band, `umd-element-card-overlay` pair **with the brand chevron** (`.umd-admissions-call-to-action-section` / `.umd-admissions-call-to-action-chevron` + the end-of-body positioning script) | freshman §6 |
 | 7 | Application Checklist | `umd-element-sticky-columns` — sticky intro, static column holds one `umd-element-accordion-item` per applicant type, each wrapping an `<ol>` of 7 steps | source accordion + transfer §4 sticky/accordion |
 | 8 | Making Sure Your Application is Complete | `umd-element-pathway data-display="sticky"`, light, image left, square image | — |
 | 9 | Services for International Students | LIGHT band + **dark `umd-element-banner-promo`** as the headline/divider + 4 zig-zag rich-text/image rows | LAYOUT-PATTERNS.md § "…two-column image + text (zig-zag)", inverted |
@@ -29,7 +29,7 @@ purpose** and draws the numerals itself: the `<ol>` carries `counter-reset: item
 and every `<li>::before` is an absolutely-positioned `content: counter(item)`
 sitting inside the li's own 40px left padding.
 
-This page was first built with `ol.intl-checklist { list-style: decimal;
+This page was first built with `ol.umd-admissions-checklist { list-style: decimal;
 padding-left: 24px }`, on the assumption that a bare `<ol>` had been left
 unstyled. Both are wrong:
 
@@ -40,7 +40,7 @@ unstyled. Both are wrong:
 The surviving rule only sets step spacing (32px, 0 on the last) and makes each
 step's opening `<strong>` a block-level uppercase label. Numbering is the DS's.
 
-This is the same reset that made `freshman-applicants.html` render its `.fa-steps`
+This is the same reset that made `freshman-applicants.html` render its `.umd-admissions-application-steps`
 numerals as real content rather than list markers.
 
 ## The sticky pathway is a DS variant — and the 1:1 injection must skip it
@@ -105,7 +105,7 @@ text-first so the mobile stack always leads with the heading.
 - The rows **top-align** (`align-items: start`). Centring floated each image to a
   different vertical offset depending on how long its copy ran, so the four rows
   had no shared top edge.
-- Rows **1, 3 and 4 are cropped square** via `.intl-figure-square img
+- Rows **1, 3 and 4 are cropped square** via `.umd-admissions-figure-square img
   { aspect-ratio: 1/1; object-fit: cover }`. Row 2 is the MEI **wordmark** — a
   logo, not a photo — and stays at its native 460×300; squaring it would clip
   the lettering.
@@ -133,7 +133,7 @@ light over the course of the flow pass.
   services with two paragraphs each overfilled the cards.
 - **§10 Resources runs light**, like `apply-now/index.html` §7, rather than the
   dark band `freshman-applicants.html` §9 uses.
-- **§7 keeps the source's accordion** rather than the `.fa-steps` stepper used on
+- **§7 keeps the source's accordion** rather than the `.umd-admissions-application-steps` stepper used on
   the freshman page — 14 steps across two applicant types would otherwise be one
   unbroken wall.
 - **Apply Now CTAs point at `../apply-now/`**, the prototype, not admissions.umd.edu.

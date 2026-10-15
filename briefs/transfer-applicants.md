@@ -22,7 +22,7 @@ The source is the same Craft-CMS stack as the freshman page (`umd-stepper`, `umd
 | Section | Choice |
 |---|---|
 | Hero | `umd-element-hero data-layout-height="small" data-layout-text="center"`, `IribeCenter_01282019_5806.jpg`. The ApplyWeb CTA moves down into the intro (RULES §22: hero carries the title, not a CTA row), and the hero subhead drops the source's trailing "Apply to UMD as a transfer student using ApplyWeb" now that the button says it. |
-| Transfer to UMD | `.study-here-section` lockup — brand chevron + `<hr>` + uppercase eyebrow + rich text — then the single ApplyWeb primary CTA. Identical treatment to the freshman page. |
+| Transfer to UMD | `.umd-admissions-study-here-section` lockup — brand chevron + `<hr>` + uppercase eyebrow + rich text — then the single ApplyWeb primary CTA. Identical treatment to the freshman page. |
 | Applicant Requirements | `umd-element-sticky-columns` — sticky heading + intro, three `umd-element-accordion-item` in the static column. **Imageless by direction:** the source's band photo (`Financial-Aid-Resources.jpg`) is not used. |
 | Choosing a Major | **White overlay** pathway on the dark band — `data-display="overlay" data-theme="white"`, image left. First of the three-band dark run. |
 | Benefits of Applying Early Action → **Application Deadlines** | Dark band: `umd-element-section-intro data-theme="dark"` + `umd-element-carousel-thumbnail data-theme="dark"` with four slides. The section is retitled: the early-action benefit argument lives entirely in one paragraph, so it becomes the section-intro copy, and the four deadline data points become the four slides. The "View All Application Deadlines" CTA sits in the section-intro's `slot="actions"`, above the carousel. See "The four-slide split" below. |
@@ -194,8 +194,8 @@ images above and have been deleted — they are re-fetchable from the source URL
 ## Page CSS
 
 Copied from `freshman-applicants.html`, minus two blocks that have no content on this page:
-`.fa-cta-section` / `.fa-chevron` (no dark overlay-card pair — its content is the deadlines
-carousel instead) and `.fa-req-grid` (no masonry icon cards — list cards instead). The
+`.umd-admissions-call-to-action-section` / `.umd-admissions-call-to-action-chevron` (no dark overlay-card pair — its content is the deadlines
+carousel instead) and `.umd-admissions-requirements-grid` (no masonry icon cards — list cards instead). The
 brand-chevron positioning script at end-of-body went with them. Added: `.relative` (the one
 Tailwind-shaped utility on the carousel host that the DS bundles do not ship) and the
 `umd-element-card-overlay.size-large { height: 560px }` rule described above.

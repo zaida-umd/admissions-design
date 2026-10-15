@@ -833,8 +833,8 @@
        The adjacency rule supplies the gap where body copy follows the lede
        directly — as it does here — since the block's own
        `> *:first-child { margin-top: 0 }` would otherwise zero it. */
-    .page-lede { max-width: 960px; }
-    .page-lede + .umd-text-rich-advanced { margin-top: 24px; }
+    .umd-admissions-page-lede { max-width: 960px; }
+    .umd-admissions-page-lede + .umd-text-rich-advanced { margin-top: 24px; }
   </style>
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
@@ -906,7 +906,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 
    The shadow supplies the column box (.nav-item-dropdown-multiple-column
    > * { min-width: 232px }); everything inside it is ours. */
-.umd-nav-promo a {
+.umd-shell-nav-promo a {
   display: block;
   width: 232px;
   max-width: 100%;
@@ -914,13 +914,13 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   text-decoration: none;
   background-image: none;
 }
-.umd-nav-promo img {
+.umd-shell-nav-promo img {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
 }
-.umd-nav-promo .umd-nav-promo-title {
+.umd-shell-nav-promo .umd-shell-nav-promo-headline {
   display: block;
   margin-top: 12px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -930,7 +930,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   color: var(--umd-color-black, #000);
   transition: color 0.3s ease-in-out;
 }
-.umd-nav-promo .umd-nav-promo-text {
+.umd-shell-nav-promo .umd-shell-nav-promo-text {
   display: block;
   margin-top: 4px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -939,8 +939,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   line-height: 1.4;
   color: var(--umd-color-gray-darker, #454545);
 }
-.umd-nav-promo a:hover .umd-nav-promo-title,
-.umd-nav-promo a:focus .umd-nav-promo-title {
+.umd-shell-nav-promo a:hover .umd-shell-nav-promo-headline,
+.umd-shell-nav-promo a:focus .umd-shell-nav-promo-headline {
   color: var(--umd-color-red, #e21833);
 }
   </style>
@@ -1188,12 +1188,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://ugst.umd.edu/llsop/index.html">Living-Learning &amp; Special Programs</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="../../pages/academics/programs.html">
             <img src="../../images/academics/students-walking.jpg" alt="" />
-            <span class="umd-nav-promo-title">All Programs</span>
-            <span class="umd-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
+            <span class="umd-shell-nav-promo-headline">All Programs</span>
+            <span class="umd-shell-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1220,12 +1220,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="../../pages/how-to-apply/application-faqs.html">Application FAQs</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="https://admissions.umd.edu/apply/application-deadlines">
             <img src="../../images/admissions/how-to-apply-hero.jpg" alt="" />
-            <span class="umd-nav-promo-title">Application Deadlines</span>
-            <span class="umd-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
+            <span class="umd-shell-nav-promo-headline">Application Deadlines</span>
+            <span class="umd-shell-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1239,12 +1239,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">
             <img src="../../images/tuition/idea-factory-hero.jpg" alt="" />
-            <span class="umd-nav-promo-title">Cost of Attendance</span>
-            <span class="umd-nav-promo-text">See what a year at Maryland actually costs.</span>
+            <span class="umd-shell-nav-promo-headline">Cost of Attendance</span>
+            <span class="umd-shell-nav-promo-text">See what a year at Maryland actually costs.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1344,7 +1344,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <div class="umd-layout-space-horizontal-normal">
       <div id="umd-shell-content">
         <section class="umd-layout-space-vertical-interior">
-          <p class="umd-sans-larger-bold text-black page-lede">Have questions about applying to the University of Maryland? You've come to the right place.</p>
+          <p class="umd-sans-larger-bold text-black umd-admissions-page-lede">Have questions about applying to the University of Maryland? You've come to the right place.</p>
           <div class="umd-text-rich-advanced">
             <p>We know applying to college is a lot of work, so we'll do everything we can to make it as stress-free as possible. Use the links below for the quickest answers to many of the common questions we receive.</p>
           </div>

@@ -71,49 +71,49 @@ PAGE_CSS = '''
        mid-way. Panel chrome borrows the accordion's red rule +
        light-gray body. Single-open, like an accordion group.
        ============================================================ */
-    .cs-grid {
+    .umd-admissions-college-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 32px;
     }
     @media (min-width: 650px) {
-      .cs-grid { grid-template-columns: repeat(2, 1fr); }
+      .umd-admissions-college-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (min-width: 1024px) {
-      .cs-grid { grid-template-columns: repeat(3, 1fr); gap: 40px 32px; }
+      .umd-admissions-college-grid { grid-template-columns: repeat(3, 1fr); gap: 40px 32px; }
     }
 
     /* --- tile ------------------------------------------------- */
-    .cs-tile {
+    .umd-admissions-college-tile {
       display: flex;
       flex-direction: column;
       background: var(--umd-color-white);
       border: 1px solid var(--umd-color-gray-light);
       transition: border-color .3s ease, box-shadow .3s ease;
     }
-    .cs-tile:hover {
+    .umd-admissions-college-tile:hover {
       border-color: var(--umd-color-gray-medium);
       box-shadow: 0 4px 16px rgba(0, 0, 0, .08);
     }
-    .cs-tile[data-open="true"] {
+    .umd-admissions-college-tile[data-open="true"] {
       border-color: var(--umd-color-red);
       box-shadow: 0 4px 16px rgba(0, 0, 0, .10);
     }
 
-    .cs-tile-figure {
+    .umd-admissions-college-tile-figure {
       margin: 0;
       overflow: hidden;
       aspect-ratio: 2 / 1;
       background: var(--umd-color-gray-lightest);
     }
-    .cs-tile-figure img {
+    .umd-admissions-college-tile-figure img {
       display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform .5s ease;
     }
-    .cs-tile:hover .cs-tile-figure img { transform: scale(1.04); }
+    .umd-admissions-college-tile:hover .umd-admissions-college-tile-figure img { transform: scale(1.04); }
 
     /* Type scale mirrors the DS card-standard shadow DOM, measured directly
        from a live umd-element-card: eyebrow 12px/700, headline 18px/700
@@ -126,13 +126,13 @@ PAGE_CSS = '''
        measure rather than read the file): smaller 14 / small 16 /
        medium 18 / large 18-bold / larger 22 / largest 44-bold. Hence
        .umd-sans-small for the 16px DS card body. */
-    .cs-tile-body {
+    .umd-admissions-college-tile-body {
       display: flex;
       flex: 1 1 auto;
       flex-direction: column;
       padding: 24px;
     }
-    .cs-tile-abbr {
+    .umd-admissions-college-tile-abbreviation {
       margin: 0 0 8px;
       color: var(--umd-color-red);
       font-size: 12px;
@@ -141,8 +141,8 @@ PAGE_CSS = '''
       letter-spacing: .05em;
       text-transform: uppercase;
     }
-    .cs-tile-name { margin: 0; }
-    .cs-tile-name a {
+    .umd-admissions-college-tile-name { margin: 0; }
+    .umd-admissions-college-tile-name a {
       color: var(--umd-color-black);
       text-decoration: none;
       background-image: linear-gradient(var(--umd-color-black), var(--umd-color-black));
@@ -151,14 +151,14 @@ PAGE_CSS = '''
       background-size: 0 1px;
       transition: color .3s, background-size .3s, background-image .3s;
     }
-    .cs-tile-name a:hover,
-    .cs-tile-name a:focus {
+    .umd-admissions-college-tile-name a:hover,
+    .umd-admissions-college-tile-name a:focus {
       color: var(--umd-color-red);
       background-image: linear-gradient(var(--umd-color-red), var(--umd-color-red));
       background-size: 100% 1px;
     }
     /* Clamped on the tile; the panel carries the full text. */
-    .cs-tile-desc {
+    .umd-admissions-college-tile-description {
       display: -webkit-box;
       -webkit-line-clamp: 4;
       -webkit-box-orient: vertical;
@@ -168,8 +168,8 @@ PAGE_CSS = '''
     }
 
     /* --- toggle ------------------------------------------------ */
-    .cs-tile-foot { margin-top: auto; padding-top: 24px; }
-    .cs-toggle {
+    .umd-admissions-college-tile-footer { margin-top: auto; padding-top: 24px; }
+    .umd-admissions-college-toggle {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -185,22 +185,22 @@ PAGE_CSS = '''
       text-align: left;
       cursor: pointer;
     }
-    .cs-toggle:hover { color: var(--umd-color-red); }
-    .cs-toggle:focus-visible {
+    .umd-admissions-college-toggle:hover { color: var(--umd-color-red); }
+    .umd-admissions-college-toggle:focus-visible {
       outline: 2px solid var(--umd-color-red);
       outline-offset: 4px;
     }
-    .cs-toggle-chev {
+    .umd-admissions-college-toggle-chevron {
       flex: 0 0 auto;
       width: 14px;
       height: 14px;
       fill: currentColor;
       transition: transform .3s ease;
     }
-    .cs-tile[data-open="true"] .cs-toggle-chev { transform: rotate(180deg); }
+    .umd-admissions-college-tile[data-open="true"] .umd-admissions-college-toggle-chevron { transform: rotate(180deg); }
 
     /* Letters & Sciences has no major list — plain link, no toggle. */
-    .cs-tile-link {
+    .umd-admissions-college-tile-link {
       display: inline-block;
       padding-top: 14px;
       border-top: 1px solid var(--umd-color-gray-light);
@@ -209,28 +209,28 @@ PAGE_CSS = '''
       font-weight: 700;
       text-decoration: none;
     }
-    .cs-tile-link:hover { color: var(--umd-color-red); }
+    .umd-admissions-college-tile-link:hover { color: var(--umd-color-red); }
 
     /* --- panel ------------------------------------------------- */
-    .cs-panel { grid-column: 1 / -1; }
-    .cs-panel[hidden] { display: none; }
-    .cs-panel-inner {
+    .umd-admissions-college-panel { grid-column: 1 / -1; }
+    .umd-admissions-college-panel[hidden] { display: none; }
+    .umd-admissions-college-panel-inner {
       padding: 32px 24px;
       border: 1px solid var(--umd-color-gray-light);
       border-top: 4px solid var(--umd-color-red);
       background: var(--umd-color-gray-lightest);
       animation: cs-panel-in .35s ease both;
     }
-    @media (min-width: 1024px) { .cs-panel-inner { padding: 40px; } }
+    @media (min-width: 1024px) { .umd-admissions-college-panel-inner { padding: 40px; } }
     @keyframes cs-panel-in {
       from { opacity: 0; transform: translateY(-8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .cs-panel-inner { animation: none; }
+      .umd-admissions-college-panel-inner { animation: none; }
     }
 
-    .cs-panel-head {
+    .umd-admissions-college-panel-head {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-start;
@@ -239,12 +239,12 @@ PAGE_CSS = '''
       padding-bottom: 24px;
       border-bottom: 1px solid var(--umd-color-gray-light);
     }
-    .cs-panel-headline { margin: 0; font-weight: 700; }
-    /* Same treatment as .cs-tile-name above: no underline at rest, a
+    .umd-admissions-college-panel-headline { margin: 0; font-weight: 700; }
+    /* Same treatment as .umd-admissions-college-tile-name above: no underline at rest, a
        red one wipes in left-to-right on hover/focus. The panel headline
        and the tile it expands from are the same link, so they animate
        identically — keep these two rules in sync. */
-    .cs-panel-headline a {
+    .umd-admissions-college-panel-headline a {
       color: var(--umd-color-black);
       text-decoration: none;
       background-image: linear-gradient(var(--umd-color-black), var(--umd-color-black));
@@ -253,13 +253,13 @@ PAGE_CSS = '''
       background-size: 0 1px;
       transition: color .3s, background-size .3s, background-image .3s;
     }
-    .cs-panel-headline a:hover,
-    .cs-panel-headline a:focus {
+    .umd-admissions-college-panel-headline a:hover,
+    .umd-admissions-college-panel-headline a:focus {
       color: var(--umd-color-red);
       background-image: linear-gradient(var(--umd-color-red), var(--umd-color-red));
       background-size: 100% 1px;
     }
-    .cs-panel-head > div { flex: 1 1 480px; }
+    .umd-admissions-college-panel-head > div { flex: 1 1 480px; }
     /* Constrained measure — the panel spans the full 1600px lock, far too wide
        to read a paragraph across. 960px is the DS paragraph measure, lifted from
        element.min.css:
@@ -268,12 +268,12 @@ PAGE_CSS = '''
        The value is restated rather than inherited by wrapping in .umd-rich-text,
        because that class also forces font-size:18px on its children and this
        paragraph is .umd-sans-small (16px). */
-    .cs-panel-desc {
+    .umd-admissions-college-panel-description {
       max-width: 960px;
       margin: 12px 0 0;
       color: var(--umd-color-gray-dark);
     }
-    .cs-panel-close {
+    .umd-admissions-college-panel-close {
       flex: 0 0 auto;
       padding: 8px 0;
       border: 0;
@@ -284,14 +284,14 @@ PAGE_CSS = '''
       text-transform: uppercase;
       cursor: pointer;
     }
-    .cs-panel-close:hover { color: var(--umd-color-red); }
-    .cs-panel-close:focus-visible {
+    .umd-admissions-college-panel-close:hover { color: var(--umd-color-red); }
+    .umd-admissions-college-panel-close:focus-visible {
       outline: 2px solid var(--umd-color-red);
       outline-offset: 2px;
     }
 
     /* --- majors list ------------------------------------------- */
-    .cs-majors {
+    .umd-admissions-college-majors {
       display: grid;
       grid-template-columns: 1fr;
       column-gap: 40px;
@@ -304,14 +304,14 @@ PAGE_CSS = '''
        needs; the group then wraps and that row runs 44px taller than its
        neighbours. 3 columns (~378px) fits the trio on one line — measured row
        heights 91/113 vs 91/131/135, and zero wrapped pill groups. */
-    @media (min-width: 650px)  { .cs-majors { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1024px) { .cs-majors { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 650px)  { .umd-admissions-college-majors { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .umd-admissions-college-majors { grid-template-columns: repeat(3, 1fr); } }
 
-    .cs-major {
+    .umd-admissions-college-major {
       padding: 14px 0;
       border-bottom: 1px solid var(--umd-color-gray-light);
     }
-    .cs-major a {
+    .umd-admissions-college-major a {
       color: var(--umd-color-black);
       font-weight: 700;
       text-decoration: none;
@@ -321,8 +321,8 @@ PAGE_CSS = '''
       background-size: 0 1px;
       transition: color .3s, background-size .3s, background-image .3s;
     }
-    .cs-major a:hover,
-    .cs-major a:focus {
+    .umd-admissions-college-major a:hover,
+    .umd-admissions-college-major a:focus {
       color: var(--umd-color-red);
       background-image: linear-gradient(var(--umd-color-red), var(--umd-color-red));
       background-size: 100% 1px;
@@ -333,18 +333,18 @@ PAGE_CSS = '''
        spans stay inert and read as labels rather than controls. No per-type
        colour coding: Major/Minor/Certificate/LEP are peers, and colouring them
        implied a hierarchy that doesn't exist. */
-    .cs-major-name { display: block; }
+    .umd-admissions-college-major-name { display: block; }
     /* Pills sit on their own line under the program name. Flex owns the 8px
        spacing in both axes, so the DS pill rhythm (wrapper margin-top:-8px +
        child margin-top:8px) is neutralised — left in place it double-counts
        against the flex gap and knocks the rows out of alignment. */
-    .cs-types {
+    .umd-admissions-college-major-types {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin-top: 8px;
     }
-    .cs-types > .cs-type {
+    .umd-admissions-college-major-types > .umd-admissions-college-major-type {
       margin-top: 0;
       border: 1px solid var(--umd-color-gray-light);
       color: var(--umd-color-gray-dark);
@@ -353,7 +353,7 @@ PAGE_CSS = '''
 '''
 
 # ---------------------------------------------------------------- tiles
-CHEV = ('<svg class="cs-toggle-chev" viewBox="0 0 24 24" aria-hidden="true" '
+CHEV = ('<svg class="umd-admissions-college-toggle-chevron" viewBox="0 0 24 24" aria-hidden="true" '
         'xmlns="http://www.w3.org/2000/svg"><path d="M12 16.5 2.5 7l1.6-1.6L12 13.3l7.9-7.9L21.5 7z"/></svg>')
 
 tiles, panels = [], []
@@ -361,26 +361,26 @@ for c in colleges:
     slug, n = c['slug'], len(c['majors'])
     label = f'View {n} program{"s" if n != 1 else ""}'
     if n:
-        foot = (f'        <button type="button" class="cs-toggle umd-interactive-sans-small"\n'
+        foot = (f'        <button type="button" class="umd-admissions-college-toggle umd-interactive-sans-small"\n'
                 f'                data-college="{slug}" aria-expanded="false" aria-controls="cs-panel-{slug}">\n'
                 f'          <span>{label}</span>\n'
                 f'          {CHEV}\n'
                 f'        </button>')
     else:
-        foot = (f'        <a class="cs-tile-link umd-interactive-sans-small" href="{e(c["url"])}"\n'
+        foot = (f'        <a class="umd-admissions-college-tile-link umd-interactive-sans-small" href="{e(c["url"])}"\n'
                 f'           target="_blank" rel="noopener">Visit {e(c["name"])}</a>')
 
-    tiles.append(f'''        <article class="cs-tile" id="cs-tile-{slug}" data-college="{slug}" data-open="false">
-          <figure class="cs-tile-figure">
+    tiles.append(f'''        <article class="umd-admissions-college-tile" id="cs-tile-{slug}" data-college="{slug}" data-open="false">
+          <figure class="umd-admissions-college-tile-figure">
             <img src="{e(c['image'])}" alt="{e(c['alt'])}" loading="lazy" width="880" height="440" />
           </figure>
-          <div class="cs-tile-body">
-            <p class="cs-tile-abbr">{e(c['abbr'])}</p>
-            <h3 class="cs-tile-name umd-sans-large">
+          <div class="umd-admissions-college-tile-body">
+            <p class="umd-admissions-college-tile-abbreviation">{e(c['abbr'])}</p>
+            <h3 class="umd-admissions-college-tile-name umd-sans-large">
               <a href="{e(c['url'])}" target="_blank" rel="noopener">{e(c['name'])}</a>
             </h3>
-            <p class="cs-tile-desc umd-sans-small">{e(c['desc'])}</p>
-            <div class="cs-tile-foot">
+            <p class="umd-admissions-college-tile-description umd-sans-small">{e(c['desc'])}</p>
+            <div class="umd-admissions-college-tile-footer">
 {foot}
             </div>
           </div>
@@ -391,29 +391,29 @@ for c in colleges:
 
     items = []
     for m in c['majors']:
-        types = ''.join(f'<span class="cs-type">{e(t)}</span>' for t in m['types'])
+        types = ''.join(f'<span class="umd-admissions-college-major-type">{e(t)}</span>' for t in m['types'])
         name = e(m['name'])
         link = (f'<a href="{e(m["url"])}" target="_blank" rel="noopener">{name}</a>'
                 if m['url'] else name)
-        items.append(f'            <li class="cs-major">\n'
-                     f'              <span class="cs-major-name umd-sans-small">{link}</span>\n'
-                     f'              <span class="cs-types umd-text-cluster-pill">{types}</span>\n'
+        items.append(f'            <li class="umd-admissions-college-major">\n'
+                     f'              <span class="umd-admissions-college-major-name umd-sans-small">{link}</span>\n'
+                     f'              <span class="umd-admissions-college-major-types umd-text-cluster-pill">{types}</span>\n'
                      f'            </li>')
     items = '\n'.join(items)
 
-    panels.append(f'''        <section class="cs-panel" id="cs-panel-{slug}" data-college="{slug}"
+    panels.append(f'''        <section class="umd-admissions-college-panel" id="cs-panel-{slug}" data-college="{slug}"
                  role="region" aria-labelledby="cs-panel-{slug}-h" hidden>
-          <div class="cs-panel-inner">
-            <div class="cs-panel-head">
+          <div class="umd-admissions-college-panel-inner">
+            <div class="umd-admissions-college-panel-head">
               <div>
-                <h3 class="cs-panel-headline umd-sans-larger" id="cs-panel-{slug}-h" tabindex="-1">
+                <h3 class="umd-admissions-college-panel-headline umd-sans-larger" id="cs-panel-{slug}-h" tabindex="-1">
                   <a href="{e(c['url'])}" target="_blank" rel="noopener">{e(c['name'])}</a>
                 </h3>
-                <p class="cs-panel-desc umd-sans-small">{e(c['desc'])}</p>
+                <p class="umd-admissions-college-panel-description umd-sans-small">{e(c['desc'])}</p>
               </div>
-              <button type="button" class="cs-panel-close umd-sans-min" data-close="{slug}">Close</button>
+              <button type="button" class="umd-admissions-college-panel-close umd-sans-min" data-close="{slug}">Close</button>
             </div>
-            <ul class="cs-majors">
+            <ul class="umd-admissions-college-majors">
 {items}
             </ul>
           </div>
@@ -434,12 +434,12 @@ PAGE_JS = '''  <!-- ============================================================
   ============================================================ -->
   <script>
   (function () {
-    var grid = document.getElementById('cs-grid');
+    var grid = document.getElementById('umd-admissions-college-grid');
     if (!grid) return;
 
-    var tiles = Array.prototype.slice.call(grid.querySelectorAll('.cs-tile'));
+    var tiles = Array.prototype.slice.call(grid.querySelectorAll('.umd-admissions-college-tile'));
     var panels = {};
-    Array.prototype.forEach.call(grid.querySelectorAll('.cs-panel'), function (p) {
+    Array.prototype.forEach.call(grid.querySelectorAll('.umd-admissions-college-panel'), function (p) {
       panels[p.getAttribute('data-college')] = p;
       grid.appendChild(p);            // park every panel at the end
     });
@@ -465,7 +465,7 @@ PAGE_JS = '''  <!-- ============================================================
     }
 
     function setToggle(id, expanded) {
-      var btn = grid.querySelector('.cs-toggle[data-college="' + id + '"]');
+      var btn = grid.querySelector('.umd-admissions-college-toggle[data-college="' + id + '"]');
       if (btn) btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
       var tile = document.getElementById('cs-tile-' + id);
       if (tile) tile.setAttribute('data-open', expanded ? 'true' : 'false');
@@ -494,7 +494,7 @@ PAGE_JS = '''  <!-- ============================================================
     }
 
     grid.addEventListener('click', function (ev) {
-      var toggle = ev.target.closest('.cs-toggle');
+      var toggle = ev.target.closest('.umd-admissions-college-toggle');
       if (toggle) {
         var id = toggle.getAttribute('data-college');
         if (openId === id) {
@@ -505,11 +505,11 @@ PAGE_JS = '''  <!-- ============================================================
         }
         return;
       }
-      var closer = ev.target.closest('.cs-panel-close');
+      var closer = ev.target.closest('.umd-admissions-college-panel-close');
       if (closer) {
         var cid = closer.getAttribute('data-close');
         close(cid);
-        var btn = grid.querySelector('.cs-toggle[data-college="' + cid + '"]');
+        var btn = grid.querySelector('.umd-admissions-college-toggle[data-college="' + cid + '"]');
         if (btn) {
           btn.focus();
           btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -519,7 +519,7 @@ PAGE_JS = '''  <!-- ============================================================
 
     grid.addEventListener('keydown', function (ev) {
       if (ev.key === 'Escape' && openId) {
-        var btn = grid.querySelector('.cs-toggle[data-college="' + openId + '"]');
+        var btn = grid.querySelector('.umd-admissions-college-toggle[data-college="' + openId + '"]');
         close(openId);
         if (btn) btn.focus();
       }
@@ -608,7 +608,7 @@ page = f'''{head_top}
   <!-- 5. COLLEGES & SCHOOLS — {len(colleges)} tiles / {total} programs -->
   <section class="umd-layout-vertical-landing">
     <div class="umd-layout-space-horizontal-larger">
-      <div class="cs-grid" id="cs-grid" data-animation="off">
+      <div class="umd-admissions-college-grid" id="umd-admissions-college-grid" data-animation="off">
 
 {tiles_html}
 

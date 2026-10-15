@@ -127,7 +127,7 @@ is no old-name usage left to match.
 Consecutive `umd-element-card[data-display="list"]` siblings get
 `border-top: 1px solid #E6E6E6` + `padding-top: 24px` from the component's own
 CSS. Inside the pinned box that is exactly the wanted rhythm, so
-`.search-pinned-list` sets `gap: 0` and lets the component space itself — a
+`.umd-admissions-search-pinned-list` sets `gap: 0` and lets the component space itself — a
 flex gap there stacks on top of the 24px and pushes the rows apart while the
 DS rule keeps drawing its divider at the old spacing.
 

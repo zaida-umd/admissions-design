@@ -40,7 +40,7 @@ stats slot".
   `pages/how-to-apply/freshman-applicants.html` and `transfer-applicants.html`
   rather than admissions.umd.edu. International and Shady Grove have no local
   page yet, so those stay external.
-- **Getting Started** uses the same `.study-here-section` lockup as
+- **Getting Started** uses the same `.umd-admissions-study-here-section` lockup as
   `pages/how-to-apply/index.html` and `pages/tuition/index.html` — rule, uppercase
   eyebrow, rich text, CTA, brand chevron behind it. The video below sits in the
   992px list-card lock (`umd-layout-space-horizontal-small`, RULES.md §33), with

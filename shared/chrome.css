@@ -65,7 +65,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 
    The shadow supplies the column box (.nav-item-dropdown-multiple-column
    > * { min-width: 232px }); everything inside it is ours. */
-.umd-nav-promo a {
+.umd-shell-nav-promo a {
   display: block;
   width: 232px;
   max-width: 100%;
@@ -73,13 +73,13 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   text-decoration: none;
   background-image: none;
 }
-.umd-nav-promo img {
+.umd-shell-nav-promo img {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
 }
-.umd-nav-promo .umd-nav-promo-title {
+.umd-shell-nav-promo .umd-shell-nav-promo-headline {
   display: block;
   margin-top: 12px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -89,7 +89,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   color: var(--umd-color-black, #000);
   transition: color 0.3s ease-in-out;
 }
-.umd-nav-promo .umd-nav-promo-text {
+.umd-shell-nav-promo .umd-shell-nav-promo-text {
   display: block;
   margin-top: 4px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -98,7 +98,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   line-height: 1.4;
   color: var(--umd-color-gray-darker, #454545);
 }
-.umd-nav-promo a:hover .umd-nav-promo-title,
-.umd-nav-promo a:focus .umd-nav-promo-title {
+.umd-shell-nav-promo a:hover .umd-shell-nav-promo-headline,
+.umd-shell-nav-promo a:focus .umd-shell-nav-promo-headline {
   color: var(--umd-color-red, #e21833);
 }

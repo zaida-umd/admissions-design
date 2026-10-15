@@ -828,7 +828,7 @@
 
     /* Information-For outline CTAs — make the DS call-to-action host fill its
        grid cell (the inner anchor is stretched via shadow injection). */
-    .information-for-actions umd-element-call-to-action {
+    .umd-admissions-information-for-actions umd-element-call-to-action {
       display: block;
       width: 100%;
     }
@@ -881,7 +881,7 @@
        neighbors. The quote (z-index 2) stays interactive on top.
        Section uses vertical-landing-style padding so the quote has
        breathing room; chevron extends past via overflow:visible. */
-    .quote-with-chevron {
+    .umd-admissions-quote-with-chevron {
       position: relative;
       min-height: 400px;
       display: flex;
@@ -892,18 +892,18 @@
          already gets below itself reads as part of the card bank rather
          than as the quote's own space. Same 56/80/120 scale as
          umd-layout-vertical-landing so the rhythm matches the rest of
-         the page. Safe for the chevron: .chevron-overlap's animation is
+         the page. Safe for the chevron: .umd-admissions-quote-chevron's animation is
          anchored to the TOP of that box (top: 0), so the box growing at
          the bottom does not move it. */
       margin-bottom: 56px;
     }
 
     @media (min-width: 768px) {
-      .quote-with-chevron { margin-bottom: 80px; }
+      .umd-admissions-quote-with-chevron { margin-bottom: 80px; }
     }
 
     @media (min-width: 1200px) {
-      .quote-with-chevron { margin-bottom: 120px; }
+      .umd-admissions-quote-with-chevron { margin-bottom: 120px; }
     }
 
     /* DARK-BAND SEAM — collapse the padding where two black bands meet.
@@ -926,13 +926,13 @@
       padding-top: 0;
     }
 
-    .quote-with-chevron-content {
+    .umd-admissions-quote-with-chevron-content {
       position: relative;
       z-index: 2;
       width: 100%;
     }
 
-    .chevron-overlap {
+    .umd-admissions-quote-chevron {
       position: absolute;
       top: -150px;
       left: 0;
@@ -942,7 +942,7 @@
       z-index: 1;
     }
 
-    .chevron-overlap > umd-element-brand-logo-animation {
+    .umd-admissions-quote-chevron > umd-element-brand-logo-animation {
       position: absolute;
       top: 0;
       left: 0;
@@ -988,34 +988,34 @@
 
     /* Simple two-column deadlines table — used in the Important Dates rich
        text column to align label/date pairs without a heavy data-table look. */
-    .deadlines-table { width: 100%; border-collapse: collapse; }
+    .umd-admissions-deadlines-table { width: 100%; border-collapse: collapse; }
 
-    .deadlines-table td {
+    .umd-admissions-deadlines-table td {
       padding: 12px 0;
       border-bottom: 1px solid var(--umd-color-black);
       vertical-align: top;
     }
 
-    .deadlines-table td:last-child {
+    .umd-admissions-deadlines-table td:last-child {
       text-align: right;
       white-space: nowrap;
       font-weight: 700;
     }
 
-    .deadlines-table tr:last-child td { border-bottom: 0; }
+    .umd-admissions-deadlines-table tr:last-child td { border-bottom: 0; }
 
     /* Neutralize the styles-package rich-text table treatment (alternating row
        backgrounds, grey row borders, and 24px first-child left padding) so this
        stays a clean label/date list with black rules. */
-    .umd-text-rich-advanced .deadlines-table tr,
-    .umd-text-rich-advanced .deadlines-table tr:nth-child(even) {
+    .umd-text-rich-advanced .umd-admissions-deadlines-table tr,
+    .umd-text-rich-advanced .umd-admissions-deadlines-table tr:nth-child(even) {
       background: transparent;
       border-top: 0;
     }
 
-    .umd-text-rich-advanced .deadlines-table td:first-child { padding-left: 0; }
+    .umd-text-rich-advanced .umd-admissions-deadlines-table td:first-child { padding-left: 0; }
 
-    .umd-text-rich-advanced .deadlines-table td:last-child { padding-right: 0; }
+    .umd-text-rich-advanced .umd-admissions-deadlines-table td:last-child { padding-right: 0; }
 
   </style>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
@@ -1087,7 +1087,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 
    The shadow supplies the column box (.nav-item-dropdown-multiple-column
    > * { min-width: 232px }); everything inside it is ours. */
-.umd-nav-promo a {
+.umd-shell-nav-promo a {
   display: block;
   width: 232px;
   max-width: 100%;
@@ -1095,13 +1095,13 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   text-decoration: none;
   background-image: none;
 }
-.umd-nav-promo img {
+.umd-shell-nav-promo img {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
 }
-.umd-nav-promo .umd-nav-promo-title {
+.umd-shell-nav-promo .umd-shell-nav-promo-headline {
   display: block;
   margin-top: 12px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -1111,7 +1111,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   color: var(--umd-color-black, #000);
   transition: color 0.3s ease-in-out;
 }
-.umd-nav-promo .umd-nav-promo-text {
+.umd-shell-nav-promo .umd-shell-nav-promo-text {
   display: block;
   margin-top: 4px;
   font-family: "Interstate", Helvetica, Arial, Verdana, sans-serif;
@@ -1120,8 +1120,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   line-height: 1.4;
   color: var(--umd-color-gray-darker, #454545);
 }
-.umd-nav-promo a:hover .umd-nav-promo-title,
-.umd-nav-promo a:focus .umd-nav-promo-title {
+.umd-shell-nav-promo a:hover .umd-shell-nav-promo-headline,
+.umd-shell-nav-promo a:focus .umd-shell-nav-promo-headline {
   color: var(--umd-color-red, #e21833);
 }
   </style>
@@ -1378,12 +1378,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://ugst.umd.edu/llsop/index.html">Living-Learning &amp; Special Programs</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="../pages/academics/programs.html">
             <img src="../images/academics/students-walking.jpg" alt="" />
-            <span class="umd-nav-promo-title">All Programs</span>
-            <span class="umd-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
+            <span class="umd-shell-nav-promo-headline">All Programs</span>
+            <span class="umd-shell-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1410,12 +1410,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="../pages/how-to-apply/application-faqs.html">Application FAQs</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="https://admissions.umd.edu/apply/application-deadlines">
             <img src="../images/admissions/how-to-apply-hero.jpg" alt="" />
-            <span class="umd-nav-promo-title">Application Deadlines</span>
-            <span class="umd-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
+            <span class="umd-shell-nav-promo-headline">Application Deadlines</span>
+            <span class="umd-shell-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1429,12 +1429,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
-             light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
-        <div slot="dropdown-callout" class="umd-nav-promo">
+             light DOM and is styled by .umd-shell-nav-promo in shared/chrome.css. -->
+        <div slot="dropdown-callout" class="umd-shell-nav-promo">
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">
             <img src="../images/tuition/idea-factory-hero.jpg" alt="" />
-            <span class="umd-nav-promo-title">Cost of Attendance</span>
-            <span class="umd-nav-promo-text">See what a year at Maryland actually costs.</span>
+            <span class="umd-shell-nav-promo-headline">Cost of Attendance</span>
+            <span class="umd-shell-nav-promo-text">See what a year at Maryland actually costs.</span>
           </a>
         </div>
       </umd-element-nav-item>
@@ -1600,7 +1600,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <section class="umd-layout-background-full-dark umd-layout-background-full-dark-arrow-right umd-layout-background-full-dark-no-bottom">
     <div class="umd-layout-space-horizontal-larger">
       <p class="umd-text-line-trailing-dark"><span>Information For</span></p>
-      <div class="umd-layout-grid-gap-four information-for-actions">
+      <div class="umd-layout-grid-gap-four umd-admissions-information-for-actions">
         <umd-element-call-to-action data-display="outline" data-theme="dark"><a href="personas/prospective-students.html">Prospective Students</a></umd-element-call-to-action>
         <umd-element-call-to-action data-display="outline" data-theme="dark"><a href="#parents">Parents &amp; Families</a></umd-element-call-to-action>
         <umd-element-call-to-action data-display="outline" data-theme="dark"><a href="#counselors">Counselors &amp; Advisors</a></umd-element-call-to-action>
@@ -1661,15 +1661,15 @@ umd-element-scroll-top[data-layout-fixed="true"] {
        layered behind the quote and overlapping ~150px into both the
        dark section above and the cards below.
   ======================================== -->
-  <section class="quote-with-chevron">
-    <div class="umd-layout-space-horizontal-normal quote-with-chevron-content">
+  <section class="umd-admissions-quote-with-chevron">
+    <div class="umd-layout-space-horizontal-normal umd-admissions-quote-with-chevron-content">
       <umd-element-quote>
         <blockquote slot="quote">You will get to know the university as a world-class leader in research and teaching, entrepreneurship and innovation, and sustainability and security. But most of all, you will get to know us as caring people who are committed to the success of our university and students.</blockquote>
         <p slot="attribution">James B. Massey, Jr.</p>
         <p slot="attribution-sub-text">Director of Undergraduate Admissions</p>
       </umd-element-quote>
     </div>
-    <div class="chevron-overlap" aria-hidden="true">
+    <div class="umd-admissions-quote-chevron" aria-hidden="true">
       <umd-element-brand-logo-animation></umd-element-brand-logo-animation>
     </div>
   </section>
@@ -1917,7 +1917,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <div class="umd-text-rich-advanced">
           <hr>
           <p class="text-black umd-sans-large">EARLY ACTION DEADLINES</p>
-          <table class="deadlines-table">
+          <table class="umd-admissions-deadlines-table">
             <tbody>
               <tr><td>Freshman Applying for Fall</td><td>November 1</td></tr>
               <tr><td>Transfers Applying for Fall</td><td>March 1</td></tr>
@@ -2062,7 +2062,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         el.__ctaStretchInjected = true;
       }
       function applyAll() {
-        document.querySelectorAll('.information-for-actions umd-element-call-to-action').forEach(inject);
+        document.querySelectorAll('.umd-admissions-information-for-actions umd-element-call-to-action').forEach(inject);
       }
       customElements.whenDefined('umd-element-call-to-action').then(() => {
         applyAll();
