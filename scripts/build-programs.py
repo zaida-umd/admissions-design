@@ -65,6 +65,7 @@ records = [{
     't': [x['title'] for x in r['types']],
     'c': [x['title'] for x in r['colleges']],
     'i': [x['title'] for x in r['interests']],
+    'l': [x['title'] for x in r.get('locations') or []],
     'd': plain(r['description']),
 } for r in raw]
 
@@ -457,10 +458,10 @@ BODY = r'''  </style>
   <script>
   (function () {
     var PROGRAMS = @@PROGRAMS@@;
-    var FACETS   = {"type":[{"title":"Major","count":104},{"title":"Minor","count":104},{"title":"Limited Enrollment Program","count":26},{"title":"Pre-Professional Program","count":13},{"title":"Certificate","count":8}],"college":[{"title":"A. James Clark School of Engineering (ENGR)","count":20},{"title":"College of Agriculture & Natural Resources (AGNR)","count":17},{"title":"College of Arts & Humanities (ARHU)","count":59},{"title":"College of Behavioral & Social Sciences (BSOS)","count":20},{"title":"College of Computer, Mathematical, & Natural Sciences (CMNS)","count":31},{"title":"College of Education (EDUC)","count":16},{"title":"College of Information (INFO)","count":6},{"title":"Philip Merrill College of Journalism (JOUR)","count":1},{"title":"Robert H. Smith School of Business (BMGT)","count":12},{"title":"School of Architecture, Planning & Preservation (ARCH)","count":7},{"title":"School of Public Health (SPH)","count":8},{"title":"School of Public Policy (SPP)","count":6}],"interest":[{"title":"Art & Performance","count":18},{"title":"Business & Entrepreneurship","count":41},{"title":"Communication & Literature","count":42},{"title":"Cultures & Languages","count":67},{"title":"Data & Analysis","count":55},{"title":"Design & Planning","count":26},{"title":"Education & Human Development","count":31},{"title":"Engineering & Technology","count":34},{"title":"Environment & Natural Resources","count":41},{"title":"Health & Wellness","count":33},{"title":"Human Behavior & Social Thought","count":29},{"title":"Natural & Physical Sciences","count":59},{"title":"Plants & Animals","count":13},{"title":"Policy & Social Justice","count":46}]};
+    var FACETS   = {"type":[{"title":"Major","count":104},{"title":"Minor","count":104},{"title":"Limited Enrollment Program","count":26},{"title":"Pre-Professional Program","count":13},{"title":"Certificate","count":8}],"college":[{"title":"A. James Clark School of Engineering (ENGR)","count":20},{"title":"College of Agriculture & Natural Resources (AGNR)","count":17},{"title":"College of Arts & Humanities (ARHU)","count":59},{"title":"College of Behavioral & Social Sciences (BSOS)","count":20},{"title":"College of Computer, Mathematical, & Natural Sciences (CMNS)","count":31},{"title":"College of Education (EDUC)","count":16},{"title":"College of Information (INFO)","count":6},{"title":"Philip Merrill College of Journalism (JOUR)","count":1},{"title":"Robert H. Smith School of Business (BMGT)","count":12},{"title":"School of Architecture, Planning & Preservation (ARCH)","count":7},{"title":"School of Public Health (SPH)","count":8},{"title":"School of Public Policy (SPP)","count":6}],"interest":[{"title":"Art & Performance","count":18},{"title":"Business & Entrepreneurship","count":41},{"title":"Communication & Literature","count":42},{"title":"Cultures & Languages","count":67},{"title":"Data & Analysis","count":55},{"title":"Design & Planning","count":26},{"title":"Education & Human Development","count":31},{"title":"Engineering & Technology","count":34},{"title":"Environment & Natural Resources","count":41},{"title":"Health & Wellness","count":33},{"title":"Human Behavior & Social Thought","count":29},{"title":"Natural & Physical Sciences","count":59},{"title":"Plants & Animals","count":13},{"title":"Policy & Social Justice","count":46}],"location":[{"title":"Shady Grove","count":12},{"title":"College Park","count":5}]};
     var ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    var GROUP_LABELS = { type:'Program Types', college:'Colleges & Schools', interest:'Interests' };
-    var GROUP_ORDER  = ['type', 'college', 'interest'];
+    var GROUP_LABELS = { type:'Program Types', college:'Colleges & Schools', interest:'Interests', location:'Locations' };
+    var GROUP_ORDER  = ['type', 'college', 'interest', 'location'];
 
     var form      = document.getElementById('pf-form');
     var qInput    = document.getElementById('pf-q');
@@ -480,7 +481,7 @@ BODY = r'''  </style>
     // options shown before a group collapses behind its "Show all" toggle
     var PF_SHOW_LIMIT = 7;
 
-    var state = { q:'', type:[], college:[], interest:[] };
+    var state = { q:'', type:[], college:[], interest:[], location:[] };
 
     // ---- build checkbox filter groups ----
     function buildGroups() {
@@ -512,7 +513,7 @@ BODY = r'''  </style>
     // ---- collect state from the DOM ----
     function collect() {
       state.q = qInput.value.trim().toLowerCase();
-      state.type = []; state.college = []; state.interest = [];
+      state.type = []; state.college = []; state.interest = []; state.location = [];
       form.querySelectorAll('input[type="checkbox"]:checked').forEach(function (cb) {
         state[cb.getAttribute('data-group')].push(cb.value);
       });
@@ -524,6 +525,7 @@ BODY = r'''  </style>
       if (state.type.length && !p.t.some(function (t) { return state.type.indexOf(t) > -1; })) return false;
       if (state.college.length && !p.c.some(function (c) { return state.college.indexOf(c) > -1; })) return false;
       if (state.interest.length && !p.i.some(function (i) { return state.interest.indexOf(i) > -1; })) return false;
+      if (state.location.length && !p.l.some(function (l) { return state.location.indexOf(l) > -1; })) return false;
       return true;
     }
 
@@ -570,7 +572,7 @@ BODY = r'''  </style>
     function renderPills() {
       var items = [];
       if (state.q) items.push({ k:'q', v:'', label:'\u201c' + state.q + '\u201d' });
-      ['type', 'college', 'interest'].forEach(function (k) {
+      GROUP_ORDER.forEach(function (k) {
         state[k].forEach(function (v) { items.push({ k:k, v:v, label:v }); });
       });
       if (!items.length) { pillsHost.hidden = true; pillsHost.innerHTML = ''; return; }
@@ -685,6 +687,16 @@ _body_pin = re.search(r'web-components-library@([\d.]+)/dist/cdn\.js', BODY)
 assert _tpl_pin and _body_pin and _tpl_pin.group(1) == _body_pin.group(1), (
     f'cdn.js pin drift: TEMPLATE.html has {_tpl_pin and _tpl_pin.group(1)}, '
     f'this script emits {_body_pin and _body_pin.group(1)} — update the BODY literal.')
+
+# The location facet is listed in the live site's order (Shady Grove first), so
+# it is written out in BODY rather than sorted -- check its counts against the data.
+_loc_counts = {}
+for r in records:
+    for l in r['l']:
+        _loc_counts[l] = _loc_counts.get(l, 0) + 1
+_loc_facet = json.loads(re.search(r'"location":(\[.*?\])', BODY).group(1))
+assert {f['title']: f['count'] for f in _loc_facet} == _loc_counts, (
+    'location facet out of sync with programs-data.json: %r' % _loc_counts)
 
 # ---------------------------------------------------------------- assemble
 body = BODY.replace('@@PROGRAMS@@', programs_json)
