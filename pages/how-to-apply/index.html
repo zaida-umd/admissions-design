@@ -1493,7 +1493,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         .umd-admissions-deadline-finder-controls {
           display: grid; grid-template-columns: 1fr; gap: 16px;
         }
-        @media (min-width: 650px) { .umd-admissions-deadline-finder-controls { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
+        @media (min-width: 650px) { .umd-admissions-deadline-finder-controls { grid-template-columns: repeat(3, minmax(0, 1fr)) auto; gap: 24px; align-items: end; } }
         .umd-admissions-deadline-finder-group { display: flex; flex-direction: column; gap: 8px; }
         .umd-admissions-deadline-finder-label { font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--umd-color-black); }
         .umd-admissions-deadline-finder-select {
@@ -1505,6 +1505,18 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           background-repeat: no-repeat; background-position: right 16px center;
         }
         .umd-admissions-deadline-finder-select:focus-visible { outline: 2px solid var(--umd-color-black); outline-offset: 2px; }
+        /* Submit — white DS chevron (controls.chevron_down, rotated to point right)
+           in a red square, sized to the select's height so the row bottoms align. */
+        .umd-admissions-deadline-finder-submit {
+          display: inline-flex; align-items: center; justify-content: center;
+          width: 51px; height: 51px; padding: 0; justify-self: start;
+          background-color: var(--umd-color-red); color: var(--umd-color-white);
+          border: 0; border-radius: 0; cursor: pointer; transition: background-color .2s;
+        }
+        .umd-admissions-deadline-finder-submit svg { width: 20px; height: 20px; fill: currentColor; transform: rotate(-90deg); }
+        .umd-admissions-deadline-finder-submit:hover:not(:disabled) { background-color: var(--umd-color-black); }
+        .umd-admissions-deadline-finder-submit:focus-visible { outline: 2px solid var(--umd-color-black); outline-offset: 2px; }
+        .umd-admissions-deadline-finder-submit:disabled { background-color: color-mix(in srgb, var(--umd-color-gray-medium) 55%, var(--umd-color-white)); cursor: not-allowed; }
         .umd-admissions-deadline-finder-result {
           margin-top: 32px; border-left: 4px solid var(--umd-color-red); background: rgba(0,0,0,0.05);
           padding: 28px 28px 24px;
@@ -1528,7 +1540,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       </style>
 
       <div class="umd-admissions-deadline-finder" id="whenToApply">
-        <div class="umd-admissions-deadline-finder-controls">
+        <form class="umd-admissions-deadline-finder-controls" id="wta-form">
           <div class="umd-admissions-deadline-finder-group">
             <label class="umd-admissions-deadline-finder-label umd-sans-smaller" for="wta-type">Student Type</label>
             <select class="umd-admissions-deadline-finder-select" id="wta-type" aria-label="Student type">
@@ -1554,7 +1566,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
               <option value="spring">Spring</option>
             </select>
           </div>
-        </div>
+          <button type="submit" class="umd-admissions-deadline-finder-submit" id="wta-submit" aria-label="Show my deadlines" disabled>
+            <svg aria-hidden="true" viewBox="0 0 96 96"><path fill-rule="evenodd" clip-rule="evenodd" d="M47.2598 49.1794L72.3325 21L94 21.0001L58.9085 62.2714L58.9247 62.2897L47.284 76L47.2598 75.9715L47.2356 76L35.5949 62.2897L35.6111 62.2714L0.519623 21L22.1871 21.0001L47.2598 49.1794Z"/></svg>
+          </button>
+        </form>
 
         <div class="umd-admissions-deadline-finder-hint umd-sans-small" id="wta-hint">Make a selection above to see your deadlines.</div>
 
@@ -1605,18 +1620,27 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           var rowsEl = document.getElementById('wta-rows');
           var resetEl = document.getElementById('wta-reset');
           var resetCta = document.getElementById('wta-reset-cta');
+          var formEl = document.getElementById('wta-form');
+          var submitEl = document.getElementById('wta-submit');
           if (!typeEl) return;
 
+          // Selecting only updates the hint and arms the arrow; the deadlines
+          // render on submit. Changing a select after submitting clears the
+          // now-stale result rather than silently swapping it.
+          function update() {
+            var t = typeEl.value, s = statusEl.value, sem = semEl.value;
+            var any = t || s || sem, all = t && s && sem;
+            submitEl.disabled = !all;
+            resultEl.hidden = true;
+            resetCta.style.display = any ? '' : 'none';
+            hintEl.hidden = false;
+            hintEl.textContent = all ? 'Select the arrow to see your deadlines.'
+              : any ? 'Finish the remaining selections to see your deadlines.'
+              : 'Make a selection above to see your deadlines.';
+          }
           function render() {
             var t = typeEl.value, s = statusEl.value, sem = semEl.value;
-            var any = t || s || sem;
-            if (!(t && s && sem)) {
-              resultEl.hidden = true;
-              resetCta.style.display = 'none';
-              hintEl.hidden = false;
-              hintEl.textContent = any ? 'Finish the remaining selections to see your deadlines.' : 'Make a selection above to see your deadlines.';
-              return;
-            }
+            if (!(t && s && sem)) { update(); return; }
             var entry = DATA[t + '|' + s + '|' + sem];
             if (!entry) { return; }
             titleEl.textContent = LABELS.status[s] + ' ' + LABELS.type[t] + ' — ' + LABELS.semester[sem] + ' entry';
@@ -1634,9 +1658,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           }
           function reset() {
             typeEl.value = ''; statusEl.value = ''; semEl.value = '';
-            render();
+            update();
           }
-          [typeEl, statusEl, semEl].forEach(function (el) { el.addEventListener('change', render); });
+          [typeEl, statusEl, semEl].forEach(function (el) { el.addEventListener('change', update); });
+          formEl.addEventListener('submit', function (e) { e.preventDefault(); render(); });
           // Delegate on the light-DOM foot so the click still fires after the
           // call-to-action component reprojects its slotted button.
           var footEl = document.querySelector('.umd-admissions-deadline-finder-footer');
