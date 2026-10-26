@@ -886,19 +886,6 @@
       border: 0;
     }
 
-    /* Accordion stack in the sticky-columns static column (RULES.md §20 —
-       single-column stacked list; no custom CSS grid). */
-    .umd-admissions-accordion-stack {
-      display: grid;
-      gap: var(--umd-space-min, 8px);
-    }
-
-    /* Sub-headings inside an accordion item's rich text (U.S. Veterans splits
-       into Freshman / Transfer) carry `umd-sans-large text-black` — the same
-       pair the home page uses for its "Early Action Deadlines" label. No page
-       rule needed: umd-sans-large is already 18px/700, `.text-black` beats
-       rich text's blanket #454545 (critical.css §7), and the 24px top margin
-       comes from `.umd-text-rich-advanced > *`. */
   </style>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
@@ -1606,149 +1593,42 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </section>
 
   <!-- ========================================
-       9. SPECIAL AUDIENCES — sticky-columns + accordion
-       Eleven long-form entries; an accordion keeps the section scannable and
-       the sticky column holds the editorial framing (RULES.md §20).
+       9. SPECIAL AUDIENCES — short intro + links to the four groups on
+       other-applicant-types.html, which now carries the full copy. The four
+       cards are the same jump nav that page opens with, pointed across pages.
   ======================================== -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-sticky-columns
-      class="umd-layout-space-horizontal-larger"
-      data-layout-position="100px">
-
-      <div slot="sticky-column">
-        <h2 class="umd-sans-largest-uppercase mb-md">Special Audiences</h2>
-        <div class="umd-text-rich-advanced mb-sm">
-          <p>We understand no two applicants are the same and not every applicant fits neatly into the category of freshman or transfer student. That is why we will consider your specific circumstances through an application process developed just for you.</p>
-        </div>
-        <div class="umd-layout-grid-inline-tablet-rows">
-          <umd-element-call-to-action data-display="secondary">
-            <a href="https://admissions.umd.edu/apply-now">Start an Application</a>
-          </umd-element-call-to-action>
-        </div>
+  <section id="special-audiences" class="umd-layout-vertical-landing">
+    <div class="umd-layout-space-horizontal-larger">
+      <h2 class="umd-sans-largest-uppercase mb-md">Special Audiences</h2>
+      <div class="umd-text-rich-advanced umd-layout-vertical-landing-child">
+        <p>We understand no two applicants are the same and not every applicant fits neatly into the category of freshman or transfer student. That is why we will consider your specific circumstances through an application process developed just for you.</p>
       </div>
-
-      <div slot="static-column">
-        <div class="umd-admissions-accordion-stack">
-
-          <umd-element-accordion-item>
-            <p slot="headline">Agriculture Forward at Maryland</p>
-            <div slot="text">
-              <div class="umd-text-rich-advanced">
-                <p><a href="https://iaa.umd.edu/agriculture-forward">Agriculture Forward at Maryland</a> is an access program for students who plan to pursue a career in agriculture and natural resources. Participants in the Ag Forward program receive dual academic advising from the Institute of Applied Agriculture (IAA) and College of Agriculture and Natural Resources (AGNR) faculty members to ensure all program requirements are met. At the end of four years, students who have met all program requirements graduate with both an IAA certificate and a bachelor's degree from their selected AGNR major.</p>
-              </div>
-            </div>
-          </umd-element-accordion-item>
-
-          <umd-element-accordion-item>
-            <p slot="headline">Concurrent Enrollment</p>
-            <div slot="text">
-              <div class="umd-text-rich-advanced">
-                <p>You can enroll at the University of Maryland (UMD) even before you graduate from high school. We allow talented high school seniors to take up to two courses or seven credits during the fall, spring and summer semesters. We're looking for students who've demonstrated exceptional performance and ability in a rigorous high school program.</p>
-                <p>To apply, submit a completed application, high school transcript, an essay explaining why you're interested in attending UMD concurrently, a letter of recommendation from your high school and a letter of permission from your parents or legal guardians. You also must live within commuting distance. In order to be considered, students must apply by the following deadlines:</p>
-                <ul>
-                  <li><strong>Spring</strong>: January 2</li>
-                  <li><strong>Summer</strong>: May 15</li>
-                  <li><strong>Fall</strong>: August 8</li>
-                </ul>
-              </div>
-            </div>
-          </umd-element-accordion-item>
-
-          <umd-element-accordion-item>
-            <p slot="headline">General Education Development (GED)</p>
-            <div slot="text">
-              <div class="umd-text-rich-advanced">
-                <p>If you did not graduate from a regionally accredited high school, then you will need to submit results of the Tests of General Education Development, along with academic letters of recommendation, an essay and SAT scores with your <a href="https://admissions.umd.edu/apply-now">UMD application</a>.</p>
-              </div>
-            </div>
-          </umd-element-accordion-item>
-
-          <umd-element-accordion-item>
-            <p slot="headline">Golden ID Program</p>
-            <div slot="text">
-              <div class="umd-text-rich-advanced">
-                <p>If you are 60 or older, a legal resident of the state of Maryland and retired, the University of Maryland has courses and services available to you. To participate in the <a href="https://registrar.umd.edu/current/registration/golden-id.html">Golden ID program</a>, you must submit a completed <a href="https://admissions.umd.edu/apply-now">UMD application</a>. If admitted to the university, you can register on a space-available basis for credit courses as a regular or special student in any session. You must pay an administrative fee for each semester registered.</p>
-              </div>
-            </div>
-          </umd-element-accordion-item>
-
-          <umd-element-accordion-item>
-            <p slot="headline">Home-Schooled Students</p>
-            <div slot="text">
-              <div class="umd-text-rich-advanced">
-                <p>If you've been home-schooled, you should submit your completed <a href="https://admissions.umd.edu/apply-now">UMD application</a> and provide a transcript with the following: course descriptions, books used, methods of evaluation and grades received. You should meet the same minimum high school course requirements expected of all applicants; your SAT and/or ACT scores will be strongly considered in the review of your application.</p>
-                <p>Please also include general information about your home-schooling program or agency and a letter of recommendation from both an academic professional and the home-schooling teacher/parent. If you've taken college-level courses, you should also include an official college transcript with your application.</p>
-              </div>
-            </div>
-          </umd-element-accordion-item>
-
-          <umd-element-accordion-item>
-            <p slot="headline">Non-Degree Seeking Students</p>
-            <div slot="text">
-              <div class="umd-text-rich-advanced">
-                <p>Transfer students interested in taking courses at UMD without pursuing a degree must apply for admission as non-degree seeking students using the <a href="https://admissions.umd.edu/apply-now">transfer application</a>.</p>
-                <p><strong>If you have not completed a bachelor's degree</strong>, you must submit a completed application, official transcripts from all colleges and universities previously attended and the application fee.</p>
-                <p><strong>If you have already completed a bachelor's degree</strong>, transcripts are not required. However, since you may need to demonstrate that you have met prerequisites, we recommend having one available to provide.</p>
-                <p><strong>If you wish to enroll for one semester as a visiting student and transfer the coursework back to your home institution</strong>, you must submit the transfer application, official transcripts, the application fee and a letter of permission from an academic advisor or dean at your home institution.</p>
-                <p>On the application, please be sure to indicate that you are applying as a "non-degree seeking" student. You will be reviewed under the same standards for admission as degree-seeking students and we cannot guarantee that non-degree seeking applications received after the application deadline will be reviewed.</p>
-                <p>Non-degree seeking students wishing to take a single course during a summer or winter term must complete the application available on the <a href="https://exst.umd.edu/">Extended Studies</a> website.</p>
-              </div>
-            </div>
-          </umd-element-accordion-item>
-
-          <umd-element-accordion-item>
-            <p slot="headline">Post-Baccalaureate Programs</p>
-            <div slot="text">
-              <div class="umd-text-rich-advanced">
-                <p>If you earned a bachelor's degree and wish to apply for admission to earn another undergraduate degree or to take courses as a non-degree seeking student at UMD, you will use the transfer application in ApplyWeb. Follow the <a href="../how-to-apply/transfer-applicants.html">transfer applicant requirements</a>. For more information on applying as a non-degree seeking student, please review the previous Non-Degree Seeking Students section on this page.</p>
-                <p>Students interested in Science in the Evening or Hearing and Speech in the Evening should apply through the <a href="https://exst.umd.edu/">Extended Studies Post-Baccalaureate Programs</a>.</p>
-              </div>
-            </div>
-          </umd-element-accordion-item>
-
-          <umd-element-accordion-item>
-            <p slot="headline">Re-enrollment</p>
-            <div slot="text">
-              <div class="umd-text-rich-advanced">
-                <p>Re-enrollment pertains only to students who have previously attended the University of Maryland, College Park. If you are interested in returning to the university after a period of dismissal or withdrawal, then you can complete a re-enrollment application. Students who attended on a "term only" basis or who were admitted to the university but did not attend must complete a regular application for undergraduate admission. For more information about the re-enrollment process, please visit the <a href="https://studentsuccess.umd.edu/reenrollment-faqs">Student Success Office</a> website.</p>
-              </div>
-            </div>
-          </umd-element-accordion-item>
-
-          <umd-element-accordion-item>
-            <p slot="headline">School of Music Applicants</p>
-            <div slot="text">
-              <div class="umd-text-rich-advanced">
-                <p>If you're interested in the School of Music, you will need to submit the <a href="https://music.umd.edu/admissions/undergraduate">online application supplement</a> and complete an <a href="https://www.music.umd.edu/prospective_students/auditions/undergraduate/">audition</a> by November 1 for an early action decision or by December 1 for a regular decision. The application supplement and audition will only be used to determine your eligibility for admission into the School of Music and will not be used in the review of your eligibility for admission to UMD. For more information, please visit the <a href="https://music.umd.edu/admissions/undergraduate">School of Music</a> website or email their office at <a href="mailto:musicadmissions@umd.edu">musicadmissions@umd.edu</a>.</p>
-              </div>
-            </div>
-          </umd-element-accordion-item>
-
-          <umd-element-accordion-item>
-            <p slot="headline">Undocumented Students</p>
-            <div slot="text">
-              <div class="umd-text-rich-advanced">
-                <p>The University of Maryland is committed to creating a welcoming and inclusive environment for all students, including <a href="https://stamp.umd.edu/engagement/immigrant_undocumented_student_life">undocumented students</a>.</p>
-              </div>
-            </div>
-          </umd-element-accordion-item>
-
-          <umd-element-accordion-item>
-            <p slot="headline">U.S. Veterans</p>
-            <div slot="text">
-              <div class="umd-text-rich-advanced">
-                <p>Thank you for your service! As a veteran, you face unique challenges navigating the admission process and we want to support you through it. At the University of Maryland, you are considered a veteran if you're currently enlisted or have served in the U.S. armed forces or one of its reserve units. We highly encourage veterans like you to apply to Maryland, where we look forward to helping you achieve your personal and academic goals and get involved in campus life. As a <a href="https://www.va.gov/education/choosing-a-school/principles-of-excellence/">Principles of Excellence Program</a> institution, we are committed to helping you continue your education and get involved in <a href="https://thestamp.umd.edu/veteran_student_life">Veteran Student Life</a>.</p>
-                <p class="umd-sans-large text-black">Freshman</p>
-                <p>Freshman applicants are students who did not attend college out of high school and have not earned more than 12 college credits. To be considered for freshman admission, you need to submit the completed application, your high school transcript and letters of recommendation from current or former military superiors or civilian supervisors. If you've been out of school more than three years, you don't need to submit SAT or ACT scores. Please review all <a href="../how-to-apply/freshman-applicants.html">requirements for freshman applicants</a>. We do not need proof of military documentation until after you are offered admission to the university. To help us determine eligibility for student aid and priority registration, during the application process you will be asked to upload a copy of your Certificate of Release or Discharge from Active Duty (DD form 214). For information regarding application fee waiver eligibility, please review our <a href="https://admissions.umd.edu/persona/fee-waiver">Fee Waivers</a> page.</p>
-                <p class="umd-sans-large text-black">Transfer</p>
-                <p>Transfer applicants should have attended college after high school or while you were on active duty and earned at least 12 college credits. Credit for basic military training is awarded to qualified students based on submission of required documentation. However, the Joint Services Transcript does not count towards the 12 credits necessary to be a transfer student or the 30 credits necessary to no longer be required to submit high school information. Visit the <a href="https://www.transfercredit.umd.edu/plc.html#bmt">basic military credit policy</a> for details. Please review all <a href="../how-to-apply/transfer-applicants.html">requirements for transfer applicants</a>. We do not need proof of military documentation until after you are offered admission to the university. For information regarding application fee waiver eligibility, please review our <a href="https://admissions.umd.edu/persona/fee-waiver">Fee Waivers</a> page.</p>
-              </div>
-            </div>
-          </umd-element-accordion-item>
-
+      <nav aria-label="Other applicant types" class="umd-layout-vertical-landing-child">
+        <div class="umd-layout-grid-gap-four">
+          <umd-element-card data-visual-bordered="true">
+            <p slot="headline"><a href="other-applicant-types.html#high-school-paths">Still in High School or a Nontraditional High School Path</a></p>
+            <div slot="text"><p>Concurrent Enrollment, Home-Schooled Students, GED</p></div>
+          </umd-element-card>
+          <umd-element-card data-visual-bordered="true">
+            <p slot="headline"><a href="other-applicant-types.html#college-credits-or-degree">Already Have College Credits or a Degree</a></p>
+            <div slot="text"><p>Non-Degree Seeking, Post-Baccalaureate, Re-enrollment</p></div>
+          </umd-element-card>
+          <umd-element-card data-visual-bordered="true">
+            <p slot="headline"><a href="other-applicant-types.html#specific-program">Applying to a Specific Program</a></p>
+            <div slot="text"><p>Agriculture Forward, School of Music</p></div>
+          </umd-element-card>
+          <umd-element-card data-visual-bordered="true">
+            <p slot="headline"><a href="other-applicant-types.html#specific-circumstances">Applying with Specific Circumstances</a></p>
+            <div slot="text"><p>U.S. Veterans, Undocumented Students, Golden ID (60+)</p></div>
+          </umd-element-card>
         </div>
+      </nav>
+      <div class="umd-layout-grid-inline-tablet-rows">
+        <umd-element-call-to-action data-display="primary">
+          <a href="other-applicant-types.html">Explore Other Applicant Types</a>
+        </umd-element-call-to-action>
       </div>
-    </umd-element-sticky-columns>
+    </div>
   </section>
 
   <!-- ========================================
