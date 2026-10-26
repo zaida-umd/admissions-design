@@ -1374,10 +1374,11 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 
         <!-- ========================================
              5. INTRO — rich-text intro + jump nav to the four groups.
-             The jump nav is four bordered standard cards: the headline links to
-             the group, the text links to each entry in it. Every group <section>
-             and every entry card carries an id, so any of them can be deep-linked
-             from elsewhere (prospective-students.html links the four groups).
+             The jump nav is four bordered standard cards: the headline and a
+             secondary "Go to section" CTA both link to the group; the text lists
+             its entries unlinked, because the CMS can only jump to sections, not
+             to individual cards. Groups and entry cards still carry ids
+             (prospective-students.html links the four groups).
         ======================================== -->
         <section class="umd-layout-space-vertical-interior">
           <div class="umd-text-rich-advanced umd-layout-space-vertical-interior-child">
@@ -1388,25 +1389,45 @@ umd-element-scroll-top[data-layout-fixed="true"] {
               <umd-element-card data-visual-bordered="true">
                 <p slot="headline"><a href="#high-school-paths">Still in High School or a Nontraditional High School Path</a></p>
                 <div slot="text">
-                  <p><a href="#concurrent-enrollment">Concurrent Enrollment</a>, <a href="#home-schooled-students">Home-Schooled Students</a>, <a href="#ged">GED</a></p>
+                  <p>Concurrent Enrollment, Home-Schooled Students, GED</p>
+                </div>
+                <div slot="actions">
+                  <umd-element-call-to-action data-display="secondary">
+                    <a href="#high-school-paths">Go to section</a>
+                  </umd-element-call-to-action>
                 </div>
               </umd-element-card>
               <umd-element-card data-visual-bordered="true">
                 <p slot="headline"><a href="#college-credits-or-degree">Already Have College Credits or a Degree</a></p>
                 <div slot="text">
-                  <p><a href="#non-degree-seeking">Non-Degree Seeking</a>, <a href="#post-baccalaureate">Post-Baccalaureate</a>, <a href="#re-enrollment">Re-enrollment</a></p>
+                  <p>Non-Degree Seeking, Post-Baccalaureate, Re-enrollment</p>
+                </div>
+                <div slot="actions">
+                  <umd-element-call-to-action data-display="secondary">
+                    <a href="#college-credits-or-degree">Go to section</a>
+                  </umd-element-call-to-action>
                 </div>
               </umd-element-card>
               <umd-element-card data-visual-bordered="true">
                 <p slot="headline"><a href="#specific-program">Applying to a Specific Program</a></p>
                 <div slot="text">
-                  <p><a href="#agriculture-forward">Agriculture Forward</a>, <a href="#school-of-music">School of Music</a></p>
+                  <p>Agriculture Forward, School of Music</p>
+                </div>
+                <div slot="actions">
+                  <umd-element-call-to-action data-display="secondary">
+                    <a href="#specific-program">Go to section</a>
+                  </umd-element-call-to-action>
                 </div>
               </umd-element-card>
               <umd-element-card data-visual-bordered="true">
                 <p slot="headline"><a href="#specific-circumstances">Applying with Specific Circumstances</a></p>
                 <div slot="text">
-                  <p><a href="#us-veterans">U.S. Veterans</a>, <a href="#undocumented-students">Undocumented Students</a>, <a href="#golden-id">Golden ID (60+)</a></p>
+                  <p>U.S. Veterans, Undocumented Students, Golden ID (60+)</p>
+                </div>
+                <div slot="actions">
+                  <umd-element-call-to-action data-display="secondary">
+                    <a href="#specific-circumstances">Go to section</a>
+                  </umd-element-call-to-action>
                 </div>
               </umd-element-card>
             </div>
@@ -1434,11 +1455,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
             <div slot="text">
               <p>You can enroll at the University of Maryland (UMD) even before you graduate from high school. We allow talented high school seniors to take up to two courses or seven credits during the fall, spring and summer semesters. We're looking for students who've demonstrated exceptional performance and ability in a rigorous high school program.</p>
               <p>To apply, submit a completed application, high school transcript, an essay explaining why you're interested in attending UMD concurrently, a letter of recommendation from your high school and a letter of permission from your parents or legal guardians. You also must live within commuting distance. In order to be considered, students must apply by the following deadlines:</p>
-              <ul>
-                <li><strong>Spring</strong>: January 2</li>
-                <li><strong>Summer</strong>: May 15</li>
-                <li><strong>Fall</strong>: August 8</li>
-              </ul>
+              <p><strong>Spring</strong>: January 2 | <strong>Summer</strong>: May 15 | <strong>Fall</strong>: August 8</p>
             </div>
           </umd-element-card>
 
