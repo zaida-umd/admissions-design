@@ -1593,17 +1593,22 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </section>
 
   <!-- ========================================
-       9. SPECIAL AUDIENCES — short intro + links to the four groups on
-       other-applicant-types.html, which now carries the full copy. The four
-       cards are the same jump nav that page opens with, pointed across pages.
+       9. SPECIAL AUDIENCES — section-intro-wide (headline + CTA right) and
+       links to the four groups on other-applicant-types.html, which now
+       carries the full copy. The four cards are the same jump nav that page
+       opens with, pointed across pages.
   ======================================== -->
   <section id="special-audiences" class="umd-layout-vertical-landing">
     <div class="umd-layout-space-horizontal-larger">
-      <h2 class="umd-sans-largest-uppercase mb-md">Special Audiences</h2>
-      <div class="umd-text-rich-advanced umd-layout-vertical-landing-child">
-        <p>We understand no two applicants are the same and not every applicant fits neatly into the category of freshman or transfer student. That is why we will consider your specific circumstances through an application process developed just for you.</p>
-      </div>
-      <nav aria-label="Other applicant types" class="umd-layout-vertical-landing-child">
+      <umd-element-section-intro-wide class="umd-layout-vertical-landing-child">
+        <h2 slot="headline">Special Audiences</h2>
+        <div slot="actions">
+          <umd-element-call-to-action data-display="secondary">
+            <a href="other-applicant-types.html">Explore Other Applicant Types</a>
+          </umd-element-call-to-action>
+        </div>
+      </umd-element-section-intro-wide>
+      <nav aria-label="Other applicant types">
         <div class="umd-layout-grid-gap-four">
           <umd-element-card data-visual-bordered="true">
             <p slot="headline"><a href="other-applicant-types.html#high-school-paths">Still in High School or a Nontraditional High School Path</a></p>
@@ -1623,11 +1628,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           </umd-element-card>
         </div>
       </nav>
-      <div class="umd-layout-grid-inline-tablet-rows">
-        <umd-element-call-to-action data-display="primary">
-          <a href="other-applicant-types.html">Explore Other Applicant Types</a>
-        </umd-element-call-to-action>
-      </div>
     </div>
   </section>
 
