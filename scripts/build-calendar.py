@@ -139,7 +139,7 @@ range_json  = json.dumps([records[0]['d'], records[-1]['d']])
 # ---------------------------------------------------------------- body
 BODY = r'''  </style>
 
-  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
+  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.1.0/dist/cdn.js"></script>
 
   <!-- Calendar explorer — page-specific styles -->
   <style>
