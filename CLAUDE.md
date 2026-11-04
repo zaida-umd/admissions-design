@@ -635,9 +635,10 @@ migration has a deterministic target.
 Body copy is 18 / 400 for contrast.
 
 **Those columns are samples of a fluid curve, not three steps.** Levels 1 and 2
-interpolate continuously between 375px and ~1024px, and level 2 **overshoots its
-own ≥1024 value in the middle of the range** — measured 18px at 375, 21.84 at
-768, **22.5 at 900**, 22 at 1024 and flat thereafter. Consequences:
+are flat below 650px, jump at 650px, scale with the viewport to 1023px, then step
+to their flat desktop size at 1024px. Level 2 **overshoots its ≥1024 value in that
+range** at the pinned stylesheet — measured 18px at 375, 21.84 at 768, **22.5 at
+900**, 22 at 1024 and flat thereafter. Consequences:
 
 - **Quote a measurement with its viewport.** "22px" and "18px" are both correct
   for level 2 depending on where you measured.
@@ -963,4 +964,4 @@ Practical verification recipe: assert on computed styles (9 CSS bundles loaded, 
 3. `page-builder/registry/`
 4. `page-builder/styles/critical.css`
 5. `OVERRIDES.md` (this repo) — admissions-specific shadow injections and class overrides
-6. `page-builder/OVERRIDES.md` — generic shadow injections (visit-card, banner-promo, etc.)
+6. `page-builder/OVERRIDES.md` — generic shadow injections (card-overlay padding, quote size-large)
