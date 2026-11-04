@@ -920,9 +920,14 @@
        flags -no-top as a dead class). Defining them zeroes the seam and
        leaves the pathway's own 80px as the gap. Compound selectors so they
        beat .umd-layout-background-full-dark's shorthand on specificity
-       rather than on source order. */
-    .umd-layout-background-full-dark.umd-layout-background-full-dark-no-bottom {
-      padding-bottom: 0;
+       rather than on source order.
+       The pathway's 80px only exists at 800px and up. Below that its image
+       stacks flush to its top edge, so the band above keeps its own bottom
+       padding or the last CTA sits directly on the photo. */
+    @media (min-width: 800px) {
+      .umd-layout-background-full-dark.umd-layout-background-full-dark-no-bottom {
+        padding-bottom: 0;
+      }
     }
 
     .umd-layout-background-full-dark.umd-layout-background-full-dark-no-top {
