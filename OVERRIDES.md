@@ -256,16 +256,14 @@ Appending three probes into a dark pathway's shadow wrapper on that page reprodu
 The second and third rows are identical, which rules our project class out entirely — an
 unstyled `<div>` is sufficient to trigger it.
 
-**Upstream candidate:** either restore `.umd-text-rich-advanced-dark p { line-height: 1.5em }`,
-or drop the blanket `div { line-height: 1 }` reset so the wrapper's line-height inherits at any
-depth. The blanket reset is the deeper problem — it makes any structural `<div>` in a rich-text
-slot silently collapse the leading of everything beneath it.
+**Not an upstream request.** The blanket reset is not going to change (confirmed 2026-11-03).
+Keep `<p>` direct in `slot="text"`; multiple direct paragraphs render correctly.
 
 ## Card-overlay: the IMAGE variant clamps `slot="text"`, the COLOR variant does not
 
 Not an override in force — a documented silent failure, kept because it cost a build iteration and because the two variants are one tag apart.
 
-`umd-element-card-overlay` with `type="image"` + `slot="image"` renders `.card-overlay-image-*` shadow nodes and **clamps `slot="text"` to a hard-coded character budget**, appending `" ..."`. The helper is `maxTextSize` in `cdn.js@1.18.12`; the budget is **300 characters**, tightening to **~220** once `slot="actions"` is also present. It is exposed as no slot, attribute, or CSS variable.
+`umd-element-card-overlay` with `type="image"` + `slot="image"` renders `.card-overlay-image-*` shadow nodes and **clamps `slot="text"` to a hard-coded character budget**, appending `" ..."`. The helper is `maxTextSize` in `cdn.js@1.18.12`; the budget measures **280 characters** plus the `" ..."` at components 2.0.0 and 2.1.0, with or without `slot="actions"` (re-measured 2026-11-03; older notes said 300 and ~220). It is exposed as no slot, attribute, or CSS variable.
 
 **The clamp is destructive, not visual.** The copy is cut out of the shadow DOM, so no CSS (`line-clamp`, `max-height`, `overflow`) brings it back — those only hide text that is still there. Recovering it means writing the light-DOM slot's `innerHTML` back over the truncated node, and a one-shot restore does **not** hold: the card re-renders its scaling text block after first paint and re-truncates, so it needs a `MutationObserver` on `.card-overlay-image-text-content` (idempotent, because restored text no longer ends in `...`).
 
@@ -273,7 +271,7 @@ Not an override in force — a documented silent failure, kept because it cost a
 
 Corollary: the "Card-overlay horizontal padding (desktop+)" entry above is also image-variant-only (it targets `.card-overlay-image-container`). Neither injection belongs on a page whose overlay cards are colour cards — both would be dead code.
 
-**Upstream candidate:** expose the budget as an attribute (e.g. `data-text-max-length`, `0` = no clamp) on the image variant, rather than forcing every page with longer copy to fight the shadow DOM — or at minimum bring the two variants' behaviour into line.
+**Not an upstream request.** The limit is intended (confirmed 2026-11-03). Write to it.
 
 Pages using this: none currently. `pages/how-to-apply/freshman-applicants.html` carried the restore injection until its cards moved from the image variant to the colour variant.
 
@@ -1520,6 +1518,10 @@ Removing the injection changed nothing visually: the actions box measures
 injected column flex, because there is only ever one action in it.
 
 ## Zig-zag alternation: use `order`, not DOM order (2026-09-14)
+
+**⚠️ SUPERSEDED 2026-09-17.** Alternate by DOM order. Migrated CMS content cannot carry
+this page-level `order` rule, so both uses were removed. See "The zig-zag pattern" in
+`CLAUDE.md`. Kept as a design record only.
 
 `LAYOUT-PATTERNS.md` § *Light background — two-column image + text* says to
 alternate the zig-zag by swapping the `<figure>` and the text `<div>` in the

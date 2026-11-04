@@ -635,10 +635,11 @@ migration has a deterministic target.
 Body copy is 18 / 400 for contrast.
 
 **Those columns are samples of a fluid curve, not three steps.** Levels 1 and 2
-scale with the viewport from 650px to 1023px. Since stylesheet 2.1.0, level 2
-runs `calc(18px + 0.3vw)` there and no longer overshoots: 18px at 375, 20.3 at
-768, 20.7 at 900, about 21.1 at 1023, then a step to 22 at 1024 and flat
-thereafter. Consequences:
+are flat below 650px, jump at 650px, scale with the viewport to 1023px, then step
+to their flat desktop size at 1024px. Since stylesheet 2.1.0, level 2 runs
+`calc(18px + 0.3vw)` in that range and no longer overshoots: 18px at 375, 20.3 at
+768, 20.7 at 900, about 21.1 at 1023, then 22 at 1024 and flat thereafter.
+Consequences:
 
 - **Quote a measurement with its viewport.** "22px" and "18px" are both correct
   for level 2 depending on where you measured.
@@ -964,4 +965,4 @@ Practical verification recipe: assert on computed styles (9 CSS bundles loaded, 
 3. `page-builder/registry/`
 4. `page-builder/styles/critical.css`
 5. `OVERRIDES.md` (this repo) — admissions-specific shadow injections and class overrides
-6. `page-builder/OVERRIDES.md` — generic shadow injections (visit-card, banner-promo, etc.)
+6. `page-builder/OVERRIDES.md` — generic shadow injections (card-overlay padding, quote size-large)
