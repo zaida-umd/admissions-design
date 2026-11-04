@@ -28,7 +28,7 @@ pin = re.search(r"web-components-library@([\d.]+)/dist/cdn\.js", template).group
 # Byte-identical to the block on every other page that has a lede — do not
 # rename these rules per page.
 LEDE_CSS = """\
-    /* LEDE. umd-sans-larger-bold is FLUID — 18px at 375, ~21.8 at 768, 22.5
+    /* LEDE. umd-sans-larger-bold is FLUID — 18px at 375, ~20.3 at 768, 20.7
        around 900, 22 at 1024+ — and it renders that scale ONLY outside
        .umd-text-rich-advanced, which pins every direct child to
        `font-size: 18px`. That pin is why the lede used to be umd-sans-large

@@ -629,16 +629,17 @@ migration has a deterministic target.
 | Level | Class | 375px | 768px | ≥1024px |
 |---|---|---|---|---|
 | 1 | `umd-sans-extralarge-bold` | 22 / 700 | 26.9 / 700 | **32 / 700** |
-| 2 | `umd-sans-larger-bold` | 18 / 700 | 21.8 / 700 | **22 / 700** |
+| 2 | `umd-sans-larger-bold` | 18 / 700 | 20.3 / 700 | **22 / 700** |
 | 3 | `umd-sans-large` | 18 / 700 | 18 / 700 | **18 / 700** |
 
 Body copy is 18 / 400 for contrast.
 
 **Those columns are samples of a fluid curve, not three steps.** Levels 1 and 2
 are flat below 650px, jump at 650px, scale with the viewport to 1023px, then step
-to their flat desktop size at 1024px. Level 2 **overshoots its ≥1024 value in that
-range** at the pinned stylesheet — measured 18px at 375, 21.84 at 768, **22.5 at
-900**, 22 at 1024 and flat thereafter. Consequences:
+to their flat desktop size at 1024px. Since stylesheet 2.1.0, level 2 runs
+`calc(18px + 0.3vw)` in that range and no longer overshoots: 18px at 375, 20.3 at
+768, 20.7 at 900, about 21.1 at 1023, then 22 at 1024 and flat thereafter.
+Consequences:
 
 - **Quote a measurement with its viewport.** "22px" and "18px" are both correct
   for level 2 depending on where you measured.
@@ -754,7 +755,7 @@ changes, and nothing tells you. That is the whole reason the lede used to be
 `umd-sans-large`: it is already 18px, so the pin took nothing from it.
 
 Moving the `<p>` out of the block is the only way the class renders its real
-fluid scale (18px at 375 → 22.5 at 900 → 22 at 1024+). A page rule that restates
+fluid scale (18px at 375 → 20.7 at 900 → 22 at 1024+). A page rule that restates
 a `font-size` cannot substitute — see the fluidity note under the scale table.
 
 #### What the two rules are for

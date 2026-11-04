@@ -277,8 +277,9 @@ Pages using this: none currently. `pages/how-to-apply/freshman-applicants.html` 
 
 ## CDN version pins
 
-All 11 pages load **web-components-library 1.19.5** and **web-styles-library 1.8.16**, matching
-`page-builder/TEMPLATE.html`.
+All pages load **web-components-library 2.1.0** and **web-styles-library 2.1.0**, matching
+`page-builder/TEMPLATE.html`. Stylesheets link `dist/css/` directly, because `/css/` has answered
+with a 301 since 2.1.0.
 
 Before 2026-08-21 the pages pinned components at `1.18.12` and linked the nine stylesheets
 **unversioned** (`.../web-styles-library/css/…`), i.e. floating on unpkg's `latest`. That is why
@@ -1334,7 +1335,12 @@ they are connected, which is what makes this safe: they render once, on append.
 > **Archived 2026-09-18.** `.umd-table-scroll` and the header-band rule below
 > are no longer applied on any page — the two pages that used them were removed
 > (see `RICH-TEXT-PATTERNS.md`). Kept as the record of *why* the treatment took
-> this shape; the upstream analysis is still accurate.
+> this shape. The "Upstream" column describes stylesheet 1.8.16.
+>
+> **At stylesheet 2.1.0, delta 1 is redundant:** upstream's default header is now
+> black with white text, plus a 2px red top rule that delta 1 never had. Deltas 2
+> and 3 still differ from upstream. Anyone restoring this treatment should drop
+> delta 1 and re-measure the others.
 
 `element.min.css` styles every `table` descended from `.umd-text-rich-advanced`.
 **This is the complete list of project changes to that treatment.** Anything not
