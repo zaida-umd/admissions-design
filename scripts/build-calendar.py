@@ -480,7 +480,7 @@ BODY = r'''  </style>
       audience: 'Audience',
       location: 'Location',
       type: 'Event Type',
-      college: 'College or School'
+      college: 'Academic Programs'
     };
     // facet key -> the event field it tests
     var GROUP_FIELD = { audience:'a', location:'l', type:'y', college:'c' };
